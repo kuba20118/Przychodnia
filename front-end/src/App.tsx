@@ -1,9 +1,8 @@
 import React from "react";
 import { Provider } from "react-redux";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import configureStore from "./state";
-import Home from "./components/Home";
-import About from "./components/About";
+import AdminLayout from "./layouts/Admin";
 
 const initialState = (window as any).initialReduxState;
 const store = configureStore(initialState);
@@ -13,8 +12,8 @@ function App() {
     <Provider store={store}>
       <BrowserRouter>
         <Switch>
-          <Route exact path="/" component={Home} />
-          <Route exact path="/about" component={About} />
+          <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
+          <Redirect from="/" to="/admin/panel-glowny" />
         </Switch>
       </BrowserRouter>
     </Provider>
