@@ -29,6 +29,7 @@ const Sidebar: React.FC<SidebarPropsType> = ({
                 to={item.layout + item.path}
                 className="nav-link"
                 activeClassName="active"
+                key={key}
               >
                 <i className="" />
                 <p>{item.name}</p>

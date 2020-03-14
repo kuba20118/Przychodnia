@@ -1,23 +1,52 @@
-import React from "react";
-import { Provider } from "react-redux";
-import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
-import configureStore from "./state";
+import React, { useCallback } from "react";
+import { Switch, Route, Redirect } from "react-router-dom";
 import AdminLayout from "./layouts/Admin";
+import {
+  ProtectedRouteProps,
+  ProtectedRoute
+} from "./components/ProtectedRoute";
+import {
+  AuthenticationStateT,
+  AuthenticationActionTypes
+} from "./state/ducks/authentication/types";
+import { IApplicationState } from "./state/ducks";
+import { useSelector, useDispatch } from "react-redux";
+import Header from "./components/Header";
+import { setRedirectPathOnAuthenticationAction } from "./state/ducks/authentication/actions";
+import Login from "./views/Login";
 
-const initialState = (window as any).initialReduxState;
-const store = configureStore(initialState);
-
-function App() {
-  return (
-    <Provider store={store}>
-      <BrowserRouter>
-        <Switch>
-          <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
-          <Redirect from="/" to="/admin/panel-glowny" />
-        </Switch>
-      </BrowserRouter>
-    </Provider>
+const App: React.FC = () => {
+  const dispatch = useDispatch();
+  const authentication: AuthenticationStateT = useSelector(
+    ({ authentication }: IApplicationState) => authentication
   );
-}
+  const setRedirectPathOnAuthentication = useCallback(
+    (path: string) => dispatch(setRedirectPathOnAuthenticationAction(path)),
+    [dispatch]
+  );
+
+  const defaultProtectedRouteProps: ProtectedRouteProps = {
+    isAuthenticated: !!authentication.isAuthenticated,
+    authenticationPath: "/login",
+    redirectPathOnAuthentication:
+      authentication.redirectPathOnAuthentication || "/login",
+    setRedirectPathOnAuthentication
+  };
+
+  return (
+    <>
+      <Switch>
+        {/* <Route path="/admin" render={(props) => <AdminLayout {...props} />} /> */}
+        {/* <Redirect from="/" to="/admin/panel-glowny" /> */}
+        <ProtectedRoute
+          {...defaultProtectedRouteProps}
+          path="/admin"
+          component={AdminLayout}
+        />
+        <Route path="/login" component={Login} />
+      </Switch>
+    </>
+  );
+};
 
 export default App;
