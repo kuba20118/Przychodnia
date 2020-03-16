@@ -1,8 +1,9 @@
 import React, { useState, FormEvent } from "react";
 import { FormGroup, FormLabel, FormControl, Button } from "react-bootstrap";
+import { UserCredentialsT } from "../state/ducks/user/types";
 
 type LoginFormPropsT = {
-  onSubmit: () => void;
+  onSubmit: (userLogin: UserCredentialsT) => void;
 };
 
 const LoginForm: React.FC<LoginFormPropsT> = (props: LoginFormPropsT) => {
@@ -20,27 +21,27 @@ const LoginForm: React.FC<LoginFormPropsT> = (props: LoginFormPropsT) => {
   };
 
   const submit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    props.onSubmit();
+    props.onSubmit({ email, password });
   };
 
   return (
-    <div className="login-page">
-      <form>
-        <FormGroup>
-          <FormLabel>E-mail</FormLabel>
-          <FormControl type="text" value={email} onChange={setEmailInput} />
-        </FormGroup>
-        <FormGroup>
-          <FormLabel>Password</FormLabel>
-          <FormControl
-            type="text"
-            value={password}
-            onChange={setPasswordInput}
-          />
-        </FormGroup>
-        <Button onClick={submit}>Login</Button>
-      </form>
-    </div>
+    <form className="login-form card">
+      <FormGroup>
+        <FormLabel>E-mail</FormLabel>
+        <FormControl type="text" value={email} onChange={setEmailInput} />
+      </FormGroup>
+      <FormGroup>
+        <FormLabel>Hasło</FormLabel>
+        <FormControl
+          type="password"
+          value={password}
+          onChange={setPasswordInput}
+        />
+      </FormGroup>
+      <Button className="login-form__btn btn-primary" onClick={submit}>
+        Zaloguj się
+      </Button>
+    </form>
   );
 };
 

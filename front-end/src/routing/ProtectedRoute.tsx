@@ -3,18 +3,16 @@ import { RouteProps, Redirect, Route, useLocation } from "react-router-dom";
 
 export interface ProtectedRouteProps extends RouteProps {
   isAuthenticated: boolean;
-  // isAllowed: boolean;
   authenticationPath: string;
-  redirectPathOnAuthentication: string;
-  setRedirectPathOnAuthentication: (path: string) => void;
+  // redirectPathOnAuthentication: string;
+  // setRedirectPathOnAuthentication: (path: string) => void;
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = (props) => {
   const currentLocation = useLocation();
-  let redirectPath = props.redirectPathOnAuthentication;
+  let redirectPath = currentLocation.pathname;
 
   if (!props.isAuthenticated) {
-    props.setRedirectPathOnAuthentication(currentLocation.pathname);
     redirectPath = props.authenticationPath;
   }
 

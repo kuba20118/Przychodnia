@@ -1,21 +1,30 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./assets/main.scss";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { Provider } from "react-redux";
 import configureStore from "./state";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./assets/scss/main.scss";
+import history from "./routing/history";
+import { authenticateAsync } from "./state/ducks/auth/actions";
 
 const initialState = (window as any).initialReduxState;
 const store = configureStore(initialState);
 
+const token = localStorage.getItem("przychodnia-jwt");
+
+if (token) {
+  store.dispatch(authenticateAsync.success());
+}
+
 const createApp = () => {
   return (
     <Provider store={store}>
-      <BrowserRouter>
+      <Router history={history}>
         <App />
-      </BrowserRouter>
+      </Router>
     </Provider>
   );
 };

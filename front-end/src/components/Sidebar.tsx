@@ -1,5 +1,5 @@
 import React from "react";
-import { RoutesType } from "../routes";
+import { RoutesType } from "../routing/routes";
 import { NavLink } from "react-router-dom";
 
 type SidebarPropsType = {

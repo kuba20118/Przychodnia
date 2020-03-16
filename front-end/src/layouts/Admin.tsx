@@ -1,5 +1,5 @@
 import React from "react";
-import Routes, { RoutesType } from "../routes";
+import Routes, { RoutesType } from "../routing/routes";
 import { Route, RouteProps } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 

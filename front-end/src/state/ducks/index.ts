@@ -1,12 +1,15 @@
 import { combineReducers } from "redux";
+import { all, fork } from "redux-saga/effects";
 import { Action, TypeConstant, PayloadAction } from "typesafe-actions";
-import { AuthenticationStateT } from "./authentication/types";
+import { AuthStateT } from "./auth/types";
 import { UserStateT } from "./user/types";
-import { authenticationReducer } from "./authentication/reducers";
+import { authenticationReducer } from "./auth/reducers";
 import { userReducer } from "./user/reducers";
+import userSaga from "./user/sagas";
+import authenticationSaga from "./auth/sagas";
 
 export interface IApplicationState {
-  authentication: AuthenticationStateT;
+  authentication: AuthStateT;
   user: UserStateT;
 }
 
@@ -19,4 +22,6 @@ export const rootReducer = combineReducers<IApplicationState>({
   user: userReducer
 });
 
-export function* rootSaga() {}
+export function* rootSaga() {
+  yield all([fork(userSaga), fork(authenticationSaga)]);
+}

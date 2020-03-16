@@ -1,6 +1,6 @@
-import Dashboard from "./views/Dashboard";
-import UserProfile from "./views/UserProfile";
-import Holidays from "./views/Holidays";
+import Dashboard from "../views/Dashboard";
+import UserProfile from "../views/UserProfile";
+import Holidays from "../views/Holidays";
 import { RouteProps } from "react-router-dom";
 
 export type RoutesType = {
