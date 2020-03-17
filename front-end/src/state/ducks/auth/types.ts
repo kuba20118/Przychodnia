@@ -7,5 +7,6 @@ export type AuthStateT = {
 export enum AuthActionTypes {
   AUTHENTICATE = "@@authentication/AUTHENTICATE",
   AUTHENTICATE_SUCCESS = "@@authentication/AUTHENTICATE_SUCCESS",
-  AUTHENTICATE_ERROR = "@@authentication/AUTHENTICATE_ERROR"
+  AUTHENTICATE_ERROR = "@@authentication/AUTHENTICATE_ERROR",
+  SET_AUTH_FALSE = "@@authentication/SET_AUTH_FALSE"
 }

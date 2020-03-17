@@ -19,6 +19,15 @@ export const userReducer = (
     case UserActionTypes.LOGIN_USER_ERROR: {
       return { ...state };
     }
+    case UserActionTypes.LOGOUT_USER: {
+      return { ...state };
+    }
+    case UserActionTypes.LOGOUT_USER_SUCCESS: {
+      return { ...initialUserState, data: undefined, loaded: false };
+    }
+    case UserActionTypes.LOGOUT_USER_ERROR: {
+      return { ...state };
+    }
     case UserActionTypes.REGISTER_USER: {
       return { ...state };
     }

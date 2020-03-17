@@ -19,6 +19,9 @@ export const authenticationReducer = (
     case AuthActionTypes.AUTHENTICATE_ERROR: {
       return { ...state };
     }
+    case AuthActionTypes.SET_AUTH_FALSE: {
+      return { ...state, isAuthenticated: false };
+    }
     default:
       return state;
   }

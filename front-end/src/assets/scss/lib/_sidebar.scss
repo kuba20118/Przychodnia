@@ -3,10 +3,67 @@
   top: 0;
   bottom: 0;
   left: 0;
-  width: 260px;
+  width: $sidebar-width;
   display: block;
   z-index: 1;
   color: #fff;
   font-weight: 200;
+  background: #282828;
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(#282828),
+    to(#111)
+  );
   background: linear-gradient(180deg, #282828 0, #111);
+  background-size: 150% 150%;
+
+  &-wrapper {
+    position: relative;
+    overflow: auto;
+    z-index: 5;
+    padding-bottom: 30px;
+  }
+
+  .logo {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+
+    span {
+      font-size: 20px;
+      color: $white-color;
+      line-height: 20px;
+      padding: 0 16px;
+      margin: 0 16px;
+    }
+  }
+
+  .nav {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+
+    > a {
+      color: $white-color;
+      padding: 14px 16px;
+      margin: 0 16px;
+      border-radius: $border-radius-base;
+      opacity: 0.85;
+      -webkit-transition: all 0.15s ease-in;
+      transition: all 0.15s ease-in;
+
+      &:hover {
+        opacity: 1;
+        background: hsla(0, 0%, 100%, 0.23);
+      }
+
+      > p {
+        margin: 0;
+      }
+    }
+  }
 }

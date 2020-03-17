@@ -16,10 +16,10 @@ const Sidebar: React.FC<SidebarPropsType> = ({
   return (
     <div className="sidebar">
       <div className="logo">
-        <div className="logo-img">
+        {/* <div className="logo-img">
           <img src={logoSrc} alt="logo_image" />
-        </div>
-        <span className="simple-text logo-normal">{userRole}</span>
+        </div> */}
+        <span className="simple-text">{userRole}</span>
       </div>
       <div className="sidebar-wrapper">
         <ul className="nav">

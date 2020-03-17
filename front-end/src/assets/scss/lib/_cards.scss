@@ -4,4 +4,28 @@
   border: 0;
   background-color: $white-bg;
   margin-bottom: 30px;
+
+  .content {
+    padding: 15px 15px 10px;
+  }
+
+  .status {
+    font-size: $font-size-small;
+  }
+}
+
+.card-stats {
+  .icon-big {
+    font-size: 64px;
+    min-height: 64px;
+  }
+
+  .numbers {
+    font-size: 32px;
+    text-align: right;
+
+    p {
+      margin: 0;
+    }
+  }
 }

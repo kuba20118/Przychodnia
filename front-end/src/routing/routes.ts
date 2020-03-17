@@ -2,6 +2,7 @@ import Dashboard from "../views/Dashboard";
 import UserProfile from "../views/UserProfile";
 import Holidays from "../views/Holidays";
 import { RouteProps } from "react-router-dom";
+import WorkHours from "../views/WorkHours";
 
 export type RoutesType = {
   path: string;
@@ -10,10 +11,10 @@ export type RoutesType = {
   layout: string;
 };
 
-const Routes: RoutesType[] = [
+const routes: RoutesType[] = [
   {
-    path: "/dashboard",
-    name: "Dashboard",
+    path: "/panel-glowny",
+    name: "Panel główny",
     component: Dashboard,
     layout: "/admin"
   },
@@ -24,11 +25,23 @@ const Routes: RoutesType[] = [
     layout: "/admin"
   },
   {
-    path: "/urlop",
-    name: "Urlop",
+    path: "/urlopy",
+    name: "Urlopy",
     component: Holidays,
+    layout: "/admin"
+  },
+  {
+    path: "/zwolnienia",
+    name: "Zwolnienia",
+    component: Holidays,
+    layout: "/admin"
+  },
+  {
+    path: "/godziny-pracy",
+    name: "Godziny pracy",
+    component: WorkHours,
     layout: "/admin"
   }
 ];
 
-export default Routes;
+export default routes;

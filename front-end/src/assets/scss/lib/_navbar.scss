@@ -1,0 +1,24 @@
+.navbar {
+  font-size: $font-size-navbar;
+
+  .navbar-brand {
+    font-weight: $font-weight-normal;
+    font-size: $font-size-navbar-large;
+    color: $navbar-text-color;
+    &:hover {
+      color: $navbar-text-color;
+    }
+  }
+
+  .navbar-nav {
+    > a:not(.btn):hover {
+      color: $link-hover-color;
+    }
+  }
+}
+
+.navbar-default {
+  background: $navbar-bg;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  height: $navbar-height;
+}

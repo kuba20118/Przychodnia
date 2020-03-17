@@ -20,12 +20,13 @@ const LoginForm: React.FC<LoginFormPropsT> = (props: LoginFormPropsT) => {
     setPassword(e.currentTarget.value);
   };
 
-  const submit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const submit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     props.onSubmit({ email, password });
   };
 
   return (
-    <form className="login-form card">
+    <form className="login-form card" onSubmit={submit}>
       <FormGroup>
         <FormLabel>E-mail</FormLabel>
         <FormControl type="text" value={email} onChange={setEmailInput} />
@@ -38,7 +39,7 @@ const LoginForm: React.FC<LoginFormPropsT> = (props: LoginFormPropsT) => {
           onChange={setPasswordInput}
         />
       </FormGroup>
-      <Button className="login-form__btn btn-primary" onClick={submit}>
+      <Button type="submit" className="login-form__btn btn-primary">
         Zaloguj się
       </Button>
     </form>

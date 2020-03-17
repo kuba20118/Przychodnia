@@ -6,10 +6,10 @@ import {
   UserApiResponseT
 } from "./types";
 import { TokenT } from "../auth/types";
-import { loginUserAsync } from "./actions";
+import { loginUserAsync, logoutUserAsync } from "./actions";
 import { IReducerAction } from "..";
 import history from "../../../routing/history";
-import { authenticateAsync } from "../auth/actions";
+import { authenticateAsync, setAuthFalse } from "../auth/actions";
 
 const fakeLogin = (userLogin: UserCredentialsT) => {
   return new Promise((res, rej) => {
@@ -60,9 +60,32 @@ function* watchLoginRequest(): Generator {
   yield takeEvery(UserActionTypes.LOGIN_USER, handleLogin);
 }
 
+function* handleLogout() {
+  try {
+    // Save token in localStorage
+    localStorage.removeItem("przychodnia-jwt");
+    // Set is authenticated to false
+    yield put(setAuthFalse());
+    yield put(logoutUserAsync.success());
+
+    // redirect to admin dashboard
+    history.push("/login", { message: "Wylogowano pomyślnie." });
+  } catch (err) {
+    if (err instanceof Error) {
+      yield put(logoutUserAsync.failure(err.stack!));
+    } else {
+      yield put(logoutUserAsync.failure("An unknown error occured."));
+    }
+  }
+}
+
+function* watchLogoutRequest(): Generator {
+  yield takeEvery(UserActionTypes.LOGOUT_USER, handleLogout);
+}
+
 /**
  * @desc saga init, forks in effects, other sagas
  */
 export default function* userSaga() {
-  yield all([fork(watchLoginRequest)]);
+  yield all([fork(watchLoginRequest), fork(watchLogoutRequest)]);
 }

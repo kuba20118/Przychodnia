@@ -1,3 +1,10 @@
 .main-panel {
-  background: $main-bg;
+  position: relative;
+  width: calc(100% - #{$sidebar-width});
+  float: right;
+
+  > .content {
+    min-height: calc(100% - #{$navbar-height});
+    padding: 30px 15px;
+  }
 }

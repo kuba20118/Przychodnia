@@ -3,8 +3,8 @@
 $border-thin: 1px;
 $border-thick: 2px;
 
-$primary-color: #3472f7;
-$primary-bg: #3472f7;
+$primary-color: #1dc7ea;
+$primary-bg: #1dc7ea;
 
 $default-color: #888888;
 $default-bg: #888888;
@@ -21,11 +21,15 @@ $warning-bg: #ff9500;
 $danger-color: #ff4a55;
 $danger-bg: #ff4a55;
 
+$white-color: #fff;
+
+$link-hover-color: $primary-color;
+
 // backgrounds
 $main-bg: rgba(203, 203, 210, 0.15);
 $white-bg: #fff;
 
-// components
+// spaces
 
 $padding-base-vertical: 8px;
 $padding-base-horizontal: 16px;
@@ -49,6 +53,14 @@ $border-radius-large: 6px;
 
 $login-padding-vertical: 48px;
 $login-padding-horizontal: 42px;
+
+// Components
+
+$sidebar-width: 260px;
+
+$navbar-text-color: #777;
+$navbar-bg: hsla(0, 0%, 100%, 0.96);
+$navbar-height: 60px;
 
 // font
 $font-size-small: 12px;
