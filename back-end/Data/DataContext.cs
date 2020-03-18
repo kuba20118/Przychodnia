@@ -28,8 +28,7 @@ namespace Przychodnia.API
         {
             if (!optionsBuilder.IsConfigured)
             {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("server=localhost;database=przychodniadb;user=user;password=password;treattinyasboolean=true", x => x.ServerVersion("5.7.29-mysql"));
+                  optionsBuilder.UseMySql("server=localhost;database=przychodniadb;user=user;password=password;treattinyasboolean=true", x => x.ServerVersion("5.7.29-mysql"));
             }
         }
 
@@ -138,13 +137,11 @@ namespace Przychodnia.API
                 entity.HasOne(d => d.IdAbsenceNavigation)
                     .WithMany(p => p.Leftvacationdays)
                     .HasForeignKey(d => d.IdAbsence)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("isAbsence");
 
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.Leftvacationdays)
                     .HasForeignKey(d => d.IdUser)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("idUser");
             });
 
@@ -223,13 +220,11 @@ namespace Przychodnia.API
                 entity.HasOne(d => d.IdEmplNavigation)
                     .WithMany(p => p.User)
                     .HasForeignKey(d => d.IdEmpl)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("idEmpl");
 
                 entity.HasOne(d => d.IdRoleNavigation)
                     .WithMany(p => p.User)
                     .HasForeignKey(d => d.IdRole)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("idRole");
             });
 
@@ -265,13 +260,11 @@ namespace Przychodnia.API
                 entity.HasOne(d => d.IdAbsenceVacNavigation)
                     .WithMany(p => p.Vacation)
                     .HasForeignKey(d => d.IdAbsenceVac)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("idAbsenceVac");
 
                 entity.HasOne(d => d.IdUserVacNavigation)
                     .WithMany(p => p.Vacation)
                     .HasForeignKey(d => d.IdUserVac)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("idUserVac");
             });
 
@@ -300,7 +293,6 @@ namespace Przychodnia.API
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.Workschedule)
                     .HasForeignKey(d => d.IdUser)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("idUserWS");
             });
 

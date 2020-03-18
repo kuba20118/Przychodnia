@@ -11,7 +11,6 @@ namespace Przychodnia.API
             Vacation = new HashSet<Vacation>();
         }
 
-
         public int IdAbsence { get; set; }
         public string Name { get; set; }
 

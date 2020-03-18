@@ -19,8 +19,8 @@ namespace Przychodnia.API
         public string Password { get; set; }
         public string Hash { get; set; }
         public string Salt { get; set; }
-        public int IdRole { get; set; }
-        public int IdEmpl { get; set; }
+        public int? IdRole { get; set; }
+        public int? IdEmpl { get; set; }
 
         public virtual Employment IdEmplNavigation { get; set; }
         public virtual Role IdRoleNavigation { get; set; }
