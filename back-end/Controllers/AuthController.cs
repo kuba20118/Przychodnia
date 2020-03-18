@@ -1,5 +1,7 @@
+using System.Diagnostics;
 using System.Threading.Tasks;
 using back_end.Data;
+using back_end.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Przychodnia.API;
 
@@ -18,24 +20,21 @@ namespace back_end.Controllers
 
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register()//string mail, string password, int role)
+        public async Task<IActionResult> Register(UserRegisterDTO userRegisterDTO)
         {
          
-            string mail = "a@a.a";
-            string password = "abc";
-            int role = 1;
-            mail = mail.ToLower();
-            if(await _repo.UserExists(mail))
-                return BadRequest("Mail jest zajęty");
+            
+            userRegisterDTO.Mail = userRegisterDTO.Mail.ToLower();
+          //  if(await _repo.UserExists(userRegisterDTO.Mail))
+            //    return BadRequest("Mail jest zajęty");
 
             var newUser = new User
-            {   
-                Mail = mail
+            {
+                Mail = userRegisterDTO.Mail
             };
-
-            var createdUser = _repo.Register(newUser, password, role);
-
-            return Ok(newUser);
+           var createdUser = await _repo.Register(newUser, userRegisterDTO.Password, userRegisterDTO.idRole);
+ 
+            return Ok(createdUser);
         }
     }
 }

@@ -34,19 +34,15 @@ namespace back_end.Data
         {
             byte[] passwordHash, passwordSalt;
             CreatePassword(password, out passwordHash, out passwordSalt);
-
-           
-            user.Hash = Encoding.Default.GetString(passwordHash);
-            user.Salt = Encoding.Default.GetString(passwordSalt);
+          
+            //user.Hash = "1";//Encoding.Default.GetString(passwordHash);
+            //user.Salt = "2";//Encoding.Default.GetString(passwordSalt);
+            user.Password = "a";
+            user.FirstName = "b";
+            user.LastName = "c";
             user.IdRole = role;
-            user.IdEmpl = 1;
-
-            var newEmployment = new Employment();
-            //user.IdEmpl = newEmployment.IdEmployment;
-
-           // await _context.Employment.AddAsync(newEmployment);
-           // await _context.SaveChangesAsync();
-
+           // user.IdEmpl = 1;
+            //user.Mail = 
          
             await _context.User.AddAsync(user);
             await _context.SaveChangesAsync();
