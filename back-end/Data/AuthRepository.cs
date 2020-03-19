@@ -15,47 +15,50 @@ namespace back_end.Data
             _context = context;
         }
 
-        public async Task<User> login(string mail, string password)
+        public async Task<User> Login(string mail, string password)
         {
-            var user = await _context.User.FirstOrDefaultAsync(x =>x.Mail==mail);
+            var user = await _context.User.FirstOrDefaultAsync(x => x.Mail == mail);
 
-            if(user == null)
+            if (user == null)
                 return null;
 
-            if(!VerifyHash(password, user.Hash, user.Salt))
+            if (!VerifyHash(password, user.Hash, user.Salt))
+            {
+                System.Console.WriteLine("err");
                 return null;
+            }
 
             return user;
         }
 
-        
-   
+
+
 
         public async Task<User> Register(User user, string password, int role)
         {
             byte[] passwordHash, passwordSalt;
             CreatePassword(password, out passwordHash, out passwordSalt);
-          
+
             user.Hash = passwordHash;
             user.Salt = passwordSalt;
-            
-            user.IdRoleNavigation =  await _context.Role.FirstOrDefaultAsync(x => x.IdRole == role);
+
+            user.IdRoleNavigation = await _context.Role.FirstOrDefaultAsync(x => x.IdRole == role);
 
             var newEmpl = new Employment();
-            user.IdEmplNavigation = newEmpl;          
+            user.IdEmplNavigation = newEmpl;
 
             await _context.Employment.AddAsync(newEmpl);
             await _context.User.AddAsync(user);
             await _context.SaveChangesAsync();
 
             return user;
-        }     
+        }
 
         public async Task<bool> UserExists(string mail)
         {
-            if(await _context.User.AnyAsync(x=>x.Mail == mail))
+            if (await _context.User.AnyAsync(x => x.Mail == mail))
                 return true;
-           
+
 
             return false;
         }
@@ -63,23 +66,25 @@ namespace back_end.Data
 
         private bool VerifyHash(string password, byte[] hash, byte[] salt)
         {
-             using(var hmac = new System.Security.Cryptography.HMACSHA512(salt))
-            {              
+            using (var hmac = new System.Security.Cryptography.HMACSHA512(salt))
+            {
                 var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-               // var passwordHash = Encoding.UTF8.GetBytes(hash);
-
-                for(int i = 0; i< computedHash.Length;i++)
+                if (computedHash.Length == hash.Length)
                 {
-                    if(computedHash[i] != hash[i])
-                        return false;
+                    for (int i = 0; i < computedHash.Length; i++)
+                    {
+                        if (computedHash[i] != hash[i])
+                            return false;
+                    }
                 }
-            return true;
+
+                return true;
 
             }
         }
-         private void CreatePassword(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        private void CreatePassword(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
-            using(var hmac = new System.Security.Cryptography.HMACSHA512())
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
             {
                 passwordHash = hmac.Key;
                 passwordSalt = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
