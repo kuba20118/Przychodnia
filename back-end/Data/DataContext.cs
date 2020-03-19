@@ -28,7 +28,7 @@ namespace Przychodnia.API
         {
             if (!optionsBuilder.IsConfigured)
             {
-                  optionsBuilder.UseMySql("server=localhost;database=przychodniadb;user=user;password=password;treattinyasboolean=true", x => x.ServerVersion("5.7.29-mysql"));
+                optionsBuilder.UseMySql("server=localhost;database=przychodniadb;user=user;password=password;treattinyasboolean=true", x => x.ServerVersion("5.7.29-mysql"));
             }
         }
 
@@ -184,10 +184,7 @@ namespace Przychodnia.API
                     .HasCharSet("latin1")
                     .HasCollation("latin1_swedish_ci");
 
-                entity.Property(e => e.Hash)
-                    .HasColumnType("varchar(45)")
-                    .HasCharSet("latin1")
-                    .HasCollation("latin1_swedish_ci");
+                entity.Property(e => e.Hash).HasColumnType("blob");
 
                 entity.Property(e => e.IdEmpl)
                     .HasColumnName("idEmpl")
@@ -207,24 +204,18 @@ namespace Przychodnia.API
                     .HasCharSet("latin1")
                     .HasCollation("latin1_swedish_ci");
 
-                entity.Property(e => e.Password)
-                    .HasColumnType("varchar(45)")
-                    .HasCharSet("latin1")
-                    .HasCollation("latin1_swedish_ci");
-
-                entity.Property(e => e.Salt)
-                    .HasColumnType("varchar(45)")
-                    .HasCharSet("latin1")
-                    .HasCollation("latin1_swedish_ci");
+                entity.Property(e => e.Salt).HasColumnType("blob");
 
                 entity.HasOne(d => d.IdEmplNavigation)
                     .WithMany(p => p.User)
                     .HasForeignKey(d => d.IdEmpl)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("idEmpl");
 
                 entity.HasOne(d => d.IdRoleNavigation)
                     .WithMany(p => p.User)
                     .HasForeignKey(d => d.IdRole)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("idRole");
             });
 

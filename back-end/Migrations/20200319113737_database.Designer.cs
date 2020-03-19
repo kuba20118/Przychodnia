@@ -9,8 +9,8 @@ using Przychodnia.API;
 namespace Przychodnia.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200318203353_init")]
-    partial class init
+    [Migration("20200319113737_database")]
+    partial class database
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -155,16 +155,14 @@ namespace Przychodnia.API.Migrations
                         .HasAnnotation("MySql:CharSet", "latin1")
                         .HasAnnotation("MySql:Collation", "latin1_swedish_ci");
 
-                    b.Property<string>("Hash")
-                        .HasColumnType("varchar(45)")
-                        .HasAnnotation("MySql:CharSet", "latin1")
-                        .HasAnnotation("MySql:Collation", "latin1_swedish_ci");
+                    b.Property<byte[]>("Hash")
+                        .HasColumnType("blob");
 
-                    b.Property<int?>("IdEmpl")
+                    b.Property<int>("IdEmpl")
                         .HasColumnName("idEmpl")
                         .HasColumnType("int(11)");
 
-                    b.Property<int?>("IdRole")
+                    b.Property<int>("IdRole")
                         .HasColumnName("idRole")
                         .HasColumnType("int(11)");
 
@@ -178,15 +176,8 @@ namespace Przychodnia.API.Migrations
                         .HasAnnotation("MySql:CharSet", "latin1")
                         .HasAnnotation("MySql:Collation", "latin1_swedish_ci");
 
-                    b.Property<string>("Password")
-                        .HasColumnType("varchar(45)")
-                        .HasAnnotation("MySql:CharSet", "latin1")
-                        .HasAnnotation("MySql:Collation", "latin1_swedish_ci");
-
-                    b.Property<string>("Salt")
-                        .HasColumnType("varchar(45)")
-                        .HasAnnotation("MySql:CharSet", "latin1")
-                        .HasAnnotation("MySql:Collation", "latin1_swedish_ci");
+                    b.Property<byte[]>("Salt")
+                        .HasColumnType("blob");
 
                     b.HasKey("IdUser")
                         .HasName("PRIMARY");
@@ -286,12 +277,14 @@ namespace Przychodnia.API.Migrations
                     b.HasOne("Przychodnia.API.Employment", "IdEmplNavigation")
                         .WithMany("User")
                         .HasForeignKey("IdEmpl")
-                        .HasConstraintName("idEmpl");
+                        .HasConstraintName("idEmpl")
+                        .IsRequired();
 
                     b.HasOne("Przychodnia.API.Role", "IdRoleNavigation")
                         .WithMany("User")
                         .HasForeignKey("IdRole")
-                        .HasConstraintName("idRole");
+                        .HasConstraintName("idRole")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Przychodnia.API.Vacation", b =>

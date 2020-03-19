@@ -29,21 +29,22 @@ namespace back_end.Data
         }
 
         
+   
 
         public async Task<User> Register(User user, string password, int role)
         {
             byte[] passwordHash, passwordSalt;
             CreatePassword(password, out passwordHash, out passwordSalt);
           
-            //user.Hash = "1";//Encoding.Default.GetString(passwordHash);
-            //user.Salt = "2";//Encoding.Default.GetString(passwordSalt);
-            user.Password = "a";
-            user.FirstName = "b";
-            user.LastName = "c";
-            user.IdRole = role;
-           // user.IdEmpl = 1;
-            //user.Mail = 
-         
+            user.Hash = passwordHash;
+            user.Salt = passwordSalt;
+            
+            user.IdRoleNavigation =  await _context.Role.FirstOrDefaultAsync(x => x.IdRole == role);
+
+            var newEmpl = new Employment();
+            user.IdEmplNavigation = newEmpl;          
+
+            await _context.Employment.AddAsync(newEmpl);
             await _context.User.AddAsync(user);
             await _context.SaveChangesAsync();
 
@@ -60,16 +61,16 @@ namespace back_end.Data
         }
 
 
-        private bool VerifyHash(string password, string hash, string salt)
+        private bool VerifyHash(string password, byte[] hash, byte[] salt)
         {
-             using(var hmac = new System.Security.Cryptography.HMACSHA512(Encoding.UTF8.GetBytes(salt)))
+             using(var hmac = new System.Security.Cryptography.HMACSHA512(salt))
             {              
                 var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-                var passwordHash = Encoding.UTF8.GetBytes(hash);
+               // var passwordHash = Encoding.UTF8.GetBytes(hash);
 
                 for(int i = 0; i< computedHash.Length;i++)
                 {
-                    if(computedHash[i] != passwordHash[i])
+                    if(computedHash[i] != hash[i])
                         return false;
                 }
             return true;

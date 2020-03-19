@@ -22,19 +22,20 @@ namespace back_end.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserRegisterDTO userRegisterDTO)
         {
-         
-            
             userRegisterDTO.Mail = userRegisterDTO.Mail.ToLower();
-          //  if(await _repo.UserExists(userRegisterDTO.Mail))
-            //    return BadRequest("Mail jest zajęty");
+            if (await _repo.UserExists(userRegisterDTO.Mail))
+                return BadRequest("Mail jest zajęty");
 
             var newUser = new User
             {
-                Mail = userRegisterDTO.Mail
+                Mail = userRegisterDTO.Mail,
+                FirstName = userRegisterDTO.FirstName,
+                LastName = userRegisterDTO.LastName
             };
-           var createdUser = await _repo.Register(newUser, userRegisterDTO.Password, userRegisterDTO.idRole);
- 
-            return Ok(createdUser);
+            
+            var createdUser = await _repo.Register(newUser, userRegisterDTO.Password, userRegisterDTO.idRole);
+
+            return Ok("createdUser");
         }
     }
 }

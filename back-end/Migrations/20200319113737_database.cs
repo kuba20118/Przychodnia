@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Przychodnia.API.Migrations
 {
-    public partial class init : Migration
+    public partial class database : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -69,17 +69,10 @@ namespace Przychodnia.API.Migrations
                     Mail = table.Column<string>(type: "varchar(45)", nullable: true)
                         .Annotation("MySql:CharSet", "latin1")
                         .Annotation("MySql:Collation", "latin1_swedish_ci"),
-                    Password = table.Column<string>(type: "varchar(45)", nullable: true)
-                        .Annotation("MySql:CharSet", "latin1")
-                        .Annotation("MySql:Collation", "latin1_swedish_ci"),
-                    Hash = table.Column<string>(type: "varchar(45)", nullable: true)
-                        .Annotation("MySql:CharSet", "latin1")
-                        .Annotation("MySql:Collation", "latin1_swedish_ci"),
-                    Salt = table.Column<string>(type: "varchar(45)", nullable: true)
-                        .Annotation("MySql:CharSet", "latin1")
-                        .Annotation("MySql:Collation", "latin1_swedish_ci"),
-                    idRole = table.Column<int>(type: "int(11)", nullable: true),
-                    idEmpl = table.Column<int>(type: "int(11)", nullable: true)
+                    Hash = table.Column<byte[]>(type: "blob", nullable: true),
+                    Salt = table.Column<byte[]>(type: "blob", nullable: true),
+                    idRole = table.Column<int>(type: "int(11)", nullable: false),
+                    idEmpl = table.Column<int>(type: "int(11)", nullable: false)
                 },
                 constraints: table =>
                 {
