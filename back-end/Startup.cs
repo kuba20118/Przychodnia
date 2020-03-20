@@ -16,6 +16,7 @@ using back_end.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Przychodnia.API
 {
@@ -25,16 +26,26 @@ namespace Przychodnia.API
         {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(x =>x.UseMySql("server=localhost;database=przychodniadb;user=user;password=password;treattinyasboolean=true", x => x.ServerVersion("5.7.29-mysql")));
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson (o =>
+            {
+                o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
+
+            // services.AddMvc(option => option.EnableEndpointRouting = false)
+            //     .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+            //     .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+
+        
             services.AddCors();
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IGenericRepository, GenericRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
              services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                         .AddJwtBearer(Options =>
                         {
