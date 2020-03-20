@@ -9,7 +9,6 @@ namespace Przychodnia.API
         public TimeSpan? FromTime { get; set; }
         public TimeSpan? ToTime { get; set; }
         public int IdWs { get; set; }
-        public int IdWsuser { get; set; }
 
         public virtual Workschedule IdWsNavigation { get; set; }
     }

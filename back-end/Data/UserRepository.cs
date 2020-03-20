@@ -18,7 +18,7 @@ namespace back_end.Data
             var user = await _context.User
                         .Include(l => l.Leftvacationdays)
                         .Include(v => v.Vacation)
-                        .Include(w => w.Workschedule)
+                        .Include(w => w.Workschedule).ThenInclude(d => d.Day)
                         .FirstOrDefaultAsync(u => u.IdUser == id);
 
             return user;
@@ -29,8 +29,8 @@ namespace back_end.Data
              var users = await _context.User
                         .Include(l => l.Leftvacationdays)
                         .Include(v => v.Vacation)
-                        .Include(w => w.Workschedule)
-                        .ThenInclude(d => d.Day)
+                       // .Include(w => w.Day)
+                       // .Include(d => d.Day)
                         .ToListAsync();
                         
             return users;

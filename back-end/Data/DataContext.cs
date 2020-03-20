@@ -61,9 +61,6 @@ namespace Przychodnia.API
                 entity.HasIndex(e => e.IdWs)
                     .HasName("idWS_idx");
 
-                entity.HasIndex(e => e.IdWsuser)
-                    .HasName("idWSUser_idx");
-
                 entity.Property(e => e.IdDay)
                     .HasColumnName("idDay")
                     .HasColumnType("int(11)");
@@ -72,10 +69,6 @@ namespace Przychodnia.API
 
                 entity.Property(e => e.IdWs)
                     .HasColumnName("idWS")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.IdWsuser)
-                    .HasColumnName("idWSUser")
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.ToTime).HasColumnType("time");
@@ -267,7 +260,7 @@ namespace Przychodnia.API
                 entity.ToTable("workschedule");
 
                 entity.HasIndex(e => e.IdUser)
-                    .HasName("idUser_idx");
+                    .HasName("idWSUser_idx");
 
                 entity.Property(e => e.IdWorkSchedule)
                     .HasColumnName("idWorkSchedule")
@@ -284,6 +277,7 @@ namespace Przychodnia.API
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.Workschedule)
                     .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("idUserWS");
             });
 
