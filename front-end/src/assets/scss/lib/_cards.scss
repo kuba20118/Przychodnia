@@ -5,6 +5,23 @@
   background-color: $white-bg;
   margin-bottom: 30px;
 
+  .header {
+    padding: 15px 15px 0;
+  }
+
+  .title {
+    margin: 0;
+    color: $card-primary-color;
+    font-weight: 300;
+  }
+
+  .subtitle {
+    font-size: $card-font-size-subtitle;
+    font-weight: 400;
+    color: $card-light-color;
+    margin-bottom: 0;
+  }
+
   .content {
     padding: 15px 15px 10px;
   }
@@ -17,7 +34,9 @@
 .card-stats {
   .icon-big {
     font-size: 64px;
-    min-height: 64px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .numbers {
@@ -27,5 +46,22 @@
     p {
       margin: 0;
     }
+  }
+
+  .status {
+    display: flex;
+    align-content: center;
+    color: $card-light-color;
+    padding: 5px 0;
+
+    > svg {
+      font-size: 18px;
+      margin-right: 4px;
+    }
+  }
+
+  hr {
+    margin: 5px 0;
+    border-color: #ddd;
   }
 }

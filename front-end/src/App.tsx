@@ -30,7 +30,7 @@ const App: React.FC = () => {
           path="/login"
           render={(props) =>
             authentication.isAuthenticated ? (
-              <Redirect to="/admin" />
+              <Redirect to="/admin/panel-glowny" />
             ) : (
               <Login />
             )

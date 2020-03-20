@@ -1,31 +1,34 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
+import { IconType } from "react-icons/lib/cjs";
 
 type CardStatsPropsT = {
   text: string;
   value: string;
-  iconBig: string;
-  icon: string;
+  IconBig: IconType;
+  iconBigColor: string;
+  Icon: IconType;
   iconText: string;
 };
 
 const CardStats: React.FC<CardStatsPropsT> = ({
   text,
   value,
-  iconBig,
-  icon,
+  IconBig,
+  iconBigColor,
+  Icon,
   iconText
 }) => {
   return (
     <div className="card card-stats">
       <div className="content">
         <Row>
-          <Col xs={5}>
-            <div className="icon big text-center icon-warning">
-              <i className={iconBig}></i>
+          <Col xs={4}>
+            <div className="icon-big text-center">
+              <IconBig color={iconBigColor} />
             </div>
           </Col>
-          <Col xs={7}>
+          <Col xs={8}>
             <div className="numbers">
               <p>{text}</p>
               {value}
@@ -35,7 +38,7 @@ const CardStats: React.FC<CardStatsPropsT> = ({
         <div className="footer">
           <hr />
           <div className="status">
-            <i className={icon}></i>
+            <Icon />
             {iconText}
           </div>
         </div>

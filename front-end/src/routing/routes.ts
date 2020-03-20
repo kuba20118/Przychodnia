@@ -2,7 +2,7 @@ import Dashboard from "../views/Dashboard";
 import UserProfile from "../views/UserProfile";
 import Holidays from "../views/Holidays";
 import { RouteProps } from "react-router-dom";
-import WorkHours from "../views/WorkHours";
+import WorkingSchedule from "../views/WorkingSchedule";
 
 export type RoutesType = {
   path: string;
@@ -39,7 +39,7 @@ const routes: RoutesType[] = [
   {
     path: "/godziny-pracy",
     name: "Godziny pracy",
-    component: WorkHours,
+    component: WorkingSchedule,
     layout: "/admin"
   }
 ];
