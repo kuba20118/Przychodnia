@@ -1,6 +1,6 @@
 import Dashboard from "../views/Dashboard";
 import UserProfile from "../views/UserProfile";
-import WorkerLeave from "../views/WorkerLeave";
+import Vacations from "../views/Vacations";
 import { RouteProps } from "react-router-dom";
 import WorkingSchedule from "../views/WorkingSchedule";
 
@@ -27,13 +27,13 @@ const routes: RoutesType[] = [
   {
     path: "/urlopy",
     name: "Urlopy",
-    component: WorkerLeave,
+    component: Vacations,
     layout: "/admin"
   },
   {
     path: "/zwolnienia",
     name: "Zwolnienia",
-    component: WorkerLeave,
+    component: Vacations,
     layout: "/admin"
   },
   {
