@@ -1,8 +1,8 @@
 import Dashboard from "../views/Dashboard";
 import UserProfile from "../views/UserProfile";
-import Holidays from "../views/Holidays";
+import Vacations from "../views/Vacations";
 import { RouteProps } from "react-router-dom";
-import WorkingSchedule from "../views/WorkingSchedule";
+import WorkSchedule from "../views/WorkSchedule";
 
 export type RoutesType = {
   path: string;
@@ -27,19 +27,19 @@ const routes: RoutesType[] = [
   {
     path: "/urlopy",
     name: "Urlopy",
-    component: Holidays,
+    component: Vacations,
     layout: "/admin"
   },
   {
     path: "/zwolnienia",
     name: "Zwolnienia",
-    component: Holidays,
+    component: Vacations,
     layout: "/admin"
   },
   {
     path: "/godziny-pracy",
     name: "Godziny pracy",
-    component: WorkingSchedule,
+    component: WorkSchedule,
     layout: "/admin"
   }
 ];
