@@ -37,7 +37,7 @@ const WorkingScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
           };
         });
         setEventsState(recurringEvents);
-      } else if (nextWeek.getTime() > eventsState[0].start!.getTime()) {
+      } else if (nextWeek.getTime() < eventsState[0].start!.getTime()) {
         recurringEvents = eventsState.map((event: Event) => {
           return {
             ...event,
@@ -45,6 +45,7 @@ const WorkingScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
             end: subDays(event.end!, 7)
           };
         });
+        setEventsState(recurringEvents);
       }
     }
   };
