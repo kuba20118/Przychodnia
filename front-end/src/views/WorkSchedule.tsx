@@ -1,10 +1,10 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import WorkingScheduleCalendar from "../components/WorkingScheduleCalendar";
+import WorkingScheduleCalendar from "../components/WorkScheduleCalendar";
 import Card from "../components/Card";
 import Search from "../components/Search";
 
-const WorkingSchedule: React.FC = () => {
+const WorkSchedule: React.FC = () => {
   const searchWorkers = () => {};
 
   return (
@@ -29,4 +29,4 @@ const WorkingSchedule: React.FC = () => {
   );
 };
 
-export default WorkingSchedule;
+export default WorkSchedule;

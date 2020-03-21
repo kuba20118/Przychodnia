@@ -20,7 +20,7 @@ export type WorkingScheduleCalendarPropsT = {
   events?: Event[];
 };
 
-const WorkingScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
+const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
   events = myEvents
 }) => {
   const [eventsState, setEventsState] = useState<Event[]>(events);
@@ -108,4 +108,4 @@ const WorkingScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
   );
 };
 
-export default WorkingScheduleCalendar;
+export default WorkScheduleCalendar;
