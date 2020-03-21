@@ -17,7 +17,8 @@ export type AllUsersApiResponseT = {
 };
 
 export type UserStateT = {
-  data?: UserT;
+  currentUser?: UserT;
+  users?: UserT[];
   loaded: boolean;
 };
 
