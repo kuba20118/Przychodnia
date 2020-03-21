@@ -6,7 +6,7 @@ import ReactDatePicker from "react-datepicker";
 import { subDays, setHours, setMinutes, addDays } from "date-fns/esm";
 import { Button } from "react-bootstrap";
 
-const WorkerLeave: React.FC = () => {
+const Vacations: React.FC = () => {
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
 
@@ -131,4 +131,4 @@ const WorkerLeave: React.FC = () => {
   );
 };
 
-export default WorkerLeave;
+export default Vacations;
