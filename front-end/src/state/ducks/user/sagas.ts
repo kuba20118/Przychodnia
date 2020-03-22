@@ -1,21 +1,23 @@
-import { all, put, takeEvery, fork } from "redux-saga/effects";
+import { all, call, put, takeEvery, fork } from "redux-saga/effects";
 import {
   UserT,
   UserActionTypes,
   UserCredentialsT,
-  UserApiResponseT
+  UserIdT,
+  TokenApiResponseT
 } from "./types";
 import { TokenT } from "../auth/types";
-import { loginUserAsync, logoutUserAsync } from "./actions";
+import { loginUserAsync, logoutUserAsync, fetchAllUsersAsync } from "./actions";
 import { IReducerAction } from "..";
 import history from "../../../routing/history";
 import { authenticateAsync, setAuthFalse } from "../auth/actions";
+import apiCaller from "../../utils/apiHelper";
 
 const fakeLogin = (userLogin: UserCredentialsT) => {
   return new Promise((res, rej) => {
     if (userLogin.email === "test@test.pl" && userLogin.password === "test") {
       const returnedUser: UserT = {
-        id: "testid",
+        id: 123,
         email: "test@test.pl",
         password: "test",
         firstName: "Mariusz",
@@ -31,7 +33,15 @@ const fakeLogin = (userLogin: UserCredentialsT) => {
 
 function* handleLogin(action: IReducerAction<UserCredentialsT>) {
   try {
-    const res: UserApiResponseT | any = yield fakeLogin(action.payload);
+    const res: TokenApiResponseT | any = yield call(
+      apiCaller,
+      "POST",
+      "/auth/login",
+      {
+        mail: action.payload.email!,
+        password: action.payload.password!
+      }
+    );
 
     // Handle Success login
     yield put(loginUserAsync.success(res));
@@ -42,6 +52,7 @@ function* handleLogin(action: IReducerAction<UserCredentialsT>) {
     } else {
       console.error("Token not provided from api.");
     }
+
     // Set is authenticated to true
     yield put(authenticateAsync.success());
 
@@ -49,7 +60,13 @@ function* handleLogin(action: IReducerAction<UserCredentialsT>) {
     history.push("/admin/panel-glowny");
   } catch (err) {
     if (err instanceof Error) {
-      yield put(loginUserAsync.failure(err.stack!));
+      if (err.message === "401") {
+        yield put(
+          loginUserAsync.failure("The provided email or password is wrong.")
+        );
+      } else {
+        yield put(loginUserAsync.failure(err.message!));
+      }
     } else {
       yield put(loginUserAsync.failure("An unknown error occured."));
     }
@@ -83,9 +100,31 @@ function* watchLogoutRequest(): Generator {
   yield takeEvery(UserActionTypes.LOGOUT_USER, handleLogout);
 }
 
+function* handleFetchAllUsers() {
+  try {
+    const users: any = yield call(apiCaller, "GET", `/users`);
+
+    yield put(fetchAllUsersAsync.success(users));
+  } catch (err) {
+    if (err instanceof Error) {
+      yield put(fetchAllUsersAsync.failure(err.message!));
+    } else {
+      yield put(fetchAllUsersAsync.failure("An unknown error occured."));
+    }
+  }
+}
+
+function* watchGetUsers(): Generator {
+  yield takeEvery(UserActionTypes.FETCH_ALL_USERS, handleFetchAllUsers);
+}
+
 /**
  * @desc saga init, forks in effects, other sagas
  */
 export default function* userSaga() {
-  yield all([fork(watchLoginRequest), fork(watchLogoutRequest)]);
+  yield all([
+    fork(watchLoginRequest),
+    fork(watchLogoutRequest),
+    fork(watchGetUsers)
+  ]);
 }
