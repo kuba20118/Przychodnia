@@ -3,7 +3,7 @@ import {
   UserActionTypes,
   UserT,
   UserCredentialsT,
-  UserApiResponseT,
+  TokenApiResponseT,
   AllUsersApiResponseT
 } from "./types";
 import { TokenT } from "../auth/types";
@@ -12,7 +12,7 @@ export const loginUserAsync = createAsyncAction(
   UserActionTypes.LOGIN_USER,
   UserActionTypes.LOGIN_USER_SUCCESS,
   UserActionTypes.LOGIN_USER_ERROR
-)<UserCredentialsT, UserT, string>();
+)<UserCredentialsT, TokenApiResponseT, string>();
 
 export const logoutUserAsync = createAsyncAction(
   UserActionTypes.LOGOUT_USER,
@@ -24,13 +24,13 @@ export const registerUserAsync = createAsyncAction(
   UserActionTypes.REGISTER_USER,
   UserActionTypes.REGISTER_USER_SUCCESS,
   UserActionTypes.REGISTER_USER_ERROR
-)<UserT, UserApiResponseT, string>();
+)<UserT, undefined, string>();
 
 export const fetchCurrentUserAsync = createAsyncAction(
   UserActionTypes.FETCH_CURRENT_USER,
   UserActionTypes.FETCH_CURRENT_USER_SUCCESS,
   UserActionTypes.FETCH_CURRENT_USER_ERROR
-)<TokenT, UserApiResponseT, string>();
+)<TokenT, UserT, string>();
 
 export const fetchAllUsersAsync = createAsyncAction(
   UserActionTypes.FETCH_ALL_USERS,

@@ -1,9 +1,4 @@
-import {
-  UserStateT,
-  UserActionTypes,
-  UserApiResponseT,
-  AllUsersApiResponseT
-} from "./types";
+import { UserStateT, UserActionTypes, AllUsersApiResponseT } from "./types";
 import { TypeConstant, Action, PayloadAction } from "typesafe-actions";
 
 export const initialUserState: UserStateT = {
@@ -13,17 +8,17 @@ export const initialUserState: UserStateT = {
 export const userReducer = (
   state: UserStateT = initialUserState,
   action: Action<TypeConstant> &
-    PayloadAction<TypeConstant, UserApiResponseT & AllUsersApiResponseT>
+    PayloadAction<TypeConstant, AllUsersApiResponseT & string>
 ): UserStateT => {
   switch (action.type) {
     case UserActionTypes.LOGIN_USER: {
       return { ...state, loaded: false };
     }
     case UserActionTypes.LOGIN_USER_SUCCESS: {
-      return { ...state, currentUser: action.payload.data!, loaded: true };
+      return { ...state, loaded: true };
     }
     case UserActionTypes.LOGIN_USER_ERROR: {
-      return { ...state };
+      return { ...state, error: action.payload };
     }
     case UserActionTypes.LOGOUT_USER: {
       return { ...state };
@@ -51,7 +46,7 @@ export const userReducer = (
       return { ...state, loaded: false };
     }
     case UserActionTypes.FETCH_CURRENT_USER_SUCCESS: {
-      return { ...state, currentUser: action.payload.data!, loaded: true };
+      return { ...state, loaded: true };
     }
     case UserActionTypes.FETCH_CURRENT_USER_ERROR: {
       return { ...state };

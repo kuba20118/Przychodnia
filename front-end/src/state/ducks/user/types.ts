@@ -1,13 +1,13 @@
+export type UserIdT = number;
 export type UserT = {
-  id: string;
+  id: UserIdT;
   firstName: string;
   lastName: string;
   email: string;
   password: string;
 };
 
-export type UserApiResponseT = {
-  data: UserT;
+export type TokenApiResponseT = {
   token: string;
 };
 
@@ -20,6 +20,7 @@ export type UserStateT = {
   currentUser?: UserT;
   users?: UserT[];
   loaded: boolean;
+  error?: string;
 };
 
 export type UserCredentialsT = {
@@ -42,5 +43,8 @@ export enum UserActionTypes {
   FETCH_CURRENT_USER_ERROR = "@@user/FETCH_CURRENT_USER_ERROR",
   FETCH_ALL_USERS = "@@user/FETCH_ALL_USERS",
   FETCH_ALL_USERS_SUCCESS = "@@user/FETCH_ALL_USERS_SUCCESS",
-  FETCH_ALL_USERS_ERROR = "@@user/FETCH_ALL_USERS_ERROR"
+  FETCH_ALL_USERS_ERROR = "@@user/FETCH_ALL_USERS_ERROR",
+  GET_USER = "@@user/GET_USER",
+  GET_USER_SUCCESS = "@@user/GET_USER_SUCCESS",
+  GET_USER_ERROR = "@@user/GET_USER_ERROR"
 }
