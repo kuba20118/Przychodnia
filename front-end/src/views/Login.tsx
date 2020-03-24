@@ -1,9 +1,10 @@
 import React, { useCallback } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LoginForm from "../components/LoginForm";
 import { loginUserAsync } from "../state/ducks/user/actions";
 import { Container } from "react-bootstrap";
 import { UserCredentialsT } from "../state/ducks/user/types";
+import { IApplicationState } from "../state/ducks";
 
 const Login: React.FC = () => {
   const dispatch = useDispatch();
@@ -14,12 +15,16 @@ const Login: React.FC = () => {
     [dispatch]
   );
 
+  const errorMsg = useSelector(({ user }: IApplicationState) => {
+    return user.error;
+  });
+
   return (
     <Container
       fluid
       className="d-flex align-items-center justify-content-center"
     >
-      <LoginForm onSubmit={loginUser}></LoginForm>
+      <LoginForm onSubmit={loginUser} errorMsg={errorMsg}></LoginForm>
     </Container>
   );
 };
