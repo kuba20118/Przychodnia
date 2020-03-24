@@ -2,4 +2,36 @@
   input {
     display: inline-block;
   }
+
+  .list {
+    display: none;
+    position: absolute;
+    top: 35px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 100;
+    margin: 8px 0;
+    padding: 0;
+    border-radius: $border-radius-base;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    list-style-type: none;
+    max-height: 250px;
+    overflow-y: auto;
+
+    li {
+      padding: 8px;
+      cursor: pointer;
+
+      &:hover,
+      &:focus {
+        background-color: $search-item-bg;
+      }
+    }
+  }
+
+  .list-active {
+    display: block;
+  }
 }

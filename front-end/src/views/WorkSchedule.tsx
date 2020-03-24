@@ -2,7 +2,25 @@ import React from "react";
 import { Row, Col } from "react-bootstrap";
 import WorkingScheduleCalendar from "../components/WorkScheduleCalendar";
 import Card from "../components/Card";
-import Search from "../components/Search";
+import UsersSearch from "../components/UsersSearch";
+import { UserT } from "../state/ducks/user/types";
+
+const fakeUsers: UserT[] = [
+  {
+    id: 1,
+    firstName: "Maciek",
+    lastName: "Kolos",
+    email: "maciekkolos@test.pl",
+    password: "xd"
+  },
+  {
+    id: 2,
+    firstName: "Irek",
+    lastName: "Nowak",
+    email: "irek@test.pl",
+    password: "xd123"
+  }
+];
 
 const WorkSchedule: React.FC = () => {
   const searchWorkers = () => {};
@@ -17,7 +35,7 @@ const WorkSchedule: React.FC = () => {
             content={
               <>
                 <div className="pt-2 pb-3">
-                  <Search onSearch={searchWorkers} />
+                  <UsersSearch onSearch={searchWorkers} users={fakeUsers} />
                 </div>
                 <WorkingScheduleCalendar />
               </>
