@@ -1,12 +1,5 @@
-import React, {
-  useState,
-  FormEvent,
-  useEffect,
-  createRef,
-  RefObject,
-  ChangeEvent
-} from "react";
-import { FormGroup, FormControl, Button } from "react-bootstrap";
+import React, { useState, FormEvent, useEffect } from "react";
+import { FormGroup, FormControl } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { UserT } from "../state/ducks/user/types";
 
@@ -82,7 +75,9 @@ const UsersSearch: React.FC<SearchPropsT> = ({ onSearch, users }) => {
     setSearchVal(e.currentTarget.innerText);
 
     const selectedUserId = e.currentTarget.value;
-    const selUser = filteredUsers.find((user) => user.id === selectedUserId);
+    const selUser = filteredUsers.find(
+      (user) => user.idUser === selectedUserId
+    );
 
     if (selUser) {
       setSelectedUser(selUser);
@@ -110,7 +105,7 @@ const UsersSearch: React.FC<SearchPropsT> = ({ onSearch, users }) => {
             <li
               key={key}
               onClick={handleSelectedUser}
-              value={user.id}
+              value={user.idUser}
             >{`${user.firstName} ${user.lastName}`}</li>
           ))}
         </div>
