@@ -1,32 +1,92 @@
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using back_end.Data;
+using back_end.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Przychodnia.API;
 
 namespace back_end.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UsersController  : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly IUserRepository _repo;
+        private readonly IMapper _mapper;
 
-        public UsersController(IUserRepository repo)
+        public UsersController(IUserRepository repo, IMapper mapper)
         {
+            _mapper = mapper;
             _repo = repo;
         }
 
-        // [HttpGet("{id}")]
-        // public async Task<IActionResult> Test(int id)
-        // {
-           
-        //     return Ok(id);
-        // }
+        #region Users
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetUser")]
         public async Task<IActionResult> GetUser(int id)
         {
             var user = await _repo.GetUser(id);
-            return Ok(user);
+            var userToReturn = _mapper.Map<UserReturnDTO>(user);
+            return Ok(userToReturn);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUsers()
+        {
+            var user = await _repo.GetUsers();
+            var usersToReturn = _mapper.Map<IEnumerable<UserReturnDTO>>(user);
+            return Ok(usersToReturn);
+        }
+
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> UpdateUser(int id, UserUpdateDTO userToUpdate)
+        {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var userFromRepo = await _repo.GetUser(id);
+
+            _mapper.Map(userToUpdate, userFromRepo);
+
+            if (await _repo.SaveAll())
+                return NoContent();
+
+            throw new Exception($"Błąd aktualizacji danych użytkownika o id: {id}");
+        }
+
+        #endregion
+
+        #region Vacation
+
+        [HttpGet("vacations/{id}")]
+        public async Task<IActionResult> GetUserVacations(int id)
+        {
+            var vacations = await _repo.GetVacations(id);
+            var vacToReturn = _mapper.Map<IEnumerable<VacationDTO>>(vacations);
+            return Ok(vacToReturn);
+        }
+
+        [HttpGet("vacations")]
+        public async Task<IActionResult> GetAllVacations()
+        {
+            var vacations = await _repo.GetAllVacations();
+            var vacToReturn = _mapper.Map<IEnumerable<VacationDTO>>(vacations);
+            return Ok(vacToReturn);
+        }
+        
+        [HttpGet("vacations/{id}/left")]
+        public async Task<IActionResult> GetLeftVacationDays(int id)
+        {
+            var daysLeft = await _repo.GetLeftVacationDays(id);
+            var daysLeftToReturn = _mapper.Map<IEnumerable<LeftVacationDaysDTO>>(daysLeft);
+            return Ok(daysLeftToReturn);
+        }
+
+        #endregion
+
+
     }
 }
