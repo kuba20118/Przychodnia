@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using back_end.Data;
 using back_end.DTOs;
 using Microsoft.AspNetCore.Authorization;
@@ -19,12 +20,16 @@ namespace back_end.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthRepository _repo;
+        private readonly IUserRepository _repoUser;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public AuthController(IAuthRepository repo, IConfiguration configuration)
+        public AuthController(IAuthRepository repo, IUserRepository repoUser, IConfiguration configuration, IMapper mapper)
         {
             _repo = repo;
+            _repoUser = repoUser;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
 
@@ -34,7 +39,10 @@ namespace back_end.Controllers
             var user = await _repo.Login(userLoginDTO.Mail.ToLower(), userLoginDTO.Password);
 
             if (user == null)
-               return Unauthorized();
+                return Unauthorized();
+
+            var userFromRepo =  await _repoUser.GetUser(user.IdUser);
+            var userToReturn = _mapper.Map<UserReturnDTO>(userFromRepo);
 
             var claims = new[]
             {
@@ -53,8 +61,8 @@ namespace back_end.Controllers
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            return Ok(new { token = tokenHandler.WriteToken(token) });
+            
+            return Ok(new { token = tokenHandler.WriteToken(token), userToReturn});
         }
 
         [HttpPost("register")]
@@ -72,8 +80,10 @@ namespace back_end.Controllers
             };
 
             var createdUser = await _repo.Register(newUser, userRegisterDTO.Password, userRegisterDTO.idRole);
+            var userFromRepo =  await _repoUser.GetUser(createdUser.IdUser);
+            var userToReturn = _mapper.Map<UserReturnDTO>(userFromRepo);
 
-            return Ok("createdUser");
+            return CreatedAtRoute("GetUser", new { controller = "Users", Id = createdUser.IdUser}, userToReturn);
         }
     }
 }
