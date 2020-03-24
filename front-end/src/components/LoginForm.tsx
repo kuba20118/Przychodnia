@@ -4,6 +4,7 @@ import { UserCredentialsT } from "../state/ducks/user/types";
 
 type LoginFormPropsT = {
   onSubmit: (userLogin: UserCredentialsT) => void;
+  errorMsg?: string;
 };
 
 const LoginForm: React.FC<LoginFormPropsT> = (props: LoginFormPropsT) => {
@@ -27,6 +28,7 @@ const LoginForm: React.FC<LoginFormPropsT> = (props: LoginFormPropsT) => {
 
   return (
     <form className="login-form card" onSubmit={submit}>
+      <p>{props.errorMsg}</p>
       <FormGroup>
         <FormLabel>E-mail</FormLabel>
         <FormControl type="text" value={email} onChange={setEmailInput} />

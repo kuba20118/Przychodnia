@@ -3,6 +3,7 @@ import UserProfile from "../views/UserProfile";
 import Vacations from "../views/Vacations";
 import { RouteProps } from "react-router-dom";
 import WorkSchedule from "../views/WorkSchedule";
+import Registration from "../views/Registration";
 
 export type RoutesType = {
   path: string;
@@ -31,15 +32,15 @@ const routes: RoutesType[] = [
     layout: "/admin"
   },
   {
-    path: "/zwolnienia",
-    name: "Zwolnienia",
-    component: Vacations,
-    layout: "/admin"
-  },
-  {
     path: "/godziny-pracy",
     name: "Godziny pracy",
     component: WorkSchedule,
+    layout: "/admin"
+  },
+  {
+    path: "/rejestracja-pracownikow",
+    name: "Rejestracja pracowników",
+    component: Registration,
     layout: "/admin"
   }
 ];
