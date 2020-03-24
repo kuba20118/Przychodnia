@@ -7,18 +7,24 @@ import { UserT } from "../state/ducks/user/types";
 
 const fakeUsers: UserT[] = [
   {
-    id: 1,
-    firstName: "Maciek",
-    lastName: "Kolos",
-    email: "maciekkolos@test.pl",
-    password: "xd"
+    idUser: 1,
+    firstName: "Radek",
+    lastName: "Kowalski",
+    mail: "kowalski@radek.pl",
+    role: "Pracownik",
+    workingHours: 8,
+    currentlyEmployed: true,
+    hireDate: "2020-01-01T00:00:00"
   },
   {
-    id: 2,
-    firstName: "Irek",
+    idUser: 1,
+    firstName: "Paweł",
     lastName: "Nowak",
-    email: "irek@test.pl",
-    password: "xd123"
+    mail: "nowak@pawel.pl",
+    role: "Kierwonik",
+    workingHours: 8,
+    currentlyEmployed: true,
+    hireDate: "2020-01-01T00:00:00"
   }
 ];
 

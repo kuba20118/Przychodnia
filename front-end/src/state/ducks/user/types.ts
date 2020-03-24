@@ -1,14 +1,20 @@
 export type UserIdT = number;
+
 export type UserT = {
-  id: UserIdT;
+  idUser: UserIdT;
   firstName: string;
   lastName: string;
-  email: string;
-  password: string;
+  mail: string;
+  role: string;
+  workingHours: number;
+  currentlyEmployed: boolean;
+  hireDate: string;
+  fireDate?: string;
 };
 
-export type TokenApiResponseT = {
+export type LoginApiResponseT = {
   token: string;
+  user: UserT;
 };
 
 export type AllUsersApiResponseT = {

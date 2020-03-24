@@ -4,7 +4,7 @@ import {
   UserActionTypes,
   UserCredentialsT,
   UserIdT,
-  TokenApiResponseT
+  LoginApiResponseT
 } from "./types";
 import { TokenT } from "../auth/types";
 import { loginUserAsync, logoutUserAsync, fetchAllUsersAsync } from "./actions";
@@ -13,27 +13,27 @@ import history from "../../../routing/history";
 import { authenticateAsync, setAuthFalse } from "../auth/actions";
 import apiCaller from "../../utils/apiHelper";
 
-const fakeLogin = (userLogin: UserCredentialsT) => {
-  return new Promise((res, rej) => {
-    if (userLogin.email === "test@test.pl" && userLogin.password === "test") {
-      const returnedUser: UserT = {
-        id: 123,
-        email: "test@test.pl",
-        password: "test",
-        firstName: "Mariusz",
-        lastName: "Pudzianowski"
-      };
+// const fakeLogin = (userLogin: UserCredentialsT) => {
+//   return new Promise((res, rej) => {
+//     if (userLogin.email === "test@test.pl" && userLogin.password === "test") {
+//       const returnedUser: UserT = {
+//         id: 123,
+//         email: "test@test.pl",
+//         password: "test",
+//         firstName: "Mariusz",
+//         lastName: "Pudzianowski"
+//       };
 
-      res({ data: returnedUser, token: "test-token" });
-    } else {
-      rej(new Error("The provided email or password is wrong."));
-    }
-  });
-};
+//       res({ data: returnedUser, token: "test-token" });
+//     } else {
+//       rej(new Error("The provided email or password is wrong."));
+//     }
+//   });
+// };
 
 function* handleLogin(action: IReducerAction<UserCredentialsT>) {
   try {
-    const res: TokenApiResponseT | any = yield call(
+    const res: LoginApiResponseT | any = yield call(
       apiCaller,
       "POST",
       "/auth/login",
