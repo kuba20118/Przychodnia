@@ -7,8 +7,8 @@ export type UserT = {
   mail: string;
   role: string;
   workingHours: number;
-  currentlyEmployed: boolean;
-  hireDate: string;
+  currentlyEmployed?: boolean;
+  hireDate?: string;
   fireDate?: string;
 };
 
