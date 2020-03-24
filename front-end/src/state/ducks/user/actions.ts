@@ -37,3 +37,9 @@ export const fetchAllUsersAsync = createAsyncAction(
   UserActionTypes.FETCH_ALL_USERS_SUCCESS,
   UserActionTypes.FETCH_ALL_USERS_ERROR
 )<undefined, AllUsersApiResponseT, string>();
+
+export const searchUsersAsync = createAsyncAction(
+  UserActionTypes.SEARCH_USERS,
+  UserActionTypes.SEARCH_USERS_SUCCESS,
+  UserActionTypes.SEARCH_USERS_ERROR
+)<string, AllUsersApiResponseT, string>();

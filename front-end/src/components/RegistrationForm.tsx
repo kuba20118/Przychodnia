@@ -68,8 +68,8 @@ const RegistrationForm: React.FC<RegistrationFormPropsT> = ({
           <FormGroup>
             <FormLabel>Rola</FormLabel>
             <FormControl as="select" value={role} onChange={setRoleInput}>
-              {roles.map((role) => (
-                <option>{role}</option>
+              {roles.map((role, key) => (
+                <option key={key}>{role}</option>
               ))}
             </FormControl>
           </FormGroup>
