@@ -1,7 +1,8 @@
 import React, { useState, FormEvent, useEffect } from "react";
 import { FormGroup, FormControl } from "react-bootstrap";
-import { useDispatch } from "react-redux";
 import { UserT } from "../state/ducks/user/types";
+import { IApplicationState } from "../state/ducks";
+import { useSelector } from "react-redux";
 
 const useDebounce = (value: string, delay: number) => {
   const [debouncedVal, setDebouncedVal] = useState(value);
@@ -21,22 +22,25 @@ const useDebounce = (value: string, delay: number) => {
 
 type SearchPropsT = {
   onSearch: (selectedUser: UserT) => void;
-  users: UserT[];
 };
 
-const UsersSearch: React.FC<SearchPropsT> = ({ onSearch, users }) => {
-  const dispatch = useDispatch();
-
+const UsersSearch: React.FC<SearchPropsT> = ({ onSearch }) => {
   const [searchVal, setSearchVal] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<UserT[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserT | undefined>();
 
+  // USERS
+  const users: UserT[] | undefined = useSelector(
+    ({ user }: IApplicationState) => user.users
+  );
+
   const debouncedSearchVal = useDebounce(searchVal, 500);
 
   const searchUsers = async (value: string): Promise<UserT[]> => {
+    console.log(users);
     const searchedVal = value.toLowerCase();
     return new Promise((res, rej) => {
-      const filteredRes: UserT[] = users.filter((user) => {
+      const filteredRes: UserT[] = users!.filter((user) => {
         const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
 
         return fullName.indexOf(searchedVal) !== -1;
@@ -45,11 +49,9 @@ const UsersSearch: React.FC<SearchPropsT> = ({ onSearch, users }) => {
     });
   };
 
-  let prevent = true;
-
   // Handle searching with debounce effect
   useEffect(() => {
-    if (debouncedSearchVal && prevent) {
+    if (debouncedSearchVal) {
       searchUsers(debouncedSearchVal).then((result) => {
         setFilteredUsers(result);
       });
@@ -74,14 +76,18 @@ const UsersSearch: React.FC<SearchPropsT> = ({ onSearch, users }) => {
     e.preventDefault();
     setSearchVal(e.currentTarget.innerText);
 
-    const selectedUserId = e.currentTarget.value;
+    const selectedUserId = e.currentTarget.value.toString();
     const selUser = filteredUsers.find(
       (user) => user.idUser === selectedUserId
     );
 
+    console.log(filteredUsers);
+    console.log(selUser);
+
     if (selUser) {
       setSelectedUser(selUser);
       setSearchVal("");
+      setFilteredUsers([]);
     }
   };
 

@@ -4,30 +4,14 @@ import { Row, Col, FormControl, FormGroup, FormLabel } from "react-bootstrap";
 import ReactDatePicker from "react-datepicker";
 import { addDays, subDays } from "date-fns/esm";
 import { Button } from "react-bootstrap";
-import { UserT } from "../state/ducks/user/types";
-
-const fakeUsers: UserT[] = [
-  {
-    idUser: 1,
-    firstName: "Radek",
-    lastName: "Kowalski",
-    mail: "kowalski@radek.pl",
-    role: "Pracownik",
-    workingHours: 8,
-    currentlyEmployed: true,
-    hireDate: "2020-01-01T00:00:00"
-  },
-  {
-    idUser: 1,
-    firstName: "Paweł",
-    lastName: "Nowak",
-    mail: "nowak@pawel.pl",
-    role: "Kierwonik",
-    workingHours: 8,
-    currentlyEmployed: true,
-    hireDate: "2020-01-01T00:00:00"
-  }
-];
+import { UserT, UserIdT } from "../state/ducks/user/types";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserVacationsAsync } from "../state/ducks/vacations/actions";
+import {
+  VacationsDataT,
+  VacationsStateT
+} from "../state/ducks/vacations/types";
+import { IApplicationState } from "../state/ducks";
 
 const initialCategories: string[] = [
   "Urlop na żądanie",
@@ -40,7 +24,7 @@ const initialCategories: string[] = [
 ];
 
 const initialSelectedUser: UserT = {
-  idUser: 1,
+  idUser: "1",
   firstName: "",
   lastName: "",
   mail: "",
@@ -59,6 +43,7 @@ const VacationsForm: React.FC<VacationsFormPropsT> = ({
   categories = initialCategories,
   submitChanges
 }) => {
+  const dispatch = useDispatch();
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
   const [category, setCategory] = useState(categories[0]);
@@ -71,20 +56,39 @@ const VacationsForm: React.FC<VacationsFormPropsT> = ({
   // TODO: GET IT FROM REDUX STORE
   const maxHolidaysDays = 14;
 
+  const getUserVacations = useCallback(
+    (idUser: UserIdT) => dispatch(getUserVacationsAsync.request(idUser)),
+    [dispatch]
+  );
+
   const searchWorkers = useCallback((user: UserT) => {
     setSelectedUser(user);
+    getUserVacations(user.idUser);
   }, []);
+
+  const userVacations: VacationsDataT[] = useSelector(
+    ({ vacations }: IApplicationState) => vacations.userVacations
+  );
 
   return (
     <>
       <Row className="py-2">
         <Col xs={12}>
-          <UsersSearch onSearch={searchWorkers} users={fakeUsers} />
+          <UsersSearch onSearch={searchWorkers} />
         </Col>
       </Row>
       <p>Imię: {selectedUser.firstName}</p>
       <p>Nazwisko: {selectedUser.lastName}</p>
       <p>Email: {selectedUser.mail}</p>
+
+      {userVacations.map((vacation, key) => (
+        <div key={key}>
+          <p>{vacation.userId}</p>
+          <p>{vacation.fromDate}</p>
+          <p>{vacation.toDate}</p>
+          <p>{vacation.absenceType}</p>
+        </div>
+      ))}
       <Row>
         <Col md={6}>
           <FormGroup>

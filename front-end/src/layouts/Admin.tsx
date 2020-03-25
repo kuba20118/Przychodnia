@@ -1,14 +1,21 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import routes, { RoutesType } from "../routing/routes";
 import { Route, RouteProps, useLocation, Switch } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import AdminNavbar from "../components/AdminNavbar";
-import { logoutUserAsync } from "../state/ducks/user/actions";
+import {
+  logoutUserAsync,
+  fetchAllUsersAsync
+} from "../state/ducks/user/actions";
 import { useDispatch } from "react-redux";
 
 const Admin: React.FC<RouteProps> = () => {
   const currentLocation = useLocation();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchAllUsersAsync.request());
+  }, [dispatch]);
 
   const getRoutes = (routes: RoutesType[]) => {
     return routes.map((item, key) => {

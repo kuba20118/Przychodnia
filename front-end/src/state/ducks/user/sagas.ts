@@ -102,9 +102,13 @@ function* watchLogoutRequest(): Generator {
 
 function* handleFetchAllUsers() {
   try {
-    const users: any = yield call(apiCaller, "GET", `/users`);
+    const res: UserT[] | any = yield call(apiCaller, "GET", `/users`);
 
-    yield put(fetchAllUsersAsync.success(users));
+    if (res.errors) {
+      throw Error(res.errors.id[0]);
+    }
+
+    yield put(fetchAllUsersAsync.success(res));
   } catch (err) {
     if (err instanceof Error) {
       yield put(fetchAllUsersAsync.failure(err.message!));

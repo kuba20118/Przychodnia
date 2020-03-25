@@ -1,4 +1,4 @@
-export type UserIdT = number;
+export type UserIdT = string;
 
 export type UserT = {
   idUser: UserIdT;
@@ -19,7 +19,6 @@ export type LoginApiResponseT = {
 
 export type AllUsersApiResponseT = {
   data: UserT[];
-  length: number;
 };
 
 export type UserStateT = {
