@@ -3,15 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import LoginForm from "../components/LoginForm";
 import { loginUserAsync } from "../state/ducks/user/actions";
 import { Container } from "react-bootstrap";
-import { UserCredentialsT } from "../state/ducks/user/types";
+import { UserLoginT } from "../state/ducks/user/types";
 import { IApplicationState } from "../state/ducks";
 
 const Login: React.FC = () => {
   const dispatch = useDispatch();
 
   const loginUser = useCallback(
-    (userLogin: UserCredentialsT) =>
-      dispatch(loginUserAsync.request(userLogin)),
+    (userLogin: UserLoginT) => dispatch(loginUserAsync.request(userLogin)),
     [dispatch]
   );
 

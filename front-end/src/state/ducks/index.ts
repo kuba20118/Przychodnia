@@ -10,10 +10,14 @@ import authenticationSaga from "./auth/sagas";
 import { vacationsReducer } from "./vacations/reducers";
 import vacationsSaga from "./vacations/sagas";
 import { VacationsStateT } from "./vacations/types";
+import { SelectedWorkerStateT } from "./selected-worker/types";
+import { selectedWorkerReducer } from "./selected-worker/reducers";
+import selectedWorkerSaga from "./selected-worker/sagas";
 
 export interface IApplicationState {
   authentication: AuthStateT;
   user: UserStateT;
+  selectedWorker: SelectedWorkerStateT;
   vacations: VacationsStateT;
 }
 
@@ -24,9 +28,15 @@ export interface IReducerAction<TPayload>
 export const rootReducer = combineReducers<IApplicationState>({
   authentication: authenticationReducer,
   user: userReducer,
+  selectedWorker: selectedWorkerReducer,
   vacations: vacationsReducer
 });
 
 export function* rootSaga() {
-  yield all([fork(userSaga), fork(authenticationSaga), fork(vacationsSaga)]);
+  yield all([
+    fork(authenticationSaga),
+    fork(userSaga),
+    fork(selectedWorkerSaga),
+    fork(vacationsSaga)
+  ]);
 }

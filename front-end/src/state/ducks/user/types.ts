@@ -21,16 +21,24 @@ export type AllUsersApiResponseT = {
   data: UserT[];
 };
 
+export type UserLoginT = {
+  email: string;
+  password: string;
+};
+
+export type UserRegisterT = {
+  firstName: string;
+  lastName: string;
+  role: number;
+  mail: string;
+  password: string;
+};
+
 export type UserStateT = {
   currentUser?: UserT;
   users?: UserT[];
   loaded: boolean;
   error?: string;
-};
-
-export type UserCredentialsT = {
-  email: string;
-  password: string;
 };
 
 export enum UserActionTypes {
@@ -48,11 +56,5 @@ export enum UserActionTypes {
   FETCH_CURRENT_USER_ERROR = "@@user/FETCH_CURRENT_USER_ERROR",
   FETCH_ALL_USERS = "@@user/FETCH_ALL_USERS",
   FETCH_ALL_USERS_SUCCESS = "@@user/FETCH_ALL_USERS_SUCCESS",
-  FETCH_ALL_USERS_ERROR = "@@user/FETCH_ALL_USERS_ERROR",
-  GET_USER = "@@user/GET_USER",
-  GET_USER_SUCCESS = "@@user/GET_USER_SUCCESS",
-  GET_USER_ERROR = "@@user/GET_USER_ERROR",
-  SEARCH_USERS = "@@user/SEARCH_USERS",
-  SEARCH_USERS_SUCCESS = "@@user/SEARCH_USERS_SUCCESS",
-  SEARCH_USERS_ERROR = "@@user/SEARCH_USERS_ERROR"
+  FETCH_ALL_USERS_ERROR = "@@user/FETCH_ALL_USERS_ERROR"
 }

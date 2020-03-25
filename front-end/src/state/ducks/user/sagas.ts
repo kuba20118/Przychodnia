@@ -2,36 +2,17 @@ import { all, call, put, takeEvery, fork } from "redux-saga/effects";
 import {
   UserT,
   UserActionTypes,
-  UserCredentialsT,
-  UserIdT,
-  LoginApiResponseT
+  UserLoginT,
+  LoginApiResponseT,
+  UserRegisterT
 } from "./types";
-import { TokenT } from "../auth/types";
 import { loginUserAsync, logoutUserAsync, fetchAllUsersAsync } from "./actions";
 import { IReducerAction } from "..";
 import history from "../../../routing/history";
 import { authenticateAsync, setAuthFalse } from "../auth/actions";
 import apiCaller from "../../utils/apiHelper";
 
-// const fakeLogin = (userLogin: UserCredentialsT) => {
-//   return new Promise((res, rej) => {
-//     if (userLogin.email === "test@test.pl" && userLogin.password === "test") {
-//       const returnedUser: UserT = {
-//         id: 123,
-//         email: "test@test.pl",
-//         password: "test",
-//         firstName: "Mariusz",
-//         lastName: "Pudzianowski"
-//       };
-
-//       res({ data: returnedUser, token: "test-token" });
-//     } else {
-//       rej(new Error("The provided email or password is wrong."));
-//     }
-//   });
-// };
-
-function* handleLogin(action: IReducerAction<UserCredentialsT>) {
+function* handleLogin(action: IReducerAction<UserLoginT>) {
   try {
     const res: LoginApiResponseT | any = yield call(
       apiCaller,
@@ -73,10 +54,6 @@ function* handleLogin(action: IReducerAction<UserCredentialsT>) {
   }
 }
 
-function* watchLoginRequest(): Generator {
-  yield takeEvery(UserActionTypes.LOGIN_USER, handleLogin);
-}
-
 function* handleLogout() {
   try {
     // Save token in localStorage
@@ -96,8 +73,24 @@ function* handleLogout() {
   }
 }
 
-function* watchLogoutRequest(): Generator {
-  yield takeEvery(UserActionTypes.LOGOUT_USER, handleLogout);
+function* handleRegister(action: IReducerAction<UserRegisterT>) {
+  try {
+    const res: any = yield call(apiCaller, "POST", "/auth/register", {
+      firstName: action.payload.firstName!,
+      lastName: action.payload.lastName!,
+      role: action.payload.role!,
+      mail: action.payload.mail!,
+      password: action.payload.password!
+    });
+
+    yield put(logoutUserAsync.success());
+  } catch (err) {
+    if (err instanceof Error) {
+      yield put(logoutUserAsync.failure(err.stack!));
+    } else {
+      yield put(logoutUserAsync.failure("An unknown error occured."));
+    }
+  }
 }
 
 function* handleFetchAllUsers() {
@@ -118,6 +111,18 @@ function* handleFetchAllUsers() {
   }
 }
 
+function* watchLoginRequest(): Generator {
+  yield takeEvery(UserActionTypes.LOGIN_USER, handleLogin);
+}
+
+function* watchLogoutRequest(): Generator {
+  yield takeEvery(UserActionTypes.LOGOUT_USER, handleLogout);
+}
+
+function* watchRegisterRequest(): Generator {
+  yield takeEvery(UserActionTypes.REGISTER_USER, handleRegister);
+}
+
 function* watchGetUsers(): Generator {
   yield takeEvery(UserActionTypes.FETCH_ALL_USERS, handleFetchAllUsers);
 }
@@ -129,6 +134,7 @@ export default function* userSaga() {
   yield all([
     fork(watchLoginRequest),
     fork(watchLogoutRequest),
+    fork(watchRegisterRequest),
     fork(watchGetUsers)
   ]);
 }

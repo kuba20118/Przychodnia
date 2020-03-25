@@ -1,9 +1,9 @@
 import React, { useState, FormEvent } from "react";
 import { FormGroup, FormLabel, FormControl, Button } from "react-bootstrap";
-import { UserCredentialsT } from "../state/ducks/user/types";
+import { UserLoginT } from "../state/ducks/user/types";
 
 type LoginFormPropsT = {
-  onSubmit: (userLogin: UserCredentialsT) => void;
+  onSubmit: (userLogin: UserLoginT) => void;
   errorMsg?: string;
 };
 
