@@ -41,7 +41,7 @@ namespace back_end.Helpers
                 .ForMember(dest => dest.UserId, opt =>
                     opt.MapFrom(src => src.IdUserNavigation.IdUser)
                     );
-            
+            CreateMap<EmplUpdateDTO, Employment>();
 
 
         }

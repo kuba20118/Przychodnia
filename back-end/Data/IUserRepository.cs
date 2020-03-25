@@ -8,7 +8,9 @@ namespace back_end.Data
     {
          Task<IEnumerable<User>> GetUsers();
          Task<User> GetUser(int id);
-         Task<Employment> UpdateEmployment(int userId);
+
+         Task<Employment> GetUserEmployment(int userId);
+         
          Task<IEnumerable<Vacation>> GetAllVacations();
          Task<IEnumerable<Vacation>> GetVacations(int userId);
         Task<IEnumerable<Leftvacationdays>> GetLeftVacationDays(int userId);

@@ -57,6 +57,22 @@ namespace back_end.Controllers
             throw new Exception($"Błąd aktualizacji danych użytkownika o id: {id}");
         }
 
+        [HttpPut("update/{id}/employment")]
+        public async Task<IActionResult> UpdateUserEmployment(int id, EmplUpdateDTO empToUpdate)
+        {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+
+            var userEmpl = await _repo.GetUserEmployment(id);
+            _mapper.Map(empToUpdate, userEmpl);
+
+            if (await _repo.SaveAll())
+                return NoContent();
+
+            throw new Exception($"Błąd aktualizacji danych o zatrudnieniu użytkownika o id: {id}");
+        }
+
         #endregion
 
         #region Vacation
