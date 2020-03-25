@@ -4,7 +4,7 @@ using Przychodnia.API;
 
 namespace back_end.Data
 {
-    public interface IUserRepository :IGenericRepository
+    public interface IUserRepository : IGenericRepository
     {
          Task<IEnumerable<User>> GetUsers();
          Task<User> GetUser(int id);
