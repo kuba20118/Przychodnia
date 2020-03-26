@@ -3,25 +3,36 @@ import { FormGroup, FormControl } from "react-bootstrap";
 import { UserT } from "../state/ducks/user/types";
 import { IApplicationState } from "../state/ducks";
 import { useSelector } from "react-redux";
+import useDebounce from "../utils/hooks/useDebounce";
 
-const useDebounce = (value: string, delay: number) => {
-  const [debouncedVal, setDebouncedVal] = useState(value);
+type searchUsersPropsT = {
+  readonly arr: UserT[];
+  readonly value: string;
+};
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedVal(value);
-    }, delay);
+/**
+ * Search users by firstName + lastName based on the given value
+ * @param searchedArr array of users
+ * @param value searched value
+ * @returns
+ */
+const searchUsers = async ({
+  arr,
+  value
+}: searchUsersPropsT): Promise<UserT[]> => {
+  const searchedVal = value.toLowerCase();
+  return new Promise((res, rej) => {
+    const filteredRes: UserT[] = arr!.filter((user) => {
+      const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
 
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value]);
-
-  return debouncedVal;
+      return fullName.indexOf(searchedVal) !== -1;
+    });
+    res(filteredRes);
+  });
 };
 
 type SearchPropsT = {
-  onSearch: (selectedUser: UserT) => void;
+  readonly onSearch: (selectedUser: UserT) => void;
 };
 
 const UsersSearch: React.FC<SearchPropsT> = ({ onSearch }) => {
@@ -36,23 +47,10 @@ const UsersSearch: React.FC<SearchPropsT> = ({ onSearch }) => {
 
   const debouncedSearchVal = useDebounce(searchVal, 500);
 
-  const searchUsers = async (value: string): Promise<UserT[]> => {
-    console.log(users);
-    const searchedVal = value.toLowerCase();
-    return new Promise((res, rej) => {
-      const filteredRes: UserT[] = users!.filter((user) => {
-        const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
-
-        return fullName.indexOf(searchedVal) !== -1;
-      });
-      res(filteredRes);
-    });
-  };
-
   // Handle searching with debounce effect
   useEffect(() => {
-    if (debouncedSearchVal) {
-      searchUsers(debouncedSearchVal).then((result) => {
+    if (debouncedSearchVal && users) {
+      searchUsers({ arr: users, value: debouncedSearchVal }).then((result) => {
         setFilteredUsers(result);
       });
     } else {
@@ -80,9 +78,6 @@ const UsersSearch: React.FC<SearchPropsT> = ({ onSearch }) => {
     const selUser = filteredUsers.find(
       (user) => user.idUser === selectedUserId
     );
-
-    console.log(filteredUsers);
-    console.log(selUser);
 
     if (selUser) {
       setSelectedUser(selUser);

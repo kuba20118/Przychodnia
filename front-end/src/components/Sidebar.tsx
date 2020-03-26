@@ -25,15 +25,34 @@ const Sidebar: React.FC<SidebarPropsType> = ({
         <ul className="nav">
           {routes.map((item, key) => {
             return (
-              <NavLink
-                to={item.layout + item.path}
-                className="nav-link"
-                activeClassName="active"
-                key={key}
-              >
-                <i className="" />
-                <p>{item.name}</p>
-              </NavLink>
+              <li key={key}>
+                <NavLink
+                  to={item.layout + item.path}
+                  className="nav-link"
+                  activeClassName="active"
+                  key={key}
+                >
+                  <i className="" />
+                  <p>{item.name}</p>
+                </NavLink>
+
+                {item.children ? (
+                  <ul className="subnav">
+                    {item.children.map((childItem, key) => (
+                      <NavLink
+                        to={childItem.layout + childItem.path}
+                        className="nav-link"
+                        activeClassName="active"
+                        key={key}
+                      >
+                        <p>{childItem.name}</p>
+                      </NavLink>
+                    ))}
+                  </ul>
+                ) : (
+                  ""
+                )}
+              </li>
             );
           })}
         </ul>

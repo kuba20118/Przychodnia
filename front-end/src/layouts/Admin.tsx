@@ -23,7 +23,14 @@ const Admin: React.FC<RouteProps> = () => {
         return (
           <Route
             path={item.layout + item.path}
-            render={(props) => <item.component {...props} />}
+            render={(props) => {
+              if (item.children) {
+                return (
+                  <item.component {...props} childrenRoutes={item.children} />
+                );
+              }
+              return <item.component {...props} />;
+            }}
             key={key}
           />
         );

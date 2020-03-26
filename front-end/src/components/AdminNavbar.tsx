@@ -1,10 +1,6 @@
 import React from "react";
-import routes, { RoutesType } from "../routing/routes";
-import { Route, RouteProps, useLocation, Switch } from "react-router-dom";
-import Sidebar from "./Sidebar";
 import { Navbar } from "react-bootstrap";
 import { Nav } from "react-bootstrap";
-import { ReplaceProps } from "react-bootstrap/helpers";
 
 type AdminNavbarPropsT = {
   pageName?: string;

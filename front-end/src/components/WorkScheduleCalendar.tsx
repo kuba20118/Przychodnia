@@ -16,48 +16,27 @@ const myEvents: Event[] = [
 
 export type WorkingScheduleCalendarPropsT = {
   events?: Event[];
+  deleteQuestionText?: string;
 };
 
 const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
-  events = myEvents
+  events = myEvents,
+  deleteQuestionText = "Czy chcesz usunąć ten blok?"
 }) => {
   const [eventsState, setEventsState] = useState<Event[]>(events);
 
-  // const handleRecurringEvents = (nextWeek: Date) => {
-  //   console.log("Nawet tutaj");
-  //   let recurringEvents: Event[] = [];
-  //   if (eventsState.length > 0) {
-  //     if (nextWeek.getTime() > eventsState[0].start!.getTime()) {
-  //       recurringEvents = eventsState.map((event: Event) => {
-  //         return {
-  //           ...event,
-  //           start: addDays(event.start!, 7),
-  //           end: addDays(event.end!, 7)
-  //         };
-  //       });
-  //       setEventsState(recurringEvents);
-  //     } else if (nextWeek.getTime() < eventsState[0].start!.getTime()) {
-  //       recurringEvents = eventsState.map((event: Event) => {
-  //         return {
-  //           ...event,
-  //           start: subDays(event.start!, 7),
-  //           end: subDays(event.end!, 7)
-  //         };
-  //       });
-  //       setEventsState(recurringEvents);
-  //     }
-  //   }
-  // };
-
-  const isSelectionOverlaping = (start: Date | string, end: Date | string) => {
-    return eventsState.find((event: Event) => {
-      if (event) {
-        return (
-          (start >= event.start! && start <= event.end!) ||
+  const isSelectionOverlaping = (
+    start: Date | string,
+    end: Date | string
+  ): boolean => {
+    const eventIsBelow = eventsState.findIndex((event: Event) =>
+      event
+        ? (start >= event.start! && start <= event.end!) ||
           (end >= event.start! && end <= event.end!)
-        );
-      }
-    });
+        : false
+    );
+
+    return eventIsBelow ? true : false;
   };
 
   return (
@@ -93,13 +72,12 @@ const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
           setEventsState([...eventsState, newEvent]);
         }}
         onSelectEvent={(event) => {
-          const r = window.confirm("Czy chcesz usunąć ten blok?");
+          const r = window.confirm(deleteQuestionText);
 
           if (r) {
             setEventsState(eventsState.filter((e) => e !== event));
           }
         }}
-        // onNavigate={(nextWeekDate) => handleRecurringEvents(nextWeekDate)}
       />
     </>
   );

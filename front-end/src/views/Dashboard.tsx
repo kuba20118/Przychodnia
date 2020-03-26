@@ -1,14 +1,11 @@
-import React, { useEffect, useCallback } from "react";
-import { Container, Row, Card } from "react-bootstrap";
+import React from "react";
+import { Container, Row } from "react-bootstrap";
 import { Col } from "react-bootstrap";
 import CardStats from "../components/CardStats";
-import { useDispatch } from "react-redux";
 import { MdPeople, MdRefresh } from "react-icons/md";
 import { Doughnut } from "react-chartjs-2";
 
 const Dashboard: React.FC = () => {
-  const dispatch = useDispatch();
-
   // const fetchAllUsers = useCallback(() => dispatch(fetchAllUsers.request()), [dispatch]);
 
   // useEffect(() => {
@@ -25,17 +22,17 @@ const Dashboard: React.FC = () => {
     ]
   };
 
-  var options = {
-    high: 10,
-    low: -10,
-    axisX: {
-      labelInterpolationFnc: function(value: number, index: number) {
-        return index % 2 === 0 ? value : null;
-      }
-    }
-  };
+  // var options = {
+  //   high: 10,
+  //   low: -10,
+  //   axisX: {
+  //     labelInterpolationFnc: function(value: number, index: number) {
+  //       return index % 2 === 0 ? value : null;
+  //     }
+  //   }
+  // };
 
-  var type = "Bar";
+  // var type = "Bar";
 
   return (
     <div className="content">

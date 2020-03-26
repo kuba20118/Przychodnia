@@ -1,15 +1,24 @@
 import Dashboard from "../views/Dashboard";
-import UserProfile from "../views/UserProfile";
+import AdminProfile from "../views/AdminProfile";
 import Vacations from "../views/Vacations";
 import { RouteProps } from "react-router-dom";
 import WorkSchedule from "../views/WorkSchedule";
 import Registration from "../views/Registration";
+import Worker from "../views/Worker";
+import WorkerVacations from "../containers/WorkerVacations";
+import WorkerWorkSchedule from "../containers/WorkerWorkSchedule";
+import WorkerEdit from "../containers/WorkerEdit";
+
+export interface IRouteComponentProps extends RouteProps {
+  childrenRoutes?: RoutesType[];
+}
 
 export type RoutesType = {
   path: string;
   name: string;
-  component: React.FC<RouteProps>;
+  component: React.FC<IRouteComponentProps>;
   layout: string;
+  children?: RoutesType[];
 };
 
 const routes: RoutesType[] = [
@@ -20,22 +29,42 @@ const routes: RoutesType[] = [
     layout: "/admin"
   },
   {
-    path: "/uzytkownik",
-    name: "Profil użytkownika",
-    component: UserProfile,
+    path: "/profil",
+    name: "Profil admina",
+    component: AdminProfile,
     layout: "/admin"
   },
   {
-    path: "/urlopy",
-    name: "Urlopy",
+    path: "/wykaz-urlopow",
+    name: "Wykaz Urlopów",
     component: Vacations,
     layout: "/admin"
   },
   {
-    path: "/godziny-pracy",
-    name: "Godziny pracy",
-    component: WorkSchedule,
-    layout: "/admin"
+    path: "/pracownicy",
+    name: "Pracownicy",
+    component: Worker,
+    layout: "/admin",
+    children: [
+      {
+        path: "/pracownicy/urlop",
+        name: "Urlop",
+        component: WorkerVacations,
+        layout: "/admin"
+      },
+      {
+        path: "/pracownicy/grafik",
+        name: "Grafik",
+        component: WorkerWorkSchedule,
+        layout: "/admin"
+      },
+      {
+        path: "/pracownicy/edytuj",
+        name: "Edytuj",
+        component: WorkerEdit,
+        layout: "/admin"
+      }
+    ]
   },
   {
     path: "/rejestracja-pracownikow",

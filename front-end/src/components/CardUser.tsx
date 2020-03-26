@@ -1,8 +1,9 @@
 import React from "react";
 import { UserT } from "../state/ducks/user/types";
+import { ISelectedWorker } from "../state/ducks/selected-worker/types";
 
 type UserCardPropsT = {
-  user: UserT;
+  user?: UserT | ISelectedWorker;
 };
 
 const initialSelectedUser: UserT = {
@@ -16,23 +17,23 @@ const initialSelectedUser: UserT = {
   hireDate: ""
 };
 
-const UserCard: React.FC<UserCardPropsT> = ({ user }) => {
+const UserCard: React.FC<UserCardPropsT> = ({ user = initialSelectedUser }) => {
   return (
     <div className="card card-user">
       <div className="content">
-        <p className="title">INFORMATION</p>
+        <p className="title">INFORMACJE</p>
         <hr />
         <p>
           <b>Imię </b>
-          {user.firstName} {user.lastName}
+          {user!.firstName} {user!.lastName}
         </p>
         <p>
           <b>Email </b>
-          {user.mail}
+          {user!.mail}
         </p>
         <p>
-          <b>Role </b>
-          {user.role}
+          <b>Rola </b>
+          {user!.role}
         </p>
       </div>
     </div>

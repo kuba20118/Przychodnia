@@ -56,7 +56,14 @@ $login-padding-horizontal: 42px;
 
 // Components
 
+// sidebar
 $sidebar-width: 260px;
+$sidebar-navlink-color: $white-color;
+$sidebar-subnavlink-color: hsla(0, 0%, 100%, 0.53);
+$sidebar-navlink-active-color: $primary-color;
+$sidebar-subnavlink-active-color: $white-color;
+$sidebar-link-transition: all 0.15s ease-in;
+$sidebar-subnav-transition: all 0.15s ease-in;
 
 $navbar-text-color: #777;
 $navbar-bg: hsla(0, 0%, 100%, 0.96);

@@ -7,7 +7,7 @@ type LoginFormPropsT = {
   errorMsg?: string;
 };
 
-const LoginForm: React.FC<LoginFormPropsT> = (props: LoginFormPropsT) => {
+const LoginForm: React.FC<LoginFormPropsT> = ({ onSubmit, errorMsg }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -23,12 +23,12 @@ const LoginForm: React.FC<LoginFormPropsT> = (props: LoginFormPropsT) => {
 
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    props.onSubmit({ email, password });
+    onSubmit({ email, password });
   };
 
   return (
     <form className="login-form card" onSubmit={submit}>
-      <p>{props.errorMsg}</p>
+      <p>{errorMsg}</p>
       <FormGroup>
         <FormLabel>E-mail</FormLabel>
         <FormControl type="text" value={email} onChange={setEmailInput} />
