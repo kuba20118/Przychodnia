@@ -37,9 +37,12 @@ namespace back_end.Data
             return users;
         }
 
-        public Task<Employment> UpdateEmployment(int userId)
+        public async Task<Employment> GetUserEmployment(int userId)
         {
-            throw new System.NotImplementedException();
+            var empl = await _context.Employment
+                        .FirstOrDefaultAsync(x => x.User.Any(d => d.IdUser == userId));
+                        
+            return empl;
         }
 
         public async Task<IEnumerable<Vacation>> GetVacations(int userId)

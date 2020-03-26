@@ -4,7 +4,6 @@ namespace back_end.Controllers
 {
     /**
     CRUD:
-    -EMPLOYMENT
     -USER
 
     GET USERS

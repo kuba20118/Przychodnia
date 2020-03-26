@@ -48,6 +48,7 @@ namespace Przychodnia.API
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IGenericRepository, GenericRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IDictionaryRepository, DictionaryRepository>();
              services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                         .AddJwtBearer(Options =>
                         {
