@@ -14,7 +14,6 @@ namespace Przychodnia.API
             : base(options)
         {
         }
-
         public virtual DbSet<Absence> Absence { get; set; }
         public virtual DbSet<Day> Day { get; set; }
         public virtual DbSet<Employment> Employment { get; set; }
@@ -44,6 +43,8 @@ namespace Przychodnia.API
                 entity.Property(e => e.IdAbsence)
                     .HasColumnName("idAbsence")
                     .HasColumnType("int(11)");
+
+                entity.Property(e => e.Limit).HasColumnType("int(11)");
 
                 entity.Property(e => e.Name)
                     .HasColumnType("varchar(45)")

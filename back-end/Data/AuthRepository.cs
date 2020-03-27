@@ -31,21 +31,41 @@ namespace back_end.Data
             return user;
         }
 
-
-
-
         public async Task<User> Register(User user, string password, int role)
         {
             byte[] passwordHash, passwordSalt;
-            CreatePassword(password, out passwordHash, out passwordSalt);
 
+            CreatePassword(password, out passwordHash, out passwordSalt);
             user.Hash = passwordHash;
             user.Salt = passwordSalt;
 
-            user.IdRoleNavigation = await _context.Role.FirstOrDefaultAsync(x => x.IdRole == role);
+            var UserRole = await _context.Role.FirstOrDefaultAsync(x => x.IdRole == role);
+            user.IdRoleNavigation = UserRole;
 
-            var newEmpl = new Employment();
+            var newEmpl = new Employment()
+            {
+                HireDate = DateTime.Now,
+                CurrentyEmployed = 1,
+                WorkingHours = 8,
+            };
             user.IdEmplNavigation = newEmpl;
+
+
+
+            var absences = await _context.Absence.ToListAsync();
+
+            foreach (var item in absences)
+            {
+                var vacLeft = new Leftvacationdays
+                {
+                    IdAbsenceNavigation = item,
+                    LeftDays = item.Limit,
+                    IdUserNavigation = user
+                };
+
+                await _context.Leftvacationdays.AddAsync(vacLeft);
+            }
+
 
             await _context.Employment.AddAsync(newEmpl);
             await _context.User.AddAsync(user);

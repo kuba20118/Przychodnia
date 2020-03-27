@@ -41,7 +41,7 @@ namespace back_end.Controllers
             if (user == null)
                 return Unauthorized();
 
-            var userFromRepo =  await _repoUser.GetUser(user.IdUser);
+            var userFromRepo = await _repoUser.GetUser(user.IdUser);
             var userToReturn = _mapper.Map<UserReturnDTO>(userFromRepo);
 
             var claims = new[]
@@ -61,8 +61,8 @@ namespace back_end.Controllers
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            
-            return Ok(new { token = tokenHandler.WriteToken(token), userToReturn});
+
+            return Ok(new { token = tokenHandler.WriteToken(token), userToReturn });
         }
 
         [HttpPost("register")]
@@ -80,10 +80,10 @@ namespace back_end.Controllers
             };
 
             var createdUser = await _repo.Register(newUser, userRegisterDTO.Password, userRegisterDTO.idRole);
-            var userFromRepo =  await _repoUser.GetUser(createdUser.IdUser);
+            var userFromRepo = await _repoUser.GetUser(createdUser.IdUser);
             var userToReturn = _mapper.Map<UserReturnDTO>(userFromRepo);
 
-            return CreatedAtRoute("GetUser", new { controller = "Users", Id = createdUser.IdUser}, userToReturn);
+            return CreatedAtRoute("GetUser", new { controller = "Users", Id = createdUser.IdUser }, userToReturn);
         }
     }
 }

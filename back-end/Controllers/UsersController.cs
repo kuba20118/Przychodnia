@@ -92,13 +92,27 @@ namespace back_end.Controllers
             var vacToReturn = _mapper.Map<IEnumerable<VacationDTO>>(vacations);
             return Ok(vacToReturn);
         }
-        
+
         [HttpGet("vacations/{id}/left")]
         public async Task<IActionResult> GetLeftVacationDays(int id)
         {
             var daysLeft = await _repo.GetLeftVacationDays(id);
             var daysLeftToReturn = _mapper.Map<IEnumerable<LeftVacationDaysDTO>>(daysLeft);
             return Ok(daysLeftToReturn);
+        }
+
+        [HttpPost("vacations/{id}/new")]
+        public async Task<IActionResult> SetUserNewVacation(int id, NewVacationDTO newVacation)
+        {
+            var totalVacDays = (newVacation.ToDate - newVacation.FromDate).Days;
+            var daysLeft = await _repo.GetDaysLeft(id, newVacation.IdAbsence, totalVacDays);
+
+            if (daysLeft < totalVacDays)
+                return Content("Nie można udzielić urlopu. Brak dni do wybrania");
+
+            var newVac = await _repo.AddNewVacation(id, newVacation);
+
+            return Ok(newVac);
         }
 
         #endregion

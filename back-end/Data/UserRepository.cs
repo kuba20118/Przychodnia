@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using back_end.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Przychodnia.API;
 
@@ -41,7 +42,7 @@ namespace back_end.Data
         {
             var empl = await _context.Employment
                         .FirstOrDefaultAsync(x => x.User.Any(d => d.IdUser == userId));
-                        
+
             return empl;
         }
 
@@ -79,6 +80,44 @@ namespace back_end.Data
             return daysLeft;
         }
 
+        public async Task<int> GetDaysLeft(int userId, int absenseId, int days)
+        {
+            var isAvailable = await _context.Leftvacationdays
+                        .Where(u => u.IdUser == userId)
+                        .Where(v => v.IdAbsenceNavigation.IdAbsence == absenseId)
+                        //.Where(l => l.LeftDays >= days)
+                        .FirstAsync();
 
+            return (int)isAvailable.LeftDays;
+            //return (isAvailable == null) ? false : true;
+        }
+
+        public async Task<Vacation> AddNewVacation(int userId, NewVacationDTO newVacation)
+        {
+
+            var user = await GetUser(userId);
+            var absence = await _context.Absence.FirstOrDefaultAsync(x => x.IdAbsence == newVacation.IdAbsence);
+            var newVac = new Vacation
+            {
+                FromDate = newVacation.FromDate,
+                ToDate = newVacation.ToDate,
+                IdUserVacNavigation = user,
+                IdAbsenceVacNavigation = absence
+            };
+
+            var vacLeft = await _context.Leftvacationdays
+                            .Where(x => x.IdUser == userId)
+                            .Where(x => x.IdAbsence == newVacation.IdAbsence)
+                            .FirstAsync();
+
+            var totalVacDays = (newVacation.ToDate - newVacation.FromDate).Days;
+            vacLeft.LeftDays -= totalVacDays;
+
+            await _context.Vacation.AddAsync(newVac);
+            await _context.SaveChangesAsync();
+
+            return newVac;
+
+        }
     }
 }
