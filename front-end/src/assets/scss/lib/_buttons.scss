@@ -1,3 +1,7 @@
 a > button {
   width: 100%;
 }
+
+.btn-animate {
+  transition: all 0.4s ease-in;
+}

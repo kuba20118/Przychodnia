@@ -4,7 +4,8 @@ import {
   UserT,
   UserLoginT,
   LoginApiResponseT,
-  AllUsersApiResponseT
+  AllUsersApiResponseT,
+  UserRegisterT
 } from "./types";
 
 export const loginUserAsync = createAsyncAction(
@@ -23,7 +24,7 @@ export const registerUserAsync = createAsyncAction(
   UserActionTypes.REGISTER_USER,
   UserActionTypes.REGISTER_USER_SUCCESS,
   UserActionTypes.REGISTER_USER_ERROR
-)<UserT, undefined, string>();
+)<UserRegisterT, UserT, string>();
 
 export const fetchAllUsersAsync = createAsyncAction(
   UserActionTypes.FETCH_ALL_USERS,

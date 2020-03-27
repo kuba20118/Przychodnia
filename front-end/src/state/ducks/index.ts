@@ -13,12 +13,16 @@ import { VacationsStateT } from "./vacations/types";
 import { SelectedWorkerStateT } from "./selected-worker/types";
 import { selectedWorkerReducer } from "./selected-worker/reducers";
 import selectedWorkerSaga from "./selected-worker/sagas";
+import roleSaga from "./role/sagas";
+import { RoleStateT } from "./role/types";
+import { roleReducer } from "./role/reducers";
 
 export interface IApplicationState {
   authentication: AuthStateT;
   user: UserStateT;
   selectedWorker: SelectedWorkerStateT;
   vacations: VacationsStateT;
+  role: RoleStateT;
 }
 
 export interface IReducerAction<TPayload>
@@ -29,7 +33,8 @@ export const rootReducer = combineReducers<IApplicationState>({
   authentication: authenticationReducer,
   user: userReducer,
   selectedWorker: selectedWorkerReducer,
-  vacations: vacationsReducer
+  vacations: vacationsReducer,
+  role: roleReducer
 });
 
 export function* rootSaga() {
@@ -37,6 +42,7 @@ export function* rootSaga() {
     fork(authenticationSaga),
     fork(userSaga),
     fork(selectedWorkerSaga),
-    fork(vacationsSaga)
+    fork(vacationsSaga),
+    fork(roleSaga)
   ]);
 }

@@ -37,8 +37,10 @@ export type UserRegisterT = {
 export type UserStateT = {
   currentUser?: UserT;
   users?: UserT[];
-  loaded: boolean;
   error?: string;
+  isLoadingUsers: boolean;
+  isLoadingRegistration: boolean;
+  isLoadingLogin: boolean;
 };
 
 export enum UserActionTypes {

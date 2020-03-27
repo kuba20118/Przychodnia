@@ -6,7 +6,12 @@ import {
   LoginApiResponseT,
   UserRegisterT
 } from "./types";
-import { loginUserAsync, logoutUserAsync, fetchAllUsersAsync } from "./actions";
+import {
+  loginUserAsync,
+  logoutUserAsync,
+  fetchAllUsersAsync,
+  registerUserAsync
+} from "./actions";
 import { IReducerAction } from "..";
 import history from "../../../routing/history";
 import { authenticateAsync, setAuthFalse } from "../auth/actions";
@@ -56,6 +61,9 @@ function* handleLogin(action: IReducerAction<UserLoginT>) {
 
 function* handleLogout() {
   try {
+    // const res: any = yield call(apiCaller, "POST", "/auth/logout");
+    // console.log(res);
+
     // Save token in localStorage
     localStorage.removeItem("przychodnia-jwt");
     // Set is authenticated to false
@@ -75,20 +83,26 @@ function* handleLogout() {
 
 function* handleRegister(action: IReducerAction<UserRegisterT>) {
   try {
-    const res: any = yield call(apiCaller, "POST", "/auth/register", {
+    const res: UserT | any = yield call(apiCaller, "POST", "/auth/register", {
       firstName: action.payload.firstName!,
       lastName: action.payload.lastName!,
-      role: action.payload.role!,
+      idRole: action.payload.role!,
       mail: action.payload.mail!,
       password: action.payload.password!
     });
 
-    yield put(logoutUserAsync.success());
+    console.log(res);
+
+    if (res.errors) {
+      throw Error(res.errors);
+    }
+
+    yield put(registerUserAsync.success(res));
   } catch (err) {
     if (err instanceof Error) {
-      yield put(logoutUserAsync.failure(err.stack!));
+      yield put(registerUserAsync.failure(err.stack!));
     } else {
-      yield put(logoutUserAsync.failure("An unknown error occured."));
+      yield put(registerUserAsync.failure("An unknown error occured."));
     }
   }
 }
