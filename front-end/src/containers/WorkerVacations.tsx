@@ -8,6 +8,7 @@ import CustomTable, {
   CustomTableDataT,
   CustomTableHeaderT
 } from "../components/CustomTable";
+import { format, parseISO } from "date-fns/esm";
 
 const WorkerVacations: React.FC = () => {
   const vacations: ISelectedWorkerVacations[] | undefined = useSelector(
@@ -24,8 +25,8 @@ const WorkerVacations: React.FC = () => {
     vacations!.map((item, index) => {
       const data = [
         index.toString(),
-        item.fromDate.toString(),
-        item.toDate.toString(),
+        format(parseISO(item.fromDate), "dd-MM-yyyy"),
+        format(parseISO(item.toDate), "dd-MM-yyyy"),
         item.absenceType
       ];
       return data;

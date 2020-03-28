@@ -56,8 +56,6 @@ function* handleGetUserVacations(action: IReducerAction<UserIdT>) {
       `/users/vacations/${action.payload}`
     );
 
-    console.log(res);
-
     yield put(getUserVacationsAsync.success(res));
 
     // history.push("/login", { message: "Wylogowano pomyślnie." });

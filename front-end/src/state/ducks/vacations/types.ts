@@ -1,7 +1,7 @@
 export type VacationsDataT = {
   userId: string;
-  fromDate: Date;
-  toDate: Date;
+  fromDate: string;
+  toDate: string;
   absenceType: string;
 };
 
