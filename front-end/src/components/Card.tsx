@@ -1,9 +1,9 @@
 import React from "react";
 
 type CardPropsT = {
-  title?: string;
-  subtitle?: string;
-  content: React.ReactNode;
+  readonly title?: string;
+  readonly subtitle?: string;
+  readonly content: React.ReactNode;
 };
 
 const Card: React.FC<CardPropsT> = ({ title, subtitle, content }) => (

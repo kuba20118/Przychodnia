@@ -1,20 +1,16 @@
 import React from "react";
-import { Navbar } from "react-bootstrap";
-import { Nav } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
-import { IApplicationState } from "../state/ducks";
-import { logoutUserAsync } from "../state/ducks/user/actions";
+import { Nav, Navbar } from "react-bootstrap";
 
 type AdminNavbarPropsT = {
-  pageName?: string;
-  logoutUserAsyncRequest: () => void;
+  readonly pageName?: string;
+  readonly logoutUserAsyncRequest: () => void;
 };
 
 const AdminNavbar: React.FC<AdminNavbarPropsT> = ({
   pageName,
   logoutUserAsyncRequest
 }: AdminNavbarPropsT) => {
-  const logout = (e: React.MouseEvent<any>) => {
+  const onLogout = (e: React.MouseEvent<any>) => {
     e.preventDefault();
     logoutUserAsyncRequest();
   };
@@ -25,7 +21,7 @@ const AdminNavbar: React.FC<AdminNavbarPropsT> = ({
       <Navbar.Collapse className="d-flex justify-content-end">
         <Nav>
           <Nav.Link className="navbar-default__link">Konto</Nav.Link>
-          <Nav.Link className="navbar-default__link" onClick={logout}>
+          <Nav.Link className="navbar-default__link" onClick={onLogout}>
             Wyloguj
           </Nav.Link>
         </Nav>

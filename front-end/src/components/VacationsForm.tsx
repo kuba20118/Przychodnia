@@ -21,9 +21,9 @@ const initialCategories: string[] = [
 ];
 
 export type VacationsFormDataT = {
-  startDate: string;
-  endDate: string;
-  category: string;
+  readonly startDate: string;
+  readonly endDate: string;
+  readonly category: string;
 };
 
 type VacationsFormPropsT = {
@@ -53,7 +53,7 @@ const VacationsForm: React.FC<VacationsFormPropsT> = ({
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isDateOk(startDate, endDate)) {
-      const vacationFormData = {
+      const vacationFormData: VacationsFormDataT = {
         startDate: startDate.toString(),
         endDate: endDate.toString(),
         category: category

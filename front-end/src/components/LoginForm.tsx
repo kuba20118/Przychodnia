@@ -3,8 +3,8 @@ import { FormGroup, FormLabel, FormControl, Button } from "react-bootstrap";
 import { UserLoginT } from "../state/ducks/user/types";
 
 type LoginFormPropsT = {
-  onSubmit: (userLogin: UserLoginT) => void;
-  errorMsg?: string;
+  readonly onSubmit: (userLogin: UserLoginT) => void;
+  readonly errorMsg?: string;
 };
 
 const LoginForm: React.FC<LoginFormPropsT> = ({ onSubmit, errorMsg }) => {

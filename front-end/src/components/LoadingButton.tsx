@@ -1,6 +1,5 @@
 import React from "react";
-import { Button, Spinner, SpinnerProps } from "react-bootstrap";
-import { ButtonProps } from "react-bootstrap";
+import { Button, ButtonProps, Spinner, SpinnerProps } from "react-bootstrap";
 
 export type LoadingButtonPropsT = {
   defaultText: string;

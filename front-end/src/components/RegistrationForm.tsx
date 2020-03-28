@@ -1,21 +1,13 @@
 import React, { useState, ChangeEvent, useEffect } from "react";
-import {
-  Button,
-  Col,
-  FormControl,
-  FormGroup,
-  FormLabel,
-  Row
-} from "react-bootstrap";
+import { Form, Col } from "react-bootstrap";
 import { UserRegisterT } from "../state/ducks/user/types";
 import { RoleT } from "../state/ducks/role/types";
 import LoadingButton from "./LoadingButton";
-import { Form } from "react-bootstrap";
 
 type RegistrationFormPropsT = {
-  registerUser: (data: UserRegisterT) => void;
-  isLoading: boolean;
-  roles: RoleT[];
+  readonly registerUser: (data: UserRegisterT) => void;
+  readonly isLoading: boolean;
+  readonly roles: RoleT[];
 };
 
 const RegistrationForm: React.FC<RegistrationFormPropsT> = ({

@@ -3,7 +3,7 @@ import { UserT } from "../state/ducks/user/types";
 import { ISelectedWorker } from "../state/ducks/selected-worker/types";
 
 type UserCardPropsT = {
-  user?: UserT | ISelectedWorker;
+  readonly user?: UserT | ISelectedWorker;
 };
 
 const initialSelectedUser: UserT = {

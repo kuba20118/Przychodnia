@@ -3,9 +3,9 @@ import { RoutesType } from "../routing/routes";
 import { NavLink } from "react-router-dom";
 
 type SidebarPropsType = {
-  userRole: string;
-  logoSrc: string;
-  routes: RoutesType[];
+  readonly userRole: string;
+  readonly logoSrc: string;
+  readonly routes: RoutesType[];
 };
 
 const Sidebar: React.FC<SidebarPropsType> = ({

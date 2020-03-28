@@ -15,8 +15,8 @@ const myEvents: Event[] = [
 ];
 
 export type WorkingScheduleCalendarPropsT = {
-  events?: Event[];
-  deleteQuestionText?: string;
+  readonly events?: Event[];
+  readonly deleteQuestionText?: string;
 };
 
 const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({

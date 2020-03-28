@@ -3,12 +3,12 @@ import { Row, Col } from "react-bootstrap";
 import { IconType } from "react-icons/lib/cjs";
 
 type CardStatsPropsT = {
-  text: string;
-  value: string;
-  IconBig: IconType;
-  iconBigColor: string;
-  Icon: IconType;
-  iconText: string;
+  readonly text: string;
+  readonly value: string;
+  readonly IconBig: IconType;
+  readonly iconBigColor: string;
+  readonly Icon: IconType;
+  readonly iconText: string;
 };
 
 const CardStats: React.FC<CardStatsPropsT> = ({

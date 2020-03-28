@@ -1,8 +1,6 @@
 import React, { useState, FormEvent, useEffect } from "react";
 import { FormGroup, FormControl } from "react-bootstrap";
 import { UserT } from "../state/ducks/user/types";
-import { IApplicationState } from "../state/ducks";
-import { useSelector } from "react-redux";
 import useDebounce from "../utils/hooks/useDebounce";
 
 type searchUsersPropsT = {
@@ -33,17 +31,15 @@ const searchUsers = async ({
 
 type SearchPropsT = {
   readonly onSearch: (selectedUser: UserT) => void;
+  readonly users?: UserT[];
 };
 
-const UsersSearch: React.FC<SearchPropsT> = ({ onSearch }) => {
+const UsersSearch: React.FC<SearchPropsT> = ({ onSearch, users }) => {
   const [searchVal, setSearchVal] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<UserT[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserT | undefined>();
 
   // USERS
-  const users: UserT[] | undefined = useSelector(
-    ({ user }: IApplicationState) => user.users
-  );
 
   const debouncedSearchVal = useDebounce(searchVal, 500);
 
