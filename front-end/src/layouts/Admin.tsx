@@ -7,7 +7,9 @@ import {
   logoutUserAsync,
   fetchAllUsersAsync
 } from "../state/ducks/user/actions";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { UserIdT } from "../state/ducks/user/types";
+import { IApplicationState } from "../state/ducks";
 
 const Admin: React.FC<RouteProps> = () => {
   const currentLocation = useLocation();
@@ -16,6 +18,10 @@ const Admin: React.FC<RouteProps> = () => {
   useEffect(() => {
     dispatch(fetchAllUsersAsync.request());
   }, [dispatch]);
+
+  const currentUser = useSelector(
+    ({ user }: IApplicationState) => user.currentUser
+  );
 
   const getRoutes = (routes: RoutesType[]) => {
     return routes.map((item, key) => {
@@ -50,10 +56,9 @@ const Admin: React.FC<RouteProps> = () => {
   };
 
   const dispatchToNavbarProps = {
-    logoutUserAsyncRequest: useCallback(
-      () => dispatch(logoutUserAsync.request()),
-      [dispatch]
-    )
+    logoutUserAsyncRequest: useCallback(() => {
+      dispatch(logoutUserAsync.request(currentUser!.idUser));
+    }, [dispatch])
   };
 
   return (

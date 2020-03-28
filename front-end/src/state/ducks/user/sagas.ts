@@ -4,7 +4,8 @@ import {
   UserActionTypes,
   UserLoginT,
   LoginApiResponseT,
-  UserRegisterT
+  UserRegisterT,
+  UserIdT
 } from "./types";
 import {
   loginUserAsync,
@@ -29,15 +30,23 @@ function* handleLogin(action: IReducerAction<UserLoginT>) {
       }
     );
 
-    // Handle Success login
-    yield put(loginUserAsync.success(res));
-
-    // Save token in localStorage
-    if (res.token) {
-      localStorage.setItem("przychodnia-jwt", res.token);
-    } else {
-      console.error("Token not provided from api.");
+    if (res.errors) {
+      throw new Error(res.errors);
     }
+
+    // Save token and user in localStorage
+    if (res.token && res.userToReturn) {
+      localStorage.setItem("przychodnia-jwt", res.token);
+      localStorage.setItem(
+        "przychodnia-user",
+        JSON.stringify(res.userToReturn)
+      );
+    } else {
+      throw new Error("The response is not valid");
+    }
+
+    // Handle Success login
+    yield put(loginUserAsync.success(res!.userToReturn));
 
     // Set is authenticated to true
     yield put(authenticateAsync.success());
@@ -59,13 +68,20 @@ function* handleLogin(action: IReducerAction<UserLoginT>) {
   }
 }
 
-function* handleLogout() {
+function* handleLogout(action: IReducerAction<UserIdT>) {
   try {
-    // const res: any = yield call(apiCaller, "POST", "/auth/logout");
+    // Not server route yet
+    // const res: any = yield call(
+    //   apiCaller,
+    //   "POST",
+    //   `/auth/logout/${action.payload}`
+    // );
     // console.log(res);
 
-    // Save token in localStorage
+    // delete token and user from localstorage
     localStorage.removeItem("przychodnia-jwt");
+    localStorage.removeItem("przychodnia-user");
+
     // Set is authenticated to false
     yield put(setAuthFalse());
     yield put(logoutUserAsync.success());
@@ -90,8 +106,6 @@ function* handleRegister(action: IReducerAction<UserRegisterT>) {
       mail: action.payload.mail!,
       password: action.payload.password!
     });
-
-    console.log(res);
 
     if (res.errors) {
       throw Error(res.errors);

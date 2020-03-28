@@ -1,6 +1,9 @@
 import React from "react";
 import { Navbar } from "react-bootstrap";
 import { Nav } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { IApplicationState } from "../state/ducks";
+import { logoutUserAsync } from "../state/ducks/user/actions";
 
 type AdminNavbarPropsT = {
   pageName?: string;

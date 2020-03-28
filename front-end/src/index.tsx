@@ -8,18 +8,42 @@ import configureStore from "./state";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-// import "react-contexify/dist/ReactContexify.min.css";
 import "./assets/scss/main.scss";
 import history from "./routing/history";
 import { authenticateAsync } from "./state/ducks/auth/actions";
+import { setCurrentUser } from "./state/ducks/user/actions";
 
 const initialState = (window as any).initialReduxState;
 const store = configureStore(initialState);
 
-const token = localStorage.getItem("przychodnia-jwt");
+/**
+ * Authentication and authorization
+ * @description
+ * It's not the best way to authenticate the user
+ * but the real protection is handled by server, which set up
+ * 12h token. Every API request is sent with bearer token (saved in localstorage).
+ * If token is not valid, the api response with error 401 Anauthorized.
+ * This error automatically redirect to login page and clears localStorage from
+ * token and user data.
+ * TODO: handle the authentication process in a service
+ * TODO: wrap every api call with middleware catching unathorized responses to redirect to login page
+ */
 
-if (token) {
-  store.dispatch(authenticateAsync.success());
+const token = localStorage.getItem("przychodnia-jwt");
+const userStr = localStorage.getItem("przychodnia-user");
+
+if (userStr) {
+  try {
+    const userObj = JSON.parse(userStr);
+    if (token && userObj) {
+      store.dispatch(authenticateAsync.success());
+      store.dispatch(setCurrentUser(userObj));
+    }
+  } catch (err) {
+    store.dispatch(
+      authenticateAsync.failure("The localstorage data is not valid.")
+    );
+  }
 }
 
 const createApp = () => {

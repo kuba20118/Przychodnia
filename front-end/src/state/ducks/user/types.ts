@@ -14,7 +14,7 @@ export type UserT = {
 
 export type LoginApiResponseT = {
   token: string;
-  user: UserT;
+  userToReturn: UserT;
 };
 
 export type AllUsersApiResponseT = {
@@ -53,10 +53,8 @@ export enum UserActionTypes {
   REGISTER_USER = "@@user/REGISTER_USER",
   REGISTER_USER_SUCCESS = "@@user/REGISTER_USER_SUCCESS",
   REGISTER_USER_ERROR = "@@user/REGISTER_USER_ERROR",
-  FETCH_CURRENT_USER = "@@user/FETCH_CURRENT_USER",
-  FETCH_CURRENT_USER_SUCCESS = "@@user/FETCH_CURRENT_USER_SUCCESS",
-  FETCH_CURRENT_USER_ERROR = "@@user/FETCH_CURRENT_USER_ERROR",
   FETCH_ALL_USERS = "@@user/FETCH_ALL_USERS",
   FETCH_ALL_USERS_SUCCESS = "@@user/FETCH_ALL_USERS_SUCCESS",
-  FETCH_ALL_USERS_ERROR = "@@user/FETCH_ALL_USERS_ERROR"
+  FETCH_ALL_USERS_ERROR = "@@user/FETCH_ALL_USERS_ERROR",
+  SET_CURRENT_USER = "@@user/SET_CURRENT_USER"
 }

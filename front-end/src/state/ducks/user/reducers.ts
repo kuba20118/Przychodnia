@@ -2,7 +2,8 @@ import {
   UserStateT,
   UserActionTypes,
   AllUsersApiResponseT,
-  UserT
+  UserT,
+  UserIdT
 } from "./types";
 import { TypeConstant, Action, PayloadAction } from "typesafe-actions";
 
@@ -22,7 +23,7 @@ export const userReducer = (
       return { ...state, isLoadingLogin: true };
     }
     case UserActionTypes.LOGIN_USER_SUCCESS: {
-      return { ...state, isLoadingLogin: false };
+      return { ...state, currentUser: action.payload, isLoadingLogin: false };
     }
     case UserActionTypes.LOGIN_USER_ERROR: {
       return { ...state, error: action.payload, isLoadingLogin: false };
@@ -49,15 +50,7 @@ export const userReducer = (
     case UserActionTypes.REGISTER_USER_ERROR: {
       return { ...state, isLoadingRegistration: false };
     }
-    case UserActionTypes.FETCH_CURRENT_USER: {
-      return { ...state };
-    }
-    case UserActionTypes.FETCH_CURRENT_USER_SUCCESS: {
-      return { ...state };
-    }
-    case UserActionTypes.FETCH_CURRENT_USER_ERROR: {
-      return { ...state };
-    }
+
     case UserActionTypes.FETCH_ALL_USERS: {
       return { ...state, isLoadingUsers: true };
     }
@@ -66,6 +59,9 @@ export const userReducer = (
     }
     case UserActionTypes.FETCH_ALL_USERS_ERROR: {
       return { ...state, isLoadingUsers: false };
+    }
+    case UserActionTypes.SET_CURRENT_USER: {
+      return { ...state, currentUser: action.payload };
     }
     default:
       return state;

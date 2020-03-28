@@ -1,9 +1,36 @@
 import { all, call, put, takeEvery, fork } from "redux-saga/effects";
 import { VacationsActionTypes, VacationsDataT } from "./types";
 import { IReducerAction } from "..";
-import { createVacationsAsync, getUserVacationsAsync } from "./actions";
+import {
+  createVacationsAsync,
+  getUserVacationsAsync,
+  fetchAllVacationsAsync
+} from "./actions";
 import { UserIdT } from "../user/types";
 import apiCaller from "../../utils/apiHelper";
+
+function* handleFetchAllVacations() {
+  try {
+    const res: VacationsDataT[] | any = yield call(
+      apiCaller,
+      "GET",
+      "/users/vacations"
+    );
+    console.log(res);
+
+    if (res.errors) {
+      throw new Error(res.errors);
+    }
+
+    fetchAllVacationsAsync.success(res);
+  } catch (err) {
+    if (err instanceof Error) {
+      yield put(fetchAllVacationsAsync.failure(err.message!));
+    } else {
+      yield put(fetchAllVacationsAsync.failure("An unknown error occured."));
+    }
+  }
+}
 
 function* handleCreateVacations(action: IReducerAction<VacationsDataT>) {
   try {
@@ -19,10 +46,6 @@ function* handleCreateVacations(action: IReducerAction<VacationsDataT>) {
       yield put(createVacationsAsync.failure("An unknown error occured."));
     }
   }
-}
-
-function* watchCreateVacationsRequest(): Generator {
-  yield takeEvery(VacationsActionTypes.CREATE_VACATIONS, handleCreateVacations);
 }
 
 function* handleGetUserVacations(action: IReducerAction<UserIdT>) {
@@ -47,6 +70,17 @@ function* handleGetUserVacations(action: IReducerAction<UserIdT>) {
   }
 }
 
+function* watchfetchAllVacationsRequest(): Generator {
+  yield takeEvery(
+    VacationsActionTypes.FETCH_ALL_VACATIONS,
+    handleFetchAllVacations
+  );
+}
+
+function* watchCreateVacationsRequest(): Generator {
+  yield takeEvery(VacationsActionTypes.CREATE_VACATIONS, handleCreateVacations);
+}
+
 function* watchGetUserVacationsRequest(): Generator {
   yield takeEvery(
     VacationsActionTypes.GET_USER_VACATIONS,
@@ -59,6 +93,7 @@ function* watchGetUserVacationsRequest(): Generator {
  */
 export default function* vacationsSaga() {
   yield all([
+    fork(watchfetchAllVacationsRequest),
     fork(watchCreateVacationsRequest),
     fork(watchGetUserVacationsRequest)
   ]);

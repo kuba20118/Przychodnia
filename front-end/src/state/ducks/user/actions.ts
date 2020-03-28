@@ -5,7 +5,8 @@ import {
   UserLoginT,
   LoginApiResponseT,
   AllUsersApiResponseT,
-  UserRegisterT
+  UserRegisterT,
+  UserIdT
 } from "./types";
 
 export const loginUserAsync = createAsyncAction(
@@ -18,7 +19,7 @@ export const logoutUserAsync = createAsyncAction(
   UserActionTypes.LOGOUT_USER,
   UserActionTypes.LOGOUT_USER_SUCCESS,
   UserActionTypes.LOGOUT_USER_ERROR
-)<undefined, undefined, string>();
+)<UserIdT, undefined, string>();
 
 export const registerUserAsync = createAsyncAction(
   UserActionTypes.REGISTER_USER,
@@ -31,3 +32,6 @@ export const fetchAllUsersAsync = createAsyncAction(
   UserActionTypes.FETCH_ALL_USERS_SUCCESS,
   UserActionTypes.FETCH_ALL_USERS_ERROR
 )<undefined, AllUsersApiResponseT, string>();
+
+export const setCurrentUser = (user: UserT) =>
+  action(UserActionTypes.SET_CURRENT_USER, user);
