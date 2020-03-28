@@ -2,7 +2,6 @@ import Dashboard from "../views/Dashboard";
 import AdminProfile from "../views/AdminProfile";
 import Vacations from "../views/Vacations";
 import { RouteProps } from "react-router-dom";
-import WorkSchedule from "../views/WorkSchedule";
 import Registration from "../views/Registration";
 import Worker from "../views/Worker";
 import WorkerVacations from "../containers/WorkerVacations";

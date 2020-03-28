@@ -3,14 +3,21 @@ import {
   SelectedWorkerActionTypes,
   ISelectedWorker,
   ISelectedWorkerVacations,
-  ISelectedWorkerWorkSchedule
+  ISelectedWorkerWorkSchedule,
+  LeftVacationsDaysT
 } from "./types";
 import { TypeConstant, Action, PayloadAction } from "typesafe-actions";
 
 export const initialSelectedWorkerState: SelectedWorkerStateT = {
   worker: undefined,
   vacations: undefined,
-  workSchedule: undefined
+  vacationsLeftDays: undefined,
+  workSchedule: undefined,
+  isLoadingVacations: false,
+  isLoadingVacationsLeftDays: false,
+  isLoadingCreateVacations: false,
+  isLoadingWorkSchedule: false,
+  isLoadingCreateWorkSchedule: false
 };
 
 export const selectedWorkerReducer = (
@@ -20,7 +27,9 @@ export const selectedWorkerReducer = (
       TypeConstant,
       ISelectedWorker &
         ISelectedWorkerVacations[] &
+        ISelectedWorkerVacations &
         ISelectedWorkerWorkSchedule[] &
+        LeftVacationsDaysT[] &
         string
     >
 ): SelectedWorkerStateT => {
@@ -29,22 +38,56 @@ export const selectedWorkerReducer = (
       return { ...state, worker: action.payload };
     }
     case SelectedWorkerActionTypes.GET_SELECTED_WORKER_VACATIONS: {
-      return { ...state };
+      return { ...state, isLoadingVacations: true };
     }
     case SelectedWorkerActionTypes.GET_SELECTED_WORKER_VACATIONS_SUCCESS: {
-      return { ...state, vacations: action.payload };
+      return { ...state, isLoadingVacations: false, vacations: action.payload };
     }
     case SelectedWorkerActionTypes.GET_SELECTED_WORKER_VACATIONS_ERROR: {
-      return { ...state, error: action.payload };
+      return { ...state, isLoadingVacations: false, error: action.payload };
+    }
+    case SelectedWorkerActionTypes.GET_SELECTED_WORKER_VACATIONS_LEFT_DAYS: {
+      return { ...state, isLoadingVacationsLeftDays: true };
+    }
+    case SelectedWorkerActionTypes.GET_SELECTED_WORKER_VACATIONS_LEFT_DAYS_SUCCESS: {
+      return {
+        ...state,
+        isLoadingVacationsLeftDays: false,
+        vacationsLeftDays: action.payload
+      };
+    }
+    case SelectedWorkerActionTypes.GET_SELECTED_WORKER_VACATIONS_LEFT_DAYS_ERROR: {
+      return { ...state, isLoadingVacationsLeftDays: false };
+    }
+    case SelectedWorkerActionTypes.CREATE_SELECTED_WORKER_VACATIONS: {
+      return { ...state, isLoadingCreateVacations: true };
+    }
+    case SelectedWorkerActionTypes.CREATE_SELECTED_WORKER_VACATIONS_SUCCESS: {
+      return {
+        ...state,
+        isLoadingCreateVacations: false,
+        vacations: [...state.vacations!, action.payload]
+      };
+    }
+    case SelectedWorkerActionTypes.CREATE_SELECTED_WORKER_VACATIONS_ERROR: {
+      return {
+        ...state,
+        isLoadingCreateVacations: false,
+        error: action.payload
+      };
     }
     case SelectedWorkerActionTypes.GET_SELECTED_WORKER_WORK_SCHEDULE: {
-      return { ...state };
+      return { ...state, isLoadingWorkSchedule: true };
     }
     case SelectedWorkerActionTypes.GET_SELECTED_WORKER_WORK_SCHEDULE_SUCCESS: {
-      return { ...state, workSchedule: action.payload };
+      return {
+        ...state,
+        isLoadingWorkSchedule: false,
+        workSchedule: action.payload
+      };
     }
     case SelectedWorkerActionTypes.GET_SELECTED_WORKER_WORK_SCHEDULE_ERROR: {
-      return { ...state, error: action.payload };
+      return { ...state, isLoadingWorkSchedule: false, error: action.payload };
     }
     default:
       return state;

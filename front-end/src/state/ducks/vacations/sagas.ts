@@ -1,22 +1,15 @@
 import { all, call, put, takeEvery, fork } from "redux-saga/effects";
 import { VacationsActionTypes, VacationsDataT } from "./types";
-import { IReducerAction } from "..";
-import {
-  createVacationsAsync,
-  getUserVacationsAsync,
-  fetchAllVacationsAsync
-} from "./actions";
-import { UserIdT } from "../user/types";
+import { fetchAllVacationsAsync, getVacationsTypesAsync } from "./actions";
 import apiCaller from "../../utils/apiHelper";
 
-function* handleFetchAllVacations() {
+function* handleFetchAllCurrentVacations() {
   try {
     const res: VacationsDataT[] | any = yield call(
       apiCaller,
       "GET",
       "/users/vacations"
     );
-    console.log(res);
 
     if (res.errors) {
       throw new Error(res.errors);
@@ -32,57 +25,39 @@ function* handleFetchAllVacations() {
   }
 }
 
-function* handleCreateVacations(action: IReducerAction<VacationsDataT>) {
+function* handleGetVacationsTypes() {
   try {
-    // const res: any = yield fakeCreateVacations(action.payload);
-
-    createVacationsAsync.success();
-
-    // history.push("/login", { message: "Wylogowano pomyślnie." });
-  } catch (err) {
-    if (err instanceof Error) {
-      yield put(createVacationsAsync.failure(err.stack!));
-    } else {
-      yield put(createVacationsAsync.failure("An unknown error occured."));
-    }
-  }
-}
-
-function* handleGetUserVacations(action: IReducerAction<UserIdT>) {
-  try {
-    const res: VacationsDataT[] | any = yield call(
+    const res: string[] | any = yield call(
       apiCaller,
       "GET",
-      `/users/vacations/${action.payload}`
+      "/users/vacations/types"
     );
 
-    yield put(getUserVacationsAsync.success(res));
+    if (res.errors) {
+      throw new Error(res.errors);
+    }
 
-    // history.push("/login", { message: "Wylogowano pomyślnie." });
+    getVacationsTypesAsync.success(res);
   } catch (err) {
     if (err instanceof Error) {
-      yield put(getUserVacationsAsync.failure(err.message!));
+      yield put(getVacationsTypesAsync.failure(err.message!));
     } else {
-      yield put(getUserVacationsAsync.failure("An unknown error occured."));
+      yield put(getVacationsTypesAsync.failure("An unknown error occured."));
     }
   }
 }
 
-function* watchfetchAllVacationsRequest(): Generator {
+function* watchfetchAllCurrentVacationsRequest(): Generator {
   yield takeEvery(
-    VacationsActionTypes.FETCH_ALL_VACATIONS,
-    handleFetchAllVacations
+    VacationsActionTypes.FETCH_ALL_CURRENT_VACATIONS,
+    handleFetchAllCurrentVacations
   );
 }
 
-function* watchCreateVacationsRequest(): Generator {
-  yield takeEvery(VacationsActionTypes.CREATE_VACATIONS, handleCreateVacations);
-}
-
-function* watchGetUserVacationsRequest(): Generator {
+function* watchGetVacationsTypes(): Generator {
   yield takeEvery(
-    VacationsActionTypes.GET_USER_VACATIONS,
-    handleGetUserVacations
+    VacationsActionTypes.GET_VACATIONS_TYPES,
+    handleGetVacationsTypes
   );
 }
 
@@ -91,8 +66,7 @@ function* watchGetUserVacationsRequest(): Generator {
  */
 export default function* vacationsSaga() {
   yield all([
-    fork(watchfetchAllVacationsRequest),
-    fork(watchCreateVacationsRequest),
-    fork(watchGetUserVacationsRequest)
+    fork(watchfetchAllCurrentVacationsRequest),
+    fork(watchGetVacationsTypes)
   ]);
 }

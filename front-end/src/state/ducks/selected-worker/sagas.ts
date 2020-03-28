@@ -2,11 +2,15 @@ import { all, call, put, takeEvery, fork } from "redux-saga/effects";
 import {
   ISelectedWorkerVacations,
   SelectedWorkerActionTypes,
-  SelectedWorkerIdT
+  SelectedWorkerIdT,
+  SelectedWorkerCreateVacationsT,
+  LeftVacationsDaysT
 } from "./types";
 import {
   getSelectedWorkerVacationsAsync,
-  getSelectedWorkerWorkScheduleAsync
+  getSelectedWorkerWorkScheduleAsync,
+  createSelectedWorkerVacationsAsync,
+  getSelectedWorkerVacationsLeftDaysAsync
 } from "./actions";
 import { IReducerAction } from "..";
 import apiCaller from "../../utils/apiHelper";
@@ -32,6 +36,67 @@ function* handleGetSelectedWorkerVacations(
     } else {
       yield put(
         getSelectedWorkerVacationsAsync.failure("An unknown error occured.")
+      );
+    }
+  }
+}
+
+function* handleCreateSelectedWorkerVacations(
+  action: IReducerAction<SelectedWorkerCreateVacationsT>
+) {
+  try {
+    const res: ISelectedWorkerVacations[] | any = yield call(
+      apiCaller,
+      "POST",
+      `/users/vacations/${action.payload}/new`,
+      {
+        fromDate: action.payload.vacation.fromDate,
+        toDate: action.payload.vacation.toDate
+        // idAbsence: action.payload.vacation.idAbsence,
+      }
+    );
+
+    if (res.errors) {
+      throw Error(res.errors.id[0]);
+    }
+
+    yield put(createSelectedWorkerVacationsAsync.success(res));
+  } catch (err) {
+    if (err instanceof Error) {
+      yield put(createSelectedWorkerVacationsAsync.failure(err.message!));
+    } else {
+      yield put(
+        createSelectedWorkerVacationsAsync.failure("An unknown error occured.")
+      );
+    }
+  }
+}
+
+function* handleGetSelectedWorkerVacationsLeftDays(
+  action: IReducerAction<SelectedWorkerIdT>
+) {
+  try {
+    const res: LeftVacationsDaysT[] | any = yield call(
+      apiCaller,
+      "GET",
+      `/users/vacations/${action.payload}/left`
+    );
+
+    console.log(res);
+
+    if (res.errors) {
+      throw Error(res.errors.id[0]);
+    }
+
+    yield put(getSelectedWorkerVacationsLeftDaysAsync.success(res));
+  } catch (err) {
+    if (err instanceof Error) {
+      yield put(getSelectedWorkerVacationsLeftDaysAsync.failure(err.message!));
+    } else {
+      yield put(
+        getSelectedWorkerVacationsLeftDaysAsync.failure(
+          "An unknown error occured."
+        )
       );
     }
   }
@@ -70,6 +135,20 @@ function* watchGetSelectedWorkerVacationsRequest(): Generator {
   );
 }
 
+function* watchCreateSelectedWorkerVacationsRequest(): Generator {
+  yield takeEvery(
+    SelectedWorkerActionTypes.CREATE_SELECTED_WORKER_VACATIONS,
+    handleCreateSelectedWorkerVacations
+  );
+}
+
+function* watchGetSelectedWorkerVacationsLeftDaysRequest(): Generator {
+  yield takeEvery(
+    SelectedWorkerActionTypes.GET_SELECTED_WORKER_VACATIONS_LEFT_DAYS,
+    handleGetSelectedWorkerVacationsLeftDays
+  );
+}
+
 function* watchGetSelectedWorkerWorkScheduleRequest(): Generator {
   yield takeEvery(
     SelectedWorkerActionTypes.GET_SELECTED_WORKER_WORK_SCHEDULE,
@@ -83,6 +162,8 @@ function* watchGetSelectedWorkerWorkScheduleRequest(): Generator {
 export default function* selectedWorkerSaga() {
   yield all([
     fork(watchGetSelectedWorkerVacationsRequest),
+    fork(watchCreateSelectedWorkerVacationsRequest),
+    fork(watchGetSelectedWorkerVacationsLeftDaysRequest),
     fork(watchGetSelectedWorkerWorkScheduleRequest)
   ]);
 }
