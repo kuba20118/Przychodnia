@@ -1,9 +1,12 @@
 import React from "react";
 import { UserT } from "../state/ducks/user/types";
 import { ISelectedWorker } from "../state/ducks/selected-worker/types";
+import { format, parseISO } from "date-fns";
+import { FaUserAlt } from "react-icons/fa";
+import DefaultUserImg from "../assets/images/default-user.jpg";
 
 type UserCardPropsT = {
-  readonly user?: UserT | ISelectedWorker;
+  readonly user: UserT | ISelectedWorker;
 };
 
 const initialSelectedUser: UserT = {
@@ -21,20 +24,40 @@ const UserCard: React.FC<UserCardPropsT> = ({ user = initialSelectedUser }) => {
   return (
     <div className="card card-user">
       <div className="content">
-        <p className="title">INFORMACJE</p>
+        <p className="title">DANE UŻYTKOWNIKA</p>
         <hr />
-        <p>
-          <b>Imię </b>
-          {user!.firstName} {user!.lastName}
-        </p>
-        <p>
-          <b>Email </b>
-          {user!.mail}
-        </p>
-        <p>
-          <b>Rola </b>
-          {user!.role}
-        </p>
+        <div className="info">
+          <div className="info__img">
+            {/* <FaUserAlt color="#cacaca" size={226} /> */}
+            <img src={DefaultUserImg} />
+          </div>
+          <div className="info__content">
+            <p>
+              <b>Imię: </b>
+              {user!.firstName}
+            </p>
+            <p>
+              <b>Nazwisko: </b>
+              {user!.firstName} {user!.lastName}
+            </p>
+            <p>
+              <b>Email: </b>
+              {user!.mail}
+            </p>
+            <p>
+              <b>Rola: </b>
+              {user!.role}
+            </p>
+            <p>
+              <b>Data zatrudnienia: </b>
+              {format(parseISO(user.hireDate!), "dd-MM-yyyy")}
+            </p>
+            <p>
+              <b>Dziennie pracuje: </b>
+              {user!.workingHours} godzin
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

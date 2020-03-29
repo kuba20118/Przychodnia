@@ -85,28 +85,26 @@ const VacationsForm: React.FC<VacationsFormPropsT> = ({
           </Col>
           <Col md={6}></Col>
         </Row>
-        <Row className="py-2 ">
-          <Col md={6} className="">
+        <Row>
+          <Col md={6} className="py-2">
             <div className="block">
-              <p>Start</p>
+              <FormLabel>Start</FormLabel>
               <ReactDatePicker
                 title="Wybierz datę początkową"
                 selected={startDate}
                 onChange={(date: Date) => setStartDate(date)}
-                inline
               />
             </div>
           </Col>
-          <Col md={6} className="">
+          <Col md={6} className="py-2">
             <div className="block">
-              <p>Koniec</p>
+              <FormLabel>Koniec</FormLabel>
               <ReactDatePicker
                 title="Wybierz datę końcową"
                 selected={endDate}
                 onChange={(date: Date) => setEndDate(date)}
                 minDate={subDays(startDate, 0)}
                 maxDate={addDays(startDate, leftDays)}
-                inline
               />
             </div>
           </Col>

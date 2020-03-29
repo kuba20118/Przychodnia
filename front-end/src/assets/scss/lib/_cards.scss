@@ -65,3 +65,34 @@
     border-color: #ddd;
   }
 }
+
+.card-user {
+  .info {
+    display: flex;
+    justify-content: flex-start;
+    padding: 10px;
+    flex-direction: column;
+
+    @include media-breakpoint-up(md) {
+      flex-direction: row;
+    }
+
+    &__img {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      width: 220px;
+      img {
+        width: 100%;
+      }
+    }
+
+    &__content {
+      margin: 24px 0 0 12px;
+
+      @include media-breakpoint-up(md) {
+        margin: 0 0 0 24px;
+      }
+    }
+  }
+}

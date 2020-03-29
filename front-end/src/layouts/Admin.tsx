@@ -10,6 +10,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { UserIdT } from "../state/ducks/user/types";
 import { IApplicationState } from "../state/ducks";
+import { Container } from "react-bootstrap";
 
 const Admin: React.FC<RouteProps> = () => {
   const currentLocation = useLocation();
@@ -63,7 +64,7 @@ const Admin: React.FC<RouteProps> = () => {
 
   return (
     <div className="wrapper">
-      <Sidebar routes={routes} userRole="TODO ROLE" logoSrc="TODO" />
+      <Sidebar routes={routes} userRole={currentUser!.role} logoSrc="TODO" />
       <div className="main-panel">
         <AdminNavbar pageName={getPageNameText()} {...dispatchToNavbarProps} />
         <Switch>{getRoutes(routes)}</Switch>

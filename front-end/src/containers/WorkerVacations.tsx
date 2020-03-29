@@ -9,6 +9,7 @@ import CustomTable, {
   CustomTableHeaderT
 } from "../components/CustomTable";
 import { format, parseISO } from "date-fns/esm";
+import { Row, Col } from "react-bootstrap";
 
 const WorkerVacations: React.FC = () => {
   const vacations: ISelectedWorkerVacations[] | undefined = useSelector(
@@ -34,18 +35,24 @@ const WorkerVacations: React.FC = () => {
 
   return (
     <div className="content">
-      <Card
-        title="Przydziel urlop"
-        content={<VacationsForm leftDays={14} onSubmit={assignHolidays} />}
-      />
-      <Card
-        title="Historia urlopów"
-        content={
-          <div className="content">
-            <CustomTable header={tableHeader} data={tableData} />
-          </div>
-        }
-      />
+      <Row>
+        <Col xl={6}>
+          <Card
+            title="Przydziel urlop"
+            content={<VacationsForm leftDays={14} onSubmit={assignHolidays} />}
+          />
+        </Col>
+        <Col xl={6}>
+          <Card
+            title="Historia urlopów"
+            content={
+              <div className="content">
+                <CustomTable header={tableHeader} data={tableData} />
+              </div>
+            }
+          />
+        </Col>
+      </Row>
     </div>
   );
 };

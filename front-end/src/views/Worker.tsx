@@ -14,6 +14,7 @@ import { ISelectedWorker } from "../state/ducks/selected-worker/types";
 import { IApplicationState } from "../state/ducks";
 import UserCard from "../components/CardUser";
 import { UserT } from "../state/ducks/user/types";
+import { Container } from "react-bootstrap";
 
 const Worker: React.FC<IRouteComponentProps> = (props) => {
   const dispatch = useDispatch();
