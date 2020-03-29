@@ -2,7 +2,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 import {
   SelectedWorkerStateT,
-  ISelectedWorker
+  ISelectedWorker,
+  LeftVacationsDaysT
 } from "../state/ducks/selected-worker/types";
 import { IApplicationState } from "../state/ducks";
 import VacationsForm, { VacationsFormDataT } from "../components/VacationsForm";
@@ -14,6 +15,7 @@ import CustomTable, {
 import { format, parseISO } from "date-fns/esm";
 import { Row, Col } from "react-bootstrap";
 import { UserT } from "../state/ducks/user/types";
+import VacationsLeftDays from "../components/VacationsLeftDays";
 
 const WorkerVacations: React.FC = () => {
   const users: UserT[] | undefined = useSelector(
@@ -49,6 +51,14 @@ const WorkerVacations: React.FC = () => {
   return (
     <div className="content">
       <Row>
+        <Col xl={6} className="d-flex">
+          <Card
+            title="Pozostałe dni urlopu"
+            content={
+              <VacationsLeftDays leftDays={selectedWorker.vacationsLeftDays} />
+            }
+          />
+        </Col>
         <Col xl={6}>
           <Card
             title="Przydziel urlop"
@@ -61,7 +71,9 @@ const WorkerVacations: React.FC = () => {
             }
           />
         </Col>
-        <Col xl={6}>
+      </Row>
+      <Row>
+        <Col>
           <Card
             title="Historia urlopów"
             content={<CustomTable header={tableHeader} data={tableData} />}

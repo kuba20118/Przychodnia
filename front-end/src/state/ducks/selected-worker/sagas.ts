@@ -82,8 +82,6 @@ function* handleGetSelectedWorkerVacationsLeftDays(
       `/users/vacations/${action.payload}/left`
     );
 
-    console.log(res);
-
     if (res.errors) {
       throw Error(res.errors.id[0]);
     }

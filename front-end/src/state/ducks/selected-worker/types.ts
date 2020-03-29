@@ -9,8 +9,8 @@ export interface ISelectedWorkerWorkSchedule extends WorkScheduleDataT {}
 
 export type LeftVacationsDaysT = {
   userId: UserIdT;
-  left: number;
-  type: string;
+  leftDays: number;
+  vacationType: string;
 };
 
 export type SelectedWorkerCreateVacationsT = {
