@@ -1,4 +1,4 @@
-import React, { useState, FormEvent, useEffect } from "react";
+import React, { useState, FormEvent, useEffect, createRef } from "react";
 import { FormGroup, FormControl } from "react-bootstrap";
 import { UserT } from "../state/ducks/user/types";
 import useDebounce from "../utils/hooks/useDebounce";
@@ -41,7 +41,7 @@ const UsersSearch: React.FC<SearchPropsT> = ({ onSearch, users }) => {
 
   // USERS
 
-  const debouncedSearchVal = useDebounce(searchVal, 500);
+  const debouncedSearchVal = useDebounce(searchVal, 300);
 
   // Handle searching with debounce effect
   useEffect(() => {
@@ -66,7 +66,7 @@ const UsersSearch: React.FC<SearchPropsT> = ({ onSearch, users }) => {
     setSearchVal(e.currentTarget.value);
   };
 
-  const handleSelectedUser = (e: React.MouseEvent<HTMLLIElement>) => {
+  const handleSelectedUser = (e: React.MouseEvent<HTMLOptionElement>) => {
     e.preventDefault();
     setSearchVal(e.currentTarget.innerText);
 
@@ -89,23 +89,25 @@ const UsersSearch: React.FC<SearchPropsT> = ({ onSearch, users }) => {
   let showList = canShowList() ? "list-active" : "";
 
   return (
-    <form className="search-default">
+    <form className="search-default" autoComplete="off">
       <FormGroup className="position-relative">
         <FormControl
           type="text"
           value={searchVal}
           placeholder="Szukaj pracowników..."
           onChange={handleSearchInput}
+          list="search-list"
         />
-        <div className={`list ${showList}`}>
+        <datalist className={`list ${showList}`}>
           {filteredUsers.map((user, key) => (
-            <li
+            <option
               key={key}
               onClick={handleSelectedUser}
               value={user.idUser}
-            >{`${user.firstName} ${user.lastName}`}</li>
+              className="list-option"
+            >{`${user.firstName} ${user.lastName}`}</option>
           ))}
-        </div>
+        </datalist>
       </FormGroup>
     </form>
   );

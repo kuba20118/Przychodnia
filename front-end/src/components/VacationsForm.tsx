@@ -9,6 +9,7 @@ import {
 } from "react-bootstrap";
 import ReactDatePicker from "react-datepicker";
 import { addDays, subDays, differenceInCalendarDays } from "date-fns/esm";
+import { UserT } from "../state/ducks/user/types";
 
 const initialCategories: string[] = [
   "Urlop na żądanie",
@@ -28,21 +29,28 @@ export type VacationsFormDataT = {
 
 type VacationsFormPropsT = {
   readonly categories?: string[];
+  readonly potentialSubs?: UserT[];
   readonly leftDays: number;
   readonly onSubmit: (data: VacationsFormDataT) => void;
 };
 
 const VacationsForm: React.FC<VacationsFormPropsT> = ({
   categories = initialCategories,
+  potentialSubs,
   leftDays = 14,
   onSubmit
 }) => {
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
   const [category, setCategory] = useState(categories[0]);
+  const [subWorkerId, setSubWorkerId] = useState("");
 
   const setCategorySelect = (e: ChangeEvent<HTMLSelectElement>) => {
     setCategory(e.currentTarget.value);
+  };
+
+  const setSubWorkerIdSelect = (e: ChangeEvent<HTMLSelectElement>) => {
+    setSubWorkerId(e.currentTarget.value);
   };
 
   const isDateOk = (from: Date, to: Date) => {
@@ -77,13 +85,31 @@ const VacationsForm: React.FC<VacationsFormPropsT> = ({
                 value={category}
                 onChange={setCategorySelect}
               >
-                {categories.map((category, key) => (
-                  <option key={key}>{category}</option>
-                ))}
+                {categories &&
+                  categories.map((category, key) => (
+                    <option value={category} key={key}>
+                      {category}
+                    </option>
+                  ))}
               </FormControl>
             </FormGroup>
           </Col>
-          <Col md={6}></Col>
+          <Col md={6}>
+            <FormLabel>Zastępstwo</FormLabel>
+            <FormControl
+              as="select"
+              value={subWorkerId}
+              onChange={setSubWorkerIdSelect}
+            >
+              {potentialSubs &&
+                potentialSubs.map((sub, key) => (
+                  <option
+                    value={sub.idUser}
+                    key={key}
+                  >{`${sub.firstName} ${sub.lastName}`}</option>
+                ))}
+            </FormControl>
+          </Col>
         </Row>
         <Row>
           <Col md={6} className="py-2">

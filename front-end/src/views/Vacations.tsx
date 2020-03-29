@@ -65,7 +65,20 @@ const Vacations: React.FC = () => {
         subtitle={`Dane dotyczą wszystkich użytkowników`}
         content={
           <div className="content">
-            <CustomTable header={tableHeader} data={tableData} />
+            {tableData && tableData!.length > 0 ? (
+              <CustomTable header={tableHeader} data={tableData} />
+            ) : (
+              <p>Obecnie nie ma żadnych urlopów.</p>
+            )}
+          </div>
+        }
+      />
+      <Card
+        title="Historia urlopów"
+        subtitle={`Dane dotyczą wszystkich użytkowników`}
+        content={
+          <div className="content">
+            <p>Historia jest pusta.</p>
           </div>
         }
       />

@@ -10,7 +10,7 @@ export type CustomTablePropsT = {
 
 const CustomTable: React.FC<CustomTablePropsT> = ({ header, data }) => {
   return (
-    <Table>
+    <Table className="table-bordered table-striped">
       <thead>
         <tr>
           {header.map((item, key) => {

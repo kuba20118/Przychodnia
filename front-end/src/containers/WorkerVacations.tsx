@@ -1,6 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { ISelectedWorkerVacations } from "../state/ducks/selected-worker/types";
+import {
+  SelectedWorkerStateT,
+  ISelectedWorker
+} from "../state/ducks/selected-worker/types";
 import { IApplicationState } from "../state/ducks";
 import VacationsForm, { VacationsFormDataT } from "../components/VacationsForm";
 import Card from "../components/Card";
@@ -10,11 +13,21 @@ import CustomTable, {
 } from "../components/CustomTable";
 import { format, parseISO } from "date-fns/esm";
 import { Row, Col } from "react-bootstrap";
+import { UserT } from "../state/ducks/user/types";
 
 const WorkerVacations: React.FC = () => {
-  const vacations: ISelectedWorkerVacations[] | undefined = useSelector(
-    ({ selectedWorker }: IApplicationState) => selectedWorker.vacations
+  const users: UserT[] | undefined = useSelector(
+    ({ user }: IApplicationState) => user.users
   );
+
+  const selectedWorker: SelectedWorkerStateT | undefined = useSelector(
+    ({ selectedWorker }: IApplicationState) => selectedWorker
+  );
+
+  const potentialSubs: ISelectedWorker[] | undefined =
+    users &&
+    users.filter((user) => user.idUser !== selectedWorker.worker?.idUser);
+
   const assignHolidays = (data: VacationsFormDataT) => {
     console.log("DATA IN PARENT", data);
   };
@@ -22,8 +35,8 @@ const WorkerVacations: React.FC = () => {
   const tableHeader: CustomTableHeaderT = ["#", "Od", "Do", "Typ"];
 
   const tableData: CustomTableDataT | undefined =
-    vacations &&
-    vacations!.map((item, index) => {
+    selectedWorker.vacations &&
+    selectedWorker.vacations!.map((item, index) => {
       const data = [
         index.toString(),
         format(parseISO(item.fromDate), "dd-MM-yyyy"),
@@ -39,17 +52,19 @@ const WorkerVacations: React.FC = () => {
         <Col xl={6}>
           <Card
             title="Przydziel urlop"
-            content={<VacationsForm leftDays={14} onSubmit={assignHolidays} />}
+            content={
+              <VacationsForm
+                leftDays={14}
+                potentialSubs={potentialSubs}
+                onSubmit={assignHolidays}
+              />
+            }
           />
         </Col>
         <Col xl={6}>
           <Card
             title="Historia urlopów"
-            content={
-              <div className="content">
-                <CustomTable header={tableHeader} data={tableData} />
-              </div>
-            }
+            content={<CustomTable header={tableHeader} data={tableData} />}
           />
         </Col>
       </Row>

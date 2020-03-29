@@ -3,7 +3,8 @@ import { Container, Row } from "react-bootstrap";
 import { Col } from "react-bootstrap";
 import CardStats from "../components/CardStats";
 import { MdPeople, MdRefresh } from "react-icons/md";
-import { Doughnut } from "react-chartjs-2";
+import { Bar, Doughnut } from "react-chartjs-2";
+import Card from "../components/Card";
 
 const Dashboard: React.FC = () => {
   // const fetchAllUsers = useCallback(() => dispatch(fetchAllUsers.request()), [dispatch]);
@@ -12,7 +13,48 @@ const Dashboard: React.FC = () => {
 
   // }
 
-  var data = {
+  const barData = {
+    labels: [
+      "Styczeń",
+      "Luty",
+      "Marzec",
+      "Kwiecień",
+      "Maj",
+      "Czerwiec",
+      "Lipiec",
+      "Sierpień",
+      "Wrzesień",
+      "Październik",
+      "Listopad",
+      "Grudzień"
+    ],
+    datasets: [
+      {
+        label: "Urlop w dniach",
+        backgroundColor: "#71dce4",
+        barPercentage: 0.5,
+        barThickness: 6,
+        maxBarThickness: 8,
+        minBarLength: 2,
+        data: [
+          { x: 1, y: 245 },
+          { x: 2, y: 243 },
+          { x: 3, y: 177 },
+          { x: 4, y: 87 },
+          { x: 5, y: 44 },
+          { x: 6, y: 33 },
+          { x: 7, y: 240 },
+          { x: 8, y: 299 },
+          { x: 9, y: 121 },
+          { x: 10, y: 55 },
+          { x: 11, y: 77 },
+          { x: 12, y: 99 }
+        ]
+      }
+    ]
+  };
+
+  const data = {
     labels: ["Wykorzystany urlop", "Pozostały urlop"],
     datasets: [
       {
@@ -80,13 +122,23 @@ const Dashboard: React.FC = () => {
           </Col>
         </Row>
         <Row>
-          <Col>
-            <div className="card">
-              <h3 className="text-center">
-                Wykorzystanie urlopu przez wszystkich pracowników
-              </h3>
-              <Doughnut data={data} options={{ maintainAspectRatio: true }} />
-            </div>
+          <Col md={7}>
+            <Card
+              title="Wykorzystanie urlopów w danym miesiącu"
+              subtitle="Dane dotyczą wszystkich użytkowników w biężącym roku "
+              content={
+                <Bar data={barData} options={{ maintainAspectRatio: true }} />
+              }
+            />
+          </Col>
+          <Col md={5}>
+            <Card
+              title="Ogólne wykorzystanie urlopów"
+              subtitle="Dane dotyczą wszystkich użytkowników w biężącym roku"
+              content={
+                <Doughnut data={data} options={{ maintainAspectRatio: true }} />
+              }
+            />
           </Col>
         </Row>
       </Container>

@@ -1,5 +1,5 @@
 import Dashboard from "../views/Dashboard";
-import AdminProfile from "../views/AdminProfile";
+import Substitutions from "../views/Substitutions";
 import Vacations from "../views/Vacations";
 import { RouteProps } from "react-router-dom";
 import Registration from "../views/Registration";
@@ -7,6 +7,7 @@ import Worker from "../views/Worker";
 import WorkerVacations from "../containers/WorkerVacations";
 import WorkerWorkSchedule from "../containers/WorkerWorkSchedule";
 import WorkerEdit from "../containers/WorkerEdit";
+import Help from "../views/Help";
 
 export interface IRouteComponentProps extends RouteProps {
   childrenRoutes?: RoutesType[];
@@ -28,15 +29,15 @@ const routes: RoutesType[] = [
     layout: "/admin"
   },
   {
-    path: "/profil",
-    name: "Profil admina",
-    component: AdminProfile,
-    layout: "/admin"
-  },
-  {
     path: "/wykaz-urlopow",
     name: "Wykaz Urlopów",
     component: Vacations,
+    layout: "/admin"
+  },
+  {
+    path: "/zastepstwa",
+    name: "Wykaz Zastępstw",
+    component: Substitutions,
     layout: "/admin"
   },
   {
@@ -69,6 +70,12 @@ const routes: RoutesType[] = [
     path: "/rejestracja-pracownikow",
     name: "Rejestracja pracowników",
     component: Registration,
+    layout: "/admin"
+  },
+  {
+    path: "/pomoc",
+    name: "Pomoc",
+    component: Help,
     layout: "/admin"
   }
 ];
