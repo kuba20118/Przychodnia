@@ -70,17 +70,9 @@ function* handleLogin(action: IReducerAction<UserLoginT>) {
 
 function* handleLogout(action: IReducerAction<UserIdT>) {
   try {
-    // Not server route yet
-    // const res: any = yield call(
-    //   apiCaller,
-    //   "POST",
-    //   `/auth/logout/${action.payload}`
-    // );
-    // console.log(res);
-
     // delete token and user from localstorage
-    localStorage.removeItem("przychodnia-jwt");
-    localStorage.removeItem("przychodnia-user");
+    yield localStorage.removeItem("przychodnia-jwt");
+    yield localStorage.removeItem("przychodnia-user");
 
     // Set is authenticated to false
     yield put(setAuthFalse());
