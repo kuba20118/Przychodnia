@@ -13,11 +13,6 @@ export type LeftVacationsDaysT = {
   vacationType: string;
 };
 
-export type SelectedWorkerCreateVacationsT = {
-  userId: UserIdT;
-  vacation: ISelectedWorkerVacations;
-};
-
 export type SelectedWorkerStateT = {
   worker?: ISelectedWorker;
   vacations?: ISelectedWorkerVacations[];

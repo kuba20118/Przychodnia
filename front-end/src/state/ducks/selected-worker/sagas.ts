@@ -3,7 +3,6 @@ import {
   ISelectedWorkerVacations,
   SelectedWorkerActionTypes,
   SelectedWorkerIdT,
-  SelectedWorkerCreateVacationsT,
   LeftVacationsDaysT
 } from "./types";
 import {
@@ -42,20 +41,20 @@ function* handleGetSelectedWorkerVacations(
 }
 
 function* handleCreateSelectedWorkerVacations(
-  action: IReducerAction<SelectedWorkerCreateVacationsT>
+  action: IReducerAction<ISelectedWorkerVacations>
 ) {
   try {
     const res: ISelectedWorkerVacations[] | any = yield call(
       apiCaller,
       "POST",
-      `/users/vacations/${action.payload}/new`,
+      `/users/vacations/${action.payload.userId}/new`,
       {
-        fromDate: action.payload.vacation.fromDate,
-        toDate: action.payload.vacation.toDate
-        // idAbsence: action.payload.vacation.idAbsence,
+        fromDate: action.payload.fromDate,
+        toDate: action.payload.toDate,
+        idAbsence: 1
       }
     );
-
+    console.log(res);
     if (res.errors) {
       throw Error(res.errors.id[0]);
     }

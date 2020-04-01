@@ -1,9 +1,10 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   SelectedWorkerStateT,
   ISelectedWorker,
-  LeftVacationsDaysT
+  LeftVacationsDaysT,
+  ISelectedWorkerVacations
 } from "../state/ducks/selected-worker/types";
 import { IApplicationState } from "../state/ducks";
 import VacationsForm, { VacationsFormDataT } from "../components/VacationsForm";
@@ -14,10 +15,13 @@ import CustomTable, {
 } from "../components/CustomTable";
 import { format, parseISO } from "date-fns/esm";
 import { Row, Col } from "react-bootstrap";
-import { UserT } from "../state/ducks/user/types";
+import { UserT, UserIdT } from "../state/ducks/user/types";
 import VacationsLeftDays from "../components/VacationsLeftDays";
+import { createSelectedWorkerVacationsAsync } from "../state/ducks/selected-worker/actions";
+import { isFuture, isPast } from "date-fns";
 
 const WorkerVacations: React.FC = () => {
+  const dispatch = useDispatch();
   const users: UserT[] | undefined = useSelector(
     ({ user }: IApplicationState) => user.users
   );
@@ -30,23 +34,47 @@ const WorkerVacations: React.FC = () => {
     users &&
     users.filter((user) => user.idUser !== selectedWorker.worker?.idUser);
 
+  const createWorkerVacationRequest = useCallback(
+    (newVacation: ISelectedWorkerVacations) =>
+      dispatch(createSelectedWorkerVacationsAsync.request(newVacation)),
+    [dispatch]
+  );
+
   const assignHolidays = (data: VacationsFormDataT) => {
-    console.log("DATA IN PARENT", data);
+    if (selectedWorker.worker) {
+      const newVacation: ISelectedWorkerVacations = {
+        userId: selectedWorker.worker?.idUser,
+        fromDate: data.startDate,
+        toDate: data.endDate,
+        absenceType: data.category
+      };
+      createWorkerVacationRequest(newVacation);
+    }
   };
 
   const tableHeader: CustomTableHeaderT = ["#", "Od", "Do", "Typ"];
 
-  const tableData: CustomTableDataT | undefined =
+  const createTableDataItem = (
+    dataItem: ISelectedWorkerVacations,
+    index: number
+  ): string[] => [
+    index.toString(),
+    format(parseISO(dataItem.fromDate), "dd-MM-yyyy"),
+    format(parseISO(dataItem.toDate), "dd-MM-yyyy"),
+    dataItem.absenceType
+  ];
+
+  const currentTableData: CustomTableDataT | undefined =
     selectedWorker.vacations &&
-    selectedWorker.vacations!.map((item, index) => {
-      const data = [
-        index.toString(),
-        format(parseISO(item.fromDate), "dd-MM-yyyy"),
-        format(parseISO(item.toDate), "dd-MM-yyyy"),
-        item.absenceType
-      ];
-      return data;
-    });
+    selectedWorker
+      .vacations!.filter((item) => isFuture(new Date(item.toDate)))
+      .map((item, index) => createTableDataItem(item, index));
+
+  const historyTableData: CustomTableDataT | undefined =
+    selectedWorker.vacations &&
+    selectedWorker
+      .vacations!.filter((item) => isPast(new Date(item.toDate)))
+      .map((item, index) => createTableDataItem(item, index));
 
   return (
     <div className="content">
@@ -72,14 +100,30 @@ const WorkerVacations: React.FC = () => {
           />
         </Col>
       </Row>
-      <Row>
-        <Col>
-          <Card
-            title="Historia urlopów"
-            content={<CustomTable header={tableHeader} data={tableData} />}
-          />
-        </Col>
-      </Row>
+      {currentTableData && (
+        <Row>
+          <Col>
+            <Card
+              title="Obecne i przyszłe urlopy"
+              content={
+                <CustomTable header={tableHeader} data={currentTableData} />
+              }
+            />
+          </Col>
+        </Row>
+      )}
+      {historyTableData && (
+        <Row>
+          <Col>
+            <Card
+              title="Historia urlopów"
+              content={
+                <CustomTable header={tableHeader} data={historyTableData} />
+              }
+            />
+          </Col>
+        </Row>
+      )}
     </div>
   );
 };

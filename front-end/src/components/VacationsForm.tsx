@@ -55,15 +55,15 @@ const VacationsForm: React.FC<VacationsFormPropsT> = ({
 
   const isDateOk = (from: Date, to: Date) => {
     const difference = differenceInCalendarDays(to, from);
-    return difference > 0 && difference <= leftDays;
+    return difference >= 0 && difference <= leftDays;
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isDateOk(startDate, endDate)) {
       const vacationFormData: VacationsFormDataT = {
-        startDate: startDate.toString(),
-        endDate: endDate.toString(),
+        startDate: startDate.toDateString(),
+        endDate: endDate.toDateString(),
         category: category
       };
 
