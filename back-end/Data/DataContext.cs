@@ -14,6 +14,7 @@ namespace Przychodnia.API
             : base(options)
         {
         }
+
         public virtual DbSet<Absence> Absence { get; set; }
         public virtual DbSet<Day> Day { get; set; }
         public virtual DbSet<Employment> Employment { get; set; }
@@ -47,6 +48,7 @@ namespace Przychodnia.API
                 entity.Property(e => e.Limit).HasColumnType("int(11)");
 
                 entity.Property(e => e.Name)
+                    .IsRequired()
                     .HasColumnType("varchar(45)")
                     .HasCharSet("latin1")
                     .HasCollation("latin1_swedish_ci");
@@ -131,11 +133,13 @@ namespace Przychodnia.API
                 entity.HasOne(d => d.IdAbsenceNavigation)
                     .WithMany(p => p.Leftvacationdays)
                     .HasForeignKey(d => d.IdAbsence)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("isAbsence");
 
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.Leftvacationdays)
                     .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("idUser");
             });
 
@@ -151,6 +155,7 @@ namespace Przychodnia.API
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.Name)
+                    .IsRequired()
                     .HasColumnType("varchar(45)")
                     .HasCharSet("latin1")
                     .HasCollation("latin1_swedish_ci");
@@ -174,6 +179,7 @@ namespace Przychodnia.API
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.FirstName)
+                    .IsRequired()
                     .HasColumnType("varchar(45)")
                     .HasCharSet("latin1")
                     .HasCollation("latin1_swedish_ci");
@@ -189,11 +195,13 @@ namespace Przychodnia.API
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.LastName)
+                    .IsRequired()
                     .HasColumnType("varchar(45)")
                     .HasCharSet("latin1")
                     .HasCollation("latin1_swedish_ci");
 
                 entity.Property(e => e.Mail)
+                    .IsRequired()
                     .HasColumnType("varchar(45)")
                     .HasCharSet("latin1")
                     .HasCollation("latin1_swedish_ci");
@@ -245,11 +253,13 @@ namespace Przychodnia.API
                 entity.HasOne(d => d.IdAbsenceVacNavigation)
                     .WithMany(p => p.Vacation)
                     .HasForeignKey(d => d.IdAbsenceVac)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("idAbsenceVac");
 
                 entity.HasOne(d => d.IdUserVacNavigation)
                     .WithMany(p => p.Vacation)
                     .HasForeignKey(d => d.IdUserVac)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("idUserVac");
             });
 
@@ -288,3 +298,4 @@ namespace Przychodnia.API
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
+

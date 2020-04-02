@@ -13,7 +13,7 @@ namespace Przychodnia.API
 
         public int IdAbsence { get; set; }
         public string Name { get; set; }
-        public int? Limit { get; set; }
+        public int Limit { get; set; }
 
         public virtual ICollection<Leftvacationdays> Leftvacationdays { get; set; }
         public virtual ICollection<Vacation> Vacation { get; set; }

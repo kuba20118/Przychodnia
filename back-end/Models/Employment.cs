@@ -11,9 +11,9 @@ namespace Przychodnia.API
         }
 
         public int IdEmployment { get; set; }
-        public int? WorkingHours { get; set; }
-        public sbyte? CurrentyEmployed { get; set; }
-        public DateTime? HireDate { get; set; }
+        public int WorkingHours { get; set; }
+        public sbyte CurrentyEmployed { get; set; }
+        public DateTime HireDate { get; set; }
         public DateTime? FireDate { get; set; }
 
         public virtual ICollection<User> User { get; set; }

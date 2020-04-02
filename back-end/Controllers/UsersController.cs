@@ -114,6 +114,9 @@ namespace back_end.Controllers
             if (daysLeft < totalVacDays)
                 return Content("Nie można udzielić urlopu. Brak dni do wybrania");
 
+            if (await _repo.CheckIfOverlapping(id, newVacation))
+                return Content("Użytkownik ma już w tym terminie zaplanowany urlop");
+
             var newVac = await _repo.AddNewVacation(id, newVacation);
 
             return Ok(new { daysLeft, totalVacDays });

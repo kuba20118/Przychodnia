@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using back_end.DTOs;
+using back_end.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Przychodnia.API;
 
@@ -55,6 +56,23 @@ namespace back_end.Data
                         .ToListAsync();
 
             return userVac;
+        }
+
+        public async Task<bool> CheckIfOverlapping(int userId, NewVacationDTO newVacation)
+        {
+            var UserVacList = await _context.Vacation
+                    .Where(u => u.IdUserVac == userId)
+                    .ToListAsync();
+
+            var check = UserVacList
+                        .Any(d =>
+                        newVacation.FromDate.IsBewteenTwoDates(d.FromDate, d.ToDate) ||
+                        newVacation.ToDate.IsBewteenTwoDates(d.FromDate, d.ToDate) ||
+                        ((d.ToDate).IsBewteenTwoDates(newVacation.FromDate, newVacation.ToDate) &&
+                        (d.FromDate).IsBewteenTwoDates(newVacation.FromDate, newVacation.ToDate)
+                        ));
+
+            return check;
         }
 
         public async Task<IEnumerable<Vacation>> GetAllVacations()
