@@ -51,7 +51,7 @@ namespace back_end.Controllers
         {
             var rolesFromRepo = await _repo.GetRole(id);
 
-             if(rolesFromRepo == null)
+            if (rolesFromRepo == null)
                 return Content("Błędne roleId");
 
             rolesFromRepo.Name = newName.Name;
@@ -60,6 +60,14 @@ namespace back_end.Controllers
                 return Content("Zapisano zmiany");
 
             throw new Exception($"Błąd aktualizacji roli o id: {id}");
+        }
+
+        [HttpGet("absences")]
+        public async Task<IActionResult> GetAbsencesType()
+        {
+            var absencesToReturn = await _repo.GetAbsences();
+
+            return Ok(absencesToReturn);
         }
     }
 }

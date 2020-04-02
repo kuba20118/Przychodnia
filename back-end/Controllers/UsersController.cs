@@ -104,7 +104,11 @@ namespace back_end.Controllers
         [HttpPost("vacations/{id}/new")]
         public async Task<IActionResult> SetUserNewVacation(int id, NewVacationDTO newVacation)
         {
-            var totalVacDays = (newVacation.ToDate - newVacation.FromDate).Days;
+
+            if (newVacation.FromDate > newVacation.ToDate || newVacation.FromDate.DayOfYear < DateTime.Now.DayOfYear)
+                return Content("Błędna data urlopu");
+
+            var totalVacDays = (newVacation.ToDate - newVacation.FromDate).Days + 1;
             var daysLeft = await _repo.GetDaysLeft(id, newVacation.IdAbsence, totalVacDays);
 
             if (daysLeft < totalVacDays)
@@ -112,7 +116,7 @@ namespace back_end.Controllers
 
             var newVac = await _repo.AddNewVacation(id, newVacation);
 
-            return Ok(newVac);
+            return Ok(new { daysLeft, totalVacDays });
         }
 
         #endregion

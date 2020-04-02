@@ -10,6 +10,7 @@ namespace back_end.Data
         Task<Role> GetRole(int roleId);
         Task<Role> AddRole(string name);
 
-        
+        Task<IEnumerable<Absence>> GetAbsences();
+
     }
 }

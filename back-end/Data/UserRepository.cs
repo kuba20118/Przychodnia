@@ -89,7 +89,6 @@ namespace back_end.Data
                         .FirstAsync();
 
             return (int)isAvailable.LeftDays;
-            //return (isAvailable == null) ? false : true;
         }
 
         public async Task<Vacation> AddNewVacation(int userId, NewVacationDTO newVacation)
@@ -110,7 +109,7 @@ namespace back_end.Data
                             .Where(x => x.IdAbsence == newVacation.IdAbsence)
                             .FirstAsync();
 
-            var totalVacDays = (newVacation.ToDate - newVacation.FromDate).Days;
+            var totalVacDays = (newVacation.ToDate - newVacation.FromDate).Days + 1;
             vacLeft.LeftDays -= totalVacDays;
 
             await _context.Vacation.AddAsync(newVac);
