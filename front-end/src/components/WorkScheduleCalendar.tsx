@@ -10,8 +10,8 @@ const myEvents: Event[] = [
   {
     title: "Praca",
     start: new Date("2020-03-20T10:00:00"),
-    end: new Date("2020-03-20T20:00:00")
-  }
+    end: new Date("2020-03-20T20:00:00"),
+  },
 ];
 
 export type WorkingScheduleCalendarPropsT = {
@@ -21,7 +21,7 @@ export type WorkingScheduleCalendarPropsT = {
 
 const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
   events = myEvents,
-  deleteQuestionText = "Czy chcesz usunąć ten blok?"
+  deleteQuestionText = "Czy chcesz usunąć ten blok?",
 }) => {
   const [eventsState, setEventsState] = useState<Event[]>(events);
 
@@ -35,8 +35,7 @@ const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
           (end >= event.start! && end <= event.end!)
         : false
     );
-
-    return eventIsBelow ? true : false;
+    return eventIsBelow > 0 ? true : false;
   };
 
   return (
@@ -50,13 +49,12 @@ const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
         selectable={true}
         views={{
           week: true,
-          work_week: true
+          work_week: true,
         }}
         onSelecting={(range) => {
           if (isSelectionOverlaping(range.start, range.end)) {
             return false;
           }
-
           return true;
         }}
         onSelectSlot={(slot) => {
@@ -66,7 +64,7 @@ const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
 
           const newEvent: Event = {
             start: new Date(slot.start),
-            end: new Date(slot.end)
+            end: new Date(slot.end),
           };
 
           setEventsState([...eventsState, newEvent]);
