@@ -26,6 +26,7 @@ namespace back_end.Helpers
                     );
 
             CreateMap<UserUpdateDTO, User>();
+
             CreateMap<Vacation, VacationDTO>()
                 .ForMember(dest => dest.AbsenceType, opt =>
                     opt.MapFrom(src => src.IdAbsenceVacNavigation.Name)
@@ -42,6 +43,15 @@ namespace back_end.Helpers
                     opt.MapFrom(src => src.IdUserNavigation.IdUser)
                     );
             CreateMap<EmplUpdateDTO, Employment>();
+
+            CreateMap<Day, DayDTO>();
+
+            CreateMap<Workschedule, WorkScheduleDTO>()
+            .ForMember(dest => dest.Day, opt =>
+                    opt.MapFrom(src => src.Day)
+                    );
+
+
 
 
         }

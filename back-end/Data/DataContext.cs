@@ -31,7 +31,6 @@ namespace Przychodnia.API
                 optionsBuilder.UseMySql("server=localhost;database=przychodniadb;user=user;password=password;treattinyasboolean=true", x => x.ServerVersion("5.7.29-mysql"));
             }
         }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Absence>(entity =>
@@ -68,13 +67,13 @@ namespace Przychodnia.API
                     .HasColumnName("idDay")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.FromTime).HasColumnType("date");
+                entity.Property(e => e.FromTime).HasColumnType("datetime");
 
                 entity.Property(e => e.IdWs)
                     .HasColumnName("idWS")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.ToTime).HasColumnType("date");
+                entity.Property(e => e.ToTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.IdWsNavigation)
                     .WithMany(p => p.Day)
