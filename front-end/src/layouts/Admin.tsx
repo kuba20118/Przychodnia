@@ -5,12 +5,13 @@ import Sidebar from "../components/Sidebar";
 import AdminNavbar from "../components/AdminNavbar";
 import {
   logoutUserAsync,
-  fetchAllUsersAsync
+  fetchAllUsersAsync,
 } from "../state/ducks/user/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { UserIdT } from "../state/ducks/user/types";
 import { IApplicationState } from "../state/ducks";
 import { Container } from "react-bootstrap";
+import AlertComponent from "../components/AlertComponent";
 
 const Admin: React.FC<RouteProps> = () => {
   const currentLocation = useLocation();
@@ -59,14 +60,19 @@ const Admin: React.FC<RouteProps> = () => {
   const dispatchToNavbarProps = {
     logoutUserAsyncRequest: useCallback(() => {
       dispatch(logoutUserAsync.request(currentUser!.idUser));
-    }, [dispatch])
+    }, [dispatch]),
   };
+
+  const alert = useSelector(
+    ({ alert }: IApplicationState) => alert.currentAlert
+  );
 
   return (
     <div className="wrapper">
       <Sidebar routes={routes} userRole={currentUser!.role} logoSrc="TODO" />
       <div className="main-panel">
         <AdminNavbar pageName={getPageNameText()} {...dispatchToNavbarProps} />
+        <AlertComponent alert={alert} />
         <Switch>{getRoutes(routes)}</Switch>
       </div>
     </div>

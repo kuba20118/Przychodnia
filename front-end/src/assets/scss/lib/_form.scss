@@ -1,0 +1,13 @@
+form {
+  .error {
+    border: 1px solid #ff6565;
+  }
+
+  .error-message {
+    color: #ff6565;
+    padding: 0 0.2em;
+    height: 1em;
+    position: absolute;
+    font-size: 0.8em;
+  }
+}

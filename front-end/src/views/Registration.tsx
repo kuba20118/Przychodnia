@@ -13,7 +13,7 @@ const Registration: React.FC = () => {
   const dispatch = useDispatch();
 
   const fetchRole = useCallback(() => dispatch(fetchRoleAsync.request()), [
-    dispatch
+    dispatch,
   ]);
 
   useEffect(() => {
