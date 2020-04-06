@@ -21,4 +21,6 @@
   background: $navbar-bg;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   height: $navbar-height;
+  overflow: hidden;
+  z-index: 1000;
 }

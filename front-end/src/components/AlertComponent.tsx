@@ -24,7 +24,7 @@ const AlertComponent: React.FC<AlertComponentPropsT> = ({ alert }) => {
           variant={alert?.variant}
           onClose={() => setActive(false)}
           dismissible
-          className="alert-transition"
+          className="alert-custom alert-transition"
         >
           {alert?.heading ? (
             <Alert.Heading>{alert?.heading}</Alert.Heading>

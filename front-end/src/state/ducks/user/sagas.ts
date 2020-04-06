@@ -105,20 +105,20 @@ function* handleRegister(action: IReducerAction<UserRegisterT>) {
       throw Error(res.errors);
     }
 
-    yield delay(3000);
+    yield delay(2000);
     yield put(registerUserAsync.success(res));
 
     const alert: AlertT = {
       body: `Sukces! Użytkownik ${res?.firstName} ${res.lastName} został pomyślnie zarejestrowany!`,
       variant: "success",
-      showTime: 5000,
+      showTime: 6000,
     };
     yield put(activateAlert(alert));
   } catch (err) {
     const alert: AlertT = {
       body: `Wystąpił błąd. Rejestracja nie powiodła się. Spróbuj ponownie później.`,
       variant: "danger",
-      showTime: 5000,
+      showTime: 6000,
     };
     yield put(activateAlert(alert));
 
