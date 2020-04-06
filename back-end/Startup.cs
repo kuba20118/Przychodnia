@@ -32,8 +32,8 @@ namespace Przychodnia.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(x =>x.UseMySql("server=localhost;database=przychodniadb;user=user;password=password;treattinyasboolean=true", x => x.ServerVersion("5.7.29-mysql")));
-            services.AddControllers().AddNewtonsoftJson (o =>
+            services.AddDbContext<DataContext>(x => x.UseMySql("server=localhost;database=przychodniadb;user=user;password=password;treattinyasboolean=true", x => x.ServerVersion("5.7.29-mysql")));
+            services.AddControllers().AddNewtonsoftJson(o =>
             {
                 o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
@@ -42,14 +42,14 @@ namespace Przychodnia.API
             //     .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
             //     .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
-        
+
             services.AddAutoMapper(typeof(Startup));
             services.AddCors();
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IGenericRepository, GenericRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IDictionaryRepository, DictionaryRepository>();
-             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                         .AddJwtBearer(Options =>
                         {
                             Options.TokenValidationParameters = new TokenValidationParameters
@@ -70,11 +70,10 @@ namespace Przychodnia.API
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseRouting();
 
-           app.UseAuthentication();
-           app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

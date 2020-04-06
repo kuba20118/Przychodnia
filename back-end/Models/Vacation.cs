@@ -10,6 +10,7 @@ namespace Przychodnia.API
         public DateTime ToDate { get; set; }
         public int IdUserVac { get; set; }
         public int IdAbsenceVac { get; set; }
+
         public virtual Absence IdAbsenceVacNavigation { get; set; }
         public virtual User IdUserVacNavigation { get; set; }
     }

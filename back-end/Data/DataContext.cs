@@ -68,13 +68,13 @@ namespace Przychodnia.API
                     .HasColumnName("idDay")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.FromTime).HasColumnType("time");
+                entity.Property(e => e.FromTime).HasColumnType("date");
 
                 entity.Property(e => e.IdWs)
                     .HasColumnName("idWS")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.ToTime).HasColumnType("time");
+                entity.Property(e => e.ToTime).HasColumnType("date");
 
                 entity.HasOne(d => d.IdWsNavigation)
                     .WithMany(p => p.Day)
@@ -277,13 +277,9 @@ namespace Przychodnia.API
                     .HasColumnName("idWorkSchedule")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.Current).HasColumnType("tinyint(4)");
-
                 entity.Property(e => e.IdUser)
                     .HasColumnName("idUser")
                     .HasColumnType("int(11)");
-
-                entity.Property(e => e.WeekNumber).HasColumnType("int(11)");
 
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.Workschedule)
@@ -298,4 +294,3 @@ namespace Przychodnia.API
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
-

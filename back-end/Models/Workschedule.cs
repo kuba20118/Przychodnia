@@ -11,8 +11,6 @@ namespace Przychodnia.API
         }
 
         public int IdWorkSchedule { get; set; }
-        public sbyte Current { get; set; }
-        public int WeekNumber { get; set; }
         public int IdUser { get; set; }
 
         public virtual User IdUserNavigation { get; set; }

@@ -78,10 +78,10 @@ namespace back_end.Data
         public async Task<IEnumerable<Vacation>> GetAllVacations()
         {
             var usersVac = await _context.Vacation
-                         .Where(d => d.FromDate <= DateTime.Now && d.ToDate >= DateTime.Now)
-                         .Include(a => a.IdAbsenceVacNavigation)
-                         .Include(u => u.IdUserVacNavigation)
-                         .ToListAsync();
+                        .Where(d => d.FromDate.DayOfYear <= DateTime.Now.DayOfYear && d.ToDate.DayOfYear >= DateTime.Now.DayOfYear)
+                        .Include(a => a.IdAbsenceVacNavigation)
+                        .Include(u => u.IdUserVacNavigation)
+                        .ToListAsync();
 
             return usersVac;
         }
@@ -89,11 +89,11 @@ namespace back_end.Data
         public async Task<IEnumerable<Leftvacationdays>> GetLeftVacationDays(int userId)
         {
             var daysLeft = await _context.Leftvacationdays
-                         .Where(u => u.IdUser == userId)
-                         //.Where(v => v.IdAbsenceNavigation.Name != "L4")
-                         .Include(u => u.IdUserNavigation)
-                         .Include(a => a.IdAbsenceNavigation)
-                         .ToListAsync();
+                        .Where(u => u.IdUser == userId)
+                        //.Where(v => v.IdAbsenceNavigation.Name != "L4")
+                        .Include(u => u.IdUserNavigation)
+                        .Include(a => a.IdAbsenceNavigation)
+                        .ToListAsync();
 
             return daysLeft;
         }
@@ -123,9 +123,9 @@ namespace back_end.Data
             };
 
             var vacLeft = await _context.Leftvacationdays
-                            .Where(x => x.IdUser == userId)
-                            .Where(x => x.IdAbsence == newVacation.IdAbsence)
-                            .FirstAsync();
+                        .Where(x => x.IdUser == userId)
+                        .Where(x => x.IdAbsence == newVacation.IdAbsence)
+                        .FirstAsync();
 
             var totalVacDays = (newVacation.ToDate - newVacation.FromDate).Days + 1;
             vacLeft.LeftDays -= totalVacDays;
