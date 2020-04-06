@@ -16,6 +16,9 @@ import selectedWorkerSaga from "./selected-worker/sagas";
 import roleSaga from "./role/sagas";
 import { RoleStateT } from "./role/types";
 import { roleReducer } from "./role/reducers";
+import { AlertStateT } from "./alert/types";
+import { alertReducer } from "./alert/reducers";
+import alertSaga from "./alert/sagas";
 
 export interface IApplicationState {
   authentication: AuthStateT;
@@ -23,6 +26,7 @@ export interface IApplicationState {
   selectedWorker: SelectedWorkerStateT;
   vacations: VacationsStateT;
   role: RoleStateT;
+  alert: AlertStateT;
 }
 
 export interface IReducerAction<TPayload>
@@ -34,7 +38,8 @@ export const rootReducer = combineReducers<IApplicationState>({
   user: userReducer,
   selectedWorker: selectedWorkerReducer,
   vacations: vacationsReducer,
-  role: roleReducer
+  role: roleReducer,
+  alert: alertReducer,
 });
 
 export function* rootSaga() {
@@ -43,6 +48,7 @@ export function* rootSaga() {
     fork(userSaga),
     fork(selectedWorkerSaga),
     fork(vacationsSaga),
-    fork(roleSaga)
+    fork(roleSaga),
+    fork(alertSaga),
   ]);
 }

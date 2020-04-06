@@ -1,22 +1,24 @@
-import { all, call, put, takeEvery, fork } from "redux-saga/effects";
+import { all, call, put, takeEvery, fork, delay } from "redux-saga/effects";
 import {
   UserT,
   UserActionTypes,
   UserLoginT,
   LoginApiResponseT,
   UserRegisterT,
-  UserIdT
+  UserIdT,
 } from "./types";
 import {
   loginUserAsync,
   logoutUserAsync,
   fetchAllUsersAsync,
-  registerUserAsync
+  registerUserAsync,
 } from "./actions";
 import { IReducerAction } from "..";
 import history from "../../../routing/history";
 import { authenticateAsync, setAuthFalse } from "../auth/actions";
 import apiCaller from "../../utils/apiHelper";
+import { activateAlert } from "../alert/actions";
+import { AlertT } from "../alert/types";
 
 function* handleLogin(action: IReducerAction<UserLoginT>) {
   try {
@@ -26,7 +28,7 @@ function* handleLogin(action: IReducerAction<UserLoginT>) {
       "/auth/login",
       {
         mail: action.payload.email!,
-        password: action.payload.password!
+        password: action.payload.password!,
       }
     );
 
@@ -96,15 +98,30 @@ function* handleRegister(action: IReducerAction<UserRegisterT>) {
       lastName: action.payload.lastName!,
       idRole: action.payload.role!,
       mail: action.payload.mail!,
-      password: action.payload.password!
+      password: action.payload.password!,
     });
 
     if (res.errors) {
       throw Error(res.errors);
     }
 
+    yield delay(3000);
     yield put(registerUserAsync.success(res));
+
+    const alert: AlertT = {
+      body: `Sukces! Użytkownik ${res?.firstName} ${res.lastName} został pomyślnie zarejestrowany!`,
+      variant: "success",
+      showTime: 5000,
+    };
+    yield put(activateAlert(alert));
   } catch (err) {
+    const alert: AlertT = {
+      body: `Wystąpił błąd. Rejestracja nie powiodła się. Spróbuj ponownie później.`,
+      variant: "danger",
+      showTime: 5000,
+    };
+    yield put(activateAlert(alert));
+
     if (err instanceof Error) {
       yield put(registerUserAsync.failure(err.stack!));
     } else {
@@ -155,6 +172,6 @@ export default function* userSaga() {
     fork(watchLoginRequest),
     fork(watchLogoutRequest),
     fork(watchRegisterRequest),
-    fork(watchGetUsers)
+    fork(watchGetUsers),
   ]);
 }

@@ -1,8 +1,11 @@
-import React, { useState, ChangeEvent, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Form, Col } from "react-bootstrap";
 import { UserRegisterT } from "../state/ducks/user/types";
 import { RoleT } from "../state/ducks/role/types";
 import LoadingButton from "./LoadingButton";
+import { FormikProps } from "formik";
+import * as Yup from "yup";
+import FormikWithRef from "./FormikWithRef";
 
 type RegistrationFormPropsT = {
   readonly registerUser: (data: UserRegisterT) => void;
@@ -10,141 +13,169 @@ type RegistrationFormPropsT = {
   readonly roles: RoleT[];
 };
 
+const initialUserRegisterData: UserRegisterT = {
+  firstName: "",
+  lastName: "",
+  role: 1,
+  mail: "",
+  password: "",
+};
+
+const validationSchema = Yup.object().shape({
+  firstName: Yup.string()
+    .min(2, "*First name must have at least 2 characters")
+    .max(100, "*First name can't be longer than 100 characters")
+    .required("*First name is required"),
+  lastName: Yup.string().required("*First name is required"),
+  role: Yup.number().required(),
+  mail: Yup.string()
+    .email("*Must be a valid email address")
+    .max(100, "*Email must be less than 100 characters")
+    .required("*Email is required"),
+  password: Yup.string()
+    .min(6, "*Password must have at least 6 characters")
+    .max(100, "*Password can't be longer than 100 characters")
+    .required("*Password is required"),
+});
+
 const RegistrationForm: React.FC<RegistrationFormPropsT> = ({
   registerUser,
   isLoading,
-  roles
+  roles,
 }) => {
-  const [validated, setValidated] = useState(false);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [role, setRole] = useState("1");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const formik = useRef<FormikProps<any>>(null);
 
-  const setFirstNameInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setFirstName(e.currentTarget.value);
-  };
-  const setLastNameInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setLastName(e.currentTarget.value);
-  };
-  const setRoleInput = (e: ChangeEvent<HTMLSelectElement>) => {
-    setRole(e.currentTarget.value);
-  };
-  const setLoginInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.currentTarget.value);
-  };
-  const setPasswordInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.currentTarget.value);
-  };
-
-  const submitRegister = (e: React.FormEvent<HTMLFormElement>) => {
-    const form = e.currentTarget;
-    if (form.checkValidity() === false) {
-      e.preventDefault();
-      e.stopPropagation();
-    } else {
-      e.preventDefault();
-      const newUser: UserRegisterT = {
-        firstName,
-        lastName,
-        role: parseInt(role),
-        mail: email,
-        password
-      };
-      registerUser(newUser);
+  useEffect(() => {
+    if (!isLoading) {
+      formik?.current?.resetForm();
+      formik?.current?.setSubmitting(false);
     }
-
-    setValidated(true);
-  };
+  }, [isLoading]);
 
   return (
-    <Form noValidate validated={validated} onSubmit={submitRegister}>
-      <Form.Row>
-        <Form.Group as={Col}>
-          <Form.Label>Imię</Form.Label>
+    <>
+      <FormikWithRef
+        ref={formik}
+        initialValues={initialUserRegisterData}
+        validationSchema={validationSchema}
+        onSubmit={(values, { setSubmitting, resetForm }) => {
+          setSubmitting(true);
+          registerUser(values);
+        }}
+      >
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          isSubmitting,
+        }) => (
+          <Form onSubmit={handleSubmit}>
+            {console.log(values)}
+            {console.log(touched)}
+            {console.log(errors)}
+            <Form.Row>
+              <Form.Group as={Col}>
+                <Form.Label>Imię</Form.Label>
 
-          <Form.Control
-            required
-            type="text"
-            value={firstName}
-            onChange={setFirstNameInput}
-          />
-          <Form.Control.Feedback type="invalid">
-            Imię jest wymagane.
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group as={Col}>
-          <Form.Label>Nazwisko</Form.Label>
-          <Form.Control
-            required
-            type="text"
-            value={lastName}
-            onChange={setLastNameInput}
-          />
-          <Form.Control.Feedback type="invalid">
-            Nazwisko jest wymagane.
-          </Form.Control.Feedback>
-        </Form.Group>
-      </Form.Row>
-      <Form.Row>
-        <Form.Group as={Col} md={6}>
-          <Form.Label>Rola</Form.Label>
-          <Form.Control
-            required
-            as="select"
-            value={role}
-            onChange={setRoleInput}
-          >
-            {roles.map((role, key) => (
-              <option key={key} value={role.idRole}>
-                {role.name}
-              </option>
-            ))}
-          </Form.Control>
-          <Form.Control.Feedback type="invalid">
-            Rola jest wymagana.
-          </Form.Control.Feedback>
-        </Form.Group>
-      </Form.Row>
-      <Form.Row>
-        <Form.Group as={Col}>
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            required
-            type="text"
-            value={email}
-            onChange={setLoginInput}
-          />
-          <Form.Control.Feedback type="invalid">
-            Email jest wymagany.
-          </Form.Control.Feedback>
-        </Form.Group>
+                <Form.Control
+                  type="text"
+                  name="firstName"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.firstName}
+                  className={
+                    touched.firstName && errors.firstName ? "error" : ""
+                  }
+                />
+                {touched.firstName && errors.firstName ? (
+                  <div className="error-message">{errors.firstName}</div>
+                ) : null}
+              </Form.Group>
+              <Form.Group as={Col}>
+                <Form.Label>Nazwisko</Form.Label>
 
-        <Form.Group as={Col}>
-          <Form.Label>Hasło</Form.Label>
-          <Form.Control
-            required
-            type="password"
-            value={password}
-            onChange={setPasswordInput}
-          />
-          <Form.Control.Feedback type="invalid">
-            Hasło jest wymagane.
-          </Form.Control.Feedback>
-        </Form.Group>
-      </Form.Row>
-      <Form.Row>
-        <Col className="py-2 text-right">
-          <LoadingButton
-            variant="primary"
-            defaultText="Rejestruj"
-            defaultType="submit"
-            isLoading={isLoading}
-          />
-        </Col>
-      </Form.Row>
-    </Form>
+                <Form.Control
+                  type="text"
+                  name="lastName"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.lastName}
+                  className={touched.lastName && errors.lastName ? "error" : ""}
+                />
+                {touched.lastName && errors.lastName ? (
+                  <div className="error-message">{errors.lastName}</div>
+                ) : null}
+              </Form.Group>
+            </Form.Row>
+            <Form.Row>
+              <Form.Group as={Col} md={6}>
+                <Form.Label>Rola</Form.Label>
+                <Form.Control
+                  as="select"
+                  name="role"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.role}
+                  className={touched.role && errors.role ? "error" : ""}
+                >
+                  {roles.map((role, key) => (
+                    <option key={key} value={role.idRole}>
+                      {role.name}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+            </Form.Row>
+            <Form.Row>
+              <Form.Group as={Col}>
+                <Form.Label>Email</Form.Label>
+
+                <Form.Control
+                  type="text"
+                  name="mail"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.mail}
+                  className={touched.mail && errors.mail ? "error" : ""}
+                />
+                {touched.mail && errors.mail ? (
+                  <div className="error-message">{errors.mail}</div>
+                ) : null}
+              </Form.Group>
+
+              <Form.Group as={Col}>
+                <Form.Label>Hasło</Form.Label>
+
+                <Form.Control
+                  type="password"
+                  name="password"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.password}
+                  className={touched.password && errors.password ? "error" : ""}
+                />
+                {touched.password && errors.password ? (
+                  <div className="error-message">{errors.password}</div>
+                ) : null}
+              </Form.Group>
+            </Form.Row>
+            <Form.Row>
+              <Col className="py-2 text-right">
+                <LoadingButton
+                  variant="primary"
+                  defaultText="Rejestruj"
+                  defaultType="submit"
+                  isLoading={isSubmitting}
+                />
+              </Col>
+            </Form.Row>
+          </Form>
+        )}
+      </FormikWithRef>
+    </>
   );
 };
 
