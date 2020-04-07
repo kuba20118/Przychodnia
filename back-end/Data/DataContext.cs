@@ -75,6 +75,12 @@ namespace Przychodnia.API
 
                 entity.Property(e => e.ToTime).HasColumnType("datetime");
 
+                entity.Property(e => e.Type)
+                    .IsRequired()
+                    .HasColumnType("varchar(45)")
+                    .HasCharSet("latin1")
+                    .HasCollation("latin1_swedish_ci");
+
                 entity.HasOne(d => d.IdWsNavigation)
                     .WithMany(p => p.Day)
                     .HasForeignKey(d => d.IdWs)

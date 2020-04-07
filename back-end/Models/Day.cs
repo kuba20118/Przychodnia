@@ -8,6 +8,7 @@ namespace Przychodnia.API
         public int IdDay { get; set; }
         public DateTime FromTime { get; set; }
         public DateTime ToTime { get; set; }
+        public string Type { get; set; }
         public int IdWs { get; set; }
 
         public virtual Workschedule IdWsNavigation { get; set; }
