@@ -2,7 +2,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using back_end.Data;
 using back_end.DTOs;
+using back_end.DTOs.Employment;
 using Microsoft.AspNetCore.Mvc;
+using Przychodnia.API;
 
 namespace back_end.Controllers
 {
@@ -13,9 +15,11 @@ namespace back_end.Controllers
     {
         private readonly IWSRepository _repo;
         private readonly IMapper _mapper;
+        private readonly IUserRepository _userRepo;
 
-        public SchedulesController(IWSRepository repo, IMapper mapper)
+        public SchedulesController(IWSRepository repo, IUserRepository userRepo, IMapper mapper)
         {
+            _userRepo = userRepo;
             _mapper = mapper;
             _repo = repo;
         }
@@ -25,9 +29,21 @@ namespace back_end.Controllers
         public async Task<IActionResult> GetUserWorkSchedule(int id)
         {
             var ws = await _repo.GetUserWS(id);
-            var wsToReturn = _mapper.Map<WorkScheduleDTO>(ws);
+            var wsToReturn = _mapper.Map<WorkScheduleReturn>(ws);
+
             return Ok(wsToReturn);
         }
+
+        [HttpPost("generate/{id}")]
+        public async Task<IActionResult> GenerateUserWorkSchedule(int id, WorkScheduleNewDTO newWS)
+        {
+            //var user = await _userRepo.GetUser(id);
+
+            var ws = await _repo.GenerateUserWS(id, newWS);
+
+            return Ok(ws);
+        }
+
 
     }
 }

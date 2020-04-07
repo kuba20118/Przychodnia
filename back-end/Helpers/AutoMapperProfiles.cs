@@ -1,5 +1,6 @@
 using AutoMapper;
 using back_end.DTOs;
+using back_end.DTOs.Employment;
 using Przychodnia.API;
 
 namespace back_end.Helpers
@@ -44,16 +45,18 @@ namespace back_end.Helpers
                     );
             CreateMap<EmplUpdateDTO, Employment>();
 
+            CreateMap<DayDTO, Day>();
             CreateMap<Day, DayDTO>();
+            // .ForMember(dest => dest.DayOfYear, opt =>
+            //         opt.MapFrom(src => src.FromTime.DayOfYear)
+            // );
 
-            CreateMap<Workschedule, WorkScheduleDTO>()
+            CreateMap<WorkScheduleNewDTO, Workschedule>();
+
+            CreateMap<Workschedule, WorkScheduleReturn>()
             .ForMember(dest => dest.Day, opt =>
                     opt.MapFrom(src => src.Day)
                     );
-
-
-
-
         }
     }
 }

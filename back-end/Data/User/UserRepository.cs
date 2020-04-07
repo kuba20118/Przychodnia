@@ -113,7 +113,8 @@ namespace back_end.Data
         {
 
             var user = await GetUser(userId);
-            var absence = await _context.Absence.FirstOrDefaultAsync(x => x.IdAbsence == newVacation.IdAbsence);
+            var absence = await _context.Absence
+                    .FirstOrDefaultAsync(x => x.IdAbsence == newVacation.IdAbsence);
             var newVac = new Vacation
             {
                 FromDate = newVacation.FromDate,
