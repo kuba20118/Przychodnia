@@ -8,7 +8,6 @@ import {
   LeftVacationsDaysT,
   ISelectedWorkerVacationCreateNew,
   SelectedWorkerUpdateT,
-  SelectedWorkerUpdateEmploymentT,
 } from "./types";
 
 export const setSelectedWorker = (worker: ISelectedWorker) =>
@@ -43,9 +42,3 @@ export const updateSelectedWorkerAsync = createAsyncAction(
   SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_SUCCESS,
   SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_ERROR
 )<SelectedWorkerUpdateT, ISelectedWorker, string>();
-
-export const updateSelectedWorkerEmploymentAsync = createAsyncAction(
-  SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_EMPLOYMENT,
-  SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_EMPLOYMENT_SUCCESS,
-  SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_EMPLOYMENT_ERROR
-)<SelectedWorkerUpdateEmploymentT, ISelectedWorker, string>();

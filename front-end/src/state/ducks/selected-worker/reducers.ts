@@ -6,7 +6,6 @@ import {
   ISelectedWorkerWorkSchedule,
   LeftVacationsDaysT,
   SelectedWorkerUpdateT,
-  SelectedWorkerUpdateEmploymentT,
   SelectedWorkerUserStateT,
   SelectedWorkerVacationsStateT,
   SelectedWorkerWorkScheduleStateT,
@@ -18,7 +17,6 @@ const initialSelectedWorkerUserState: SelectedWorkerUserStateT = {
   data: undefined,
   isLoadingData: false,
   isLoadingUpdate: false,
-  isLoadingEmploymentUpdate: false,
 };
 
 export const selectedWorkerUserReducer = (
@@ -26,10 +24,7 @@ export const selectedWorkerUserReducer = (
   action: Action<TypeConstant> &
     PayloadAction<
       TypeConstant,
-      ISelectedWorker &
-        SelectedWorkerUpdateT &
-        SelectedWorkerUpdateEmploymentT &
-        string
+      ISelectedWorker & SelectedWorkerUpdateT & string
     >
 ): SelectedWorkerUserStateT => {
   // TODO: UPDATE WORKER AFTER SUCCESS UPDATE
@@ -45,19 +40,6 @@ export const selectedWorkerUserReducer = (
     }
     case SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_ERROR: {
       return { ...state, isLoadingUpdate: false, error: action.payload };
-    }
-    case SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_EMPLOYMENT: {
-      return { ...state, isLoadingEmploymentUpdate: true };
-    }
-    case SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_EMPLOYMENT_SUCCESS: {
-      return { ...state, isLoadingEmploymentUpdate: false };
-    }
-    case SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_EMPLOYMENT_ERROR: {
-      return {
-        ...state,
-        isLoadingEmploymentUpdate: false,
-        error: action.payload,
-      };
     }
     default: {
       return state;

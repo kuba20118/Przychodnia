@@ -12,9 +12,6 @@ export type SelectedWorkerUpdateT = {
   idRole: number;
   firstName: UserT["firstName"];
   lastName: UserT["lastName"];
-};
-
-export type SelectedWorkerUpdateEmploymentT = {
   workingHours: UserT["workingHours"];
   currentlyEmployed: UserT["currentlyEmployed"];
   fireDate: UserT["fireDate"];
@@ -30,7 +27,6 @@ export type SelectedWorkerUserStateT = {
   data?: ISelectedWorker;
   isLoadingData: boolean;
   isLoadingUpdate: boolean;
-  isLoadingEmploymentUpdate: boolean;
   error?: string;
 };
 
