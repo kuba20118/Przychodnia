@@ -4,7 +4,7 @@ import { fetchAllVacationsAsync } from "../state/ducks/vacations/actions";
 import { VacationsDataT } from "../state/ducks/vacations/types";
 import CustomTable, {
   CustomTableHeaderT,
-  CustomTableDataT
+  CustomTableDataT,
 } from "../components/CustomTable";
 import { IApplicationState } from "../state/ducks";
 import { UserT } from "../state/ducks/user/types";
@@ -36,7 +36,7 @@ const Vacations: React.FC = () => {
     "Nazwisko",
     "Od",
     "Do",
-    "Typ"
+    "Typ",
   ];
 
   const tableData: CustomTableDataT | undefined =
@@ -53,7 +53,7 @@ const Vacations: React.FC = () => {
         user!.lastName || "",
         item.fromDate.toString(),
         item.toDate.toString(),
-        item.absenceType
+        item.absenceType,
       ];
       return data;
     });

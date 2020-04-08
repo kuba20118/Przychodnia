@@ -1,36 +1,18 @@
 export type WorkScheduleDayT = {
   id: number;
-  fromTime: string;
-  toTime: string;
+  fromTime: Date;
+  toTime: Date;
 };
 
 export type WorkScheduleDataT = {
-  current: number;
-  weekNumber: number;
+  idWorkSchedule: number;
+  idUser: number;
   days: WorkScheduleDayT[];
 };
 
 export type WorkScheduleStateT = {
   current?: WorkScheduleDataT;
   loaded: boolean;
-};
-
-// --------
-// API TYPES
-// -------
-export type WorkScheduleDayApiResponseT = {
-  idDay: number;
-  fromTime: string;
-  toTime: string;
-  idWs: number;
-};
-
-export type WorkScheduleApiResponseT = {
-  idWorkSchedule: number;
-  current: number;
-  weekNumber: number;
-  idUser: number;
-  day: WorkScheduleDayApiResponseT[];
 };
 
 export type WorkScheduleApiFetchT = {
@@ -47,5 +29,5 @@ export enum WorkScheduleActionTypes {
   CREATE_WORK_SCHEDULE_ERROR = "@@work-schedule/CREATE_WORK_SCHEDULE_ERROR",
   UPDATE_WORK_SCHEDULE = "@@work-schedule/UPDATE_WORK_SCHEDULE",
   UPDATE_WORK_SCHEDULE_SUCCESS = "@@work-schedule/UPDATE_WORK_SCHEDULE_SUCCESS",
-  UPDATE_WORK_SCHEDULE_ERROR = "@@work-schedule/UPDATE_WORK_SCHEDULE_ERROR"
+  UPDATE_WORK_SCHEDULE_ERROR = "@@work-schedule/UPDATE_WORK_SCHEDULE_ERROR",
 }

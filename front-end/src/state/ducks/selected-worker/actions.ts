@@ -5,7 +5,10 @@ import {
   ISelectedWorkerVacations,
   ISelectedWorkerWorkSchedule,
   SelectedWorkerIdT,
-  LeftVacationsDaysT
+  LeftVacationsDaysT,
+  ISelectedWorkerVacationCreateNew,
+  SelectedWorkerUpdateT,
+  SelectedWorkerUpdateEmploymentT,
 } from "./types";
 
 export const setSelectedWorker = (worker: ISelectedWorker) =>
@@ -27,10 +30,22 @@ export const createSelectedWorkerVacationsAsync = createAsyncAction(
   SelectedWorkerActionTypes.CREATE_SELECTED_WORKER_VACATIONS,
   SelectedWorkerActionTypes.CREATE_SELECTED_WORKER_VACATIONS_SUCCESS,
   SelectedWorkerActionTypes.CREATE_SELECTED_WORKER_VACATIONS_ERROR
-)<ISelectedWorkerVacations, ISelectedWorkerVacations[], string>();
+)<ISelectedWorkerVacationCreateNew, ISelectedWorkerVacations[], string>();
 
 export const getSelectedWorkerWorkScheduleAsync = createAsyncAction(
   SelectedWorkerActionTypes.GET_SELECTED_WORKER_WORK_SCHEDULE,
   SelectedWorkerActionTypes.GET_SELECTED_WORKER_WORK_SCHEDULE_SUCCESS,
   SelectedWorkerActionTypes.GET_SELECTED_WORKER_WORK_SCHEDULE_ERROR
 )<SelectedWorkerIdT, ISelectedWorkerWorkSchedule[], string>();
+
+export const updateSelectedWorkerAsync = createAsyncAction(
+  SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER,
+  SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_SUCCESS,
+  SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_ERROR
+)<SelectedWorkerUpdateT, ISelectedWorker, string>();
+
+export const updateSelectedWorkerEmploymentAsync = createAsyncAction(
+  SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_EMPLOYMENT,
+  SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_EMPLOYMENT_SUCCESS,
+  SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_EMPLOYMENT_ERROR
+)<SelectedWorkerUpdateEmploymentT, ISelectedWorker, string>();

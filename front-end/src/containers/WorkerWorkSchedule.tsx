@@ -7,7 +7,7 @@ import { Event } from "react-big-calendar";
 
 const WorkerWorkSchedule: React.FC = () => {
   const workSchedule: ISelectedWorkerWorkSchedule[] | undefined = useSelector(
-    ({ selectedWorker }: IApplicationState) => selectedWorker.workSchedule
+    ({ selectedWorker }: IApplicationState) => selectedWorker.workSchedule.data
   );
 
   const days: Event[] | undefined =

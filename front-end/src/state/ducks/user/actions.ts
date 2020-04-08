@@ -6,7 +6,7 @@ import {
   LoginApiResponseT,
   AllUsersApiResponseT,
   UserRegisterT,
-  UserIdT
+  UserIdT,
 } from "./types";
 
 export const loginUserAsync = createAsyncAction(

@@ -1,56 +1,71 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   SelectedWorkerStateT,
   ISelectedWorker,
-  LeftVacationsDaysT,
-  ISelectedWorkerVacations
+  ISelectedWorkerVacations,
+  ISelectedWorkerVacationCreateNew,
 } from "../state/ducks/selected-worker/types";
 import { IApplicationState } from "../state/ducks";
 import VacationsForm, { VacationsFormDataT } from "../components/VacationsForm";
 import Card from "../components/Card";
 import CustomTable, {
   CustomTableDataT,
-  CustomTableHeaderT
+  CustomTableHeaderT,
 } from "../components/CustomTable";
 import { format, parseISO } from "date-fns/esm";
 import { Row, Col } from "react-bootstrap";
-import { UserT, UserIdT } from "../state/ducks/user/types";
+import { UserT } from "../state/ducks/user/types";
 import VacationsLeftDays from "../components/VacationsLeftDays";
 import { createSelectedWorkerVacationsAsync } from "../state/ducks/selected-worker/actions";
 import { isFuture, isPast } from "date-fns";
+import { getVacationsCategoriesAsync } from "../state/ducks/vacations/actions";
+import { VacationsCategoryT } from "../state/ducks/vacations/types";
 
 const WorkerVacations: React.FC = () => {
   const dispatch = useDispatch();
   const users: UserT[] | undefined = useSelector(
     ({ user }: IApplicationState) => user.users
   );
-
-  const selectedWorker: SelectedWorkerStateT | undefined = useSelector(
+  const vacationsCategories: VacationsCategoryT[] = useSelector(
+    ({ vacations }: IApplicationState) => vacations.categories
+  );
+  const selectedWorker: SelectedWorkerStateT = useSelector(
     ({ selectedWorker }: IApplicationState) => selectedWorker
   );
 
-  const potentialSubs: ISelectedWorker[] | undefined =
-    users &&
-    users.filter((user) => user.idUser !== selectedWorker.worker?.idUser);
-
-  const createWorkerVacationRequest = useCallback(
-    (newVacation: ISelectedWorkerVacations) =>
-      dispatch(createSelectedWorkerVacationsAsync.request(newVacation)),
+  const getVacationsCategoriersRequest = useCallback(
+    () => dispatch(getVacationsCategoriesAsync.request()),
     [dispatch]
   );
 
-  const assignHolidays = (data: VacationsFormDataT) => {
-    if (selectedWorker.worker) {
-      const newVacation: ISelectedWorkerVacations = {
-        userId: selectedWorker.worker?.idUser,
-        fromDate: data.startDate,
-        toDate: data.endDate,
-        absenceType: data.category
-      };
-      createWorkerVacationRequest(newVacation);
-    }
-  };
+  useEffect(() => {
+    getVacationsCategoriersRequest();
+  }, []);
+
+  const potentialSubs: ISelectedWorker[] | undefined =
+    users &&
+    users.filter(
+      (user) =>
+        user.idUser !== selectedWorker.user.data?.idUser &&
+        user.role === selectedWorker.user.data?.role
+    );
+
+  const createWorkerVacationRequest = useCallback(
+    (data: VacationsFormDataT) => {
+      if (selectedWorker.user.data?.idUser) {
+        const newVacation: ISelectedWorkerVacationCreateNew = {
+          userId: selectedWorker.user.data?.idUser,
+          fromDate: data.fromDate,
+          toDate: data.toDate,
+          absenceId: parseInt(data.categoryId),
+          substitutionId: data.substitutionId,
+        };
+        dispatch(createSelectedWorkerVacationsAsync.request(newVacation));
+      }
+    },
+    [dispatch]
+  );
 
   const tableHeader: CustomTableHeaderT = ["#", "Od", "Do", "Typ"];
 
@@ -61,20 +76,28 @@ const WorkerVacations: React.FC = () => {
     index.toString(),
     format(parseISO(dataItem.fromDate), "dd-MM-yyyy"),
     format(parseISO(dataItem.toDate), "dd-MM-yyyy"),
-    dataItem.absenceType
+    dataItem.absenceType,
   ];
 
-  const currentTableData: CustomTableDataT | undefined =
-    selectedWorker.vacations &&
-    selectedWorker
-      .vacations!.filter((item) => isFuture(new Date(item.toDate)))
-      .map((item, index) => createTableDataItem(item, index));
+  const currentTableData: CustomTableDataT | undefined = useMemo(
+    () =>
+      selectedWorker.vacation.data &&
+      selectedWorker.vacation
+        .data!.filter((item) => {
+          return isFuture(new Date(item.toDate));
+        })
+        .map((item, index) => createTableDataItem(item, index)),
+    [selectedWorker.vacation.data]
+  );
 
-  const historyTableData: CustomTableDataT | undefined =
-    selectedWorker.vacations &&
-    selectedWorker
-      .vacations!.filter((item) => isPast(new Date(item.toDate)))
-      .map((item, index) => createTableDataItem(item, index));
+  const historyTableData: CustomTableDataT | undefined = useMemo(
+    () =>
+      selectedWorker.vacation.data &&
+      selectedWorker.vacation
+        .data!.filter((item) => isPast(new Date(item.toDate)))
+        .map((item, index) => createTableDataItem(item, index)),
+    [selectedWorker.vacation.data]
+  );
 
   return (
     <div className="content">
@@ -83,7 +106,7 @@ const WorkerVacations: React.FC = () => {
           <Card
             title="Pozostałe dni urlopu"
             content={
-              <VacationsLeftDays leftDays={selectedWorker.vacationsLeftDays} />
+              <VacationsLeftDays leftDays={selectedWorker.vacation.leftDays} />
             }
           />
         </Col>
@@ -92,38 +115,36 @@ const WorkerVacations: React.FC = () => {
             title="Przydziel urlop"
             content={
               <VacationsForm
-                leftDays={14}
+                leftVacationsDays={selectedWorker.vacation.leftDays}
                 potentialSubs={potentialSubs}
-                onSubmit={assignHolidays}
+                createNewVacation={createWorkerVacationRequest}
+                categories={vacationsCategories}
+                isLoading={selectedWorker.vacation.isLoadingCreateData}
               />
             }
           />
         </Col>
       </Row>
-      {currentTableData && (
-        <Row>
-          <Col>
-            <Card
-              title="Obecne i przyszłe urlopy"
-              content={
-                <CustomTable header={tableHeader} data={currentTableData} />
-              }
-            />
-          </Col>
-        </Row>
-      )}
-      {historyTableData && (
-        <Row>
-          <Col>
-            <Card
-              title="Historia urlopów"
-              content={
-                <CustomTable header={tableHeader} data={historyTableData} />
-              }
-            />
-          </Col>
-        </Row>
-      )}
+      <Row>
+        <Col>
+          <Card
+            title="Obecne i przyszłe urlopy"
+            content={
+              <CustomTable header={tableHeader} data={currentTableData} />
+            }
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <Card
+            title="Historia urlopów"
+            content={
+              <CustomTable header={tableHeader} data={historyTableData} />
+            }
+          />
+        </Col>
+      </Row>
     </div>
   );
 };

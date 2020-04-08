@@ -73,9 +73,6 @@ const RegistrationForm: React.FC<RegistrationFormPropsT> = ({
           isSubmitting,
         }) => (
           <Form onSubmit={handleSubmit}>
-            {console.log(values)}
-            {console.log(touched)}
-            {console.log(errors)}
             <Form.Row>
               <Form.Group as={Col}>
                 <Form.Label>Imię</Form.Label>

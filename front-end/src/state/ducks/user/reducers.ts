@@ -3,14 +3,14 @@ import {
   UserActionTypes,
   AllUsersApiResponseT,
   UserT,
-  UserIdT
+  UserIdT,
 } from "./types";
 import { TypeConstant, Action, PayloadAction } from "typesafe-actions";
 
 export const initialUserState: UserStateT = {
   isLoadingUsers: false,
   isLoadingRegistration: false,
-  isLoadingLogin: false
+  isLoadingLogin: false,
 };
 
 export const userReducer = (
@@ -44,7 +44,7 @@ export const userReducer = (
       return {
         ...state,
         users: [...state.users!, action.payload],
-        isLoadingRegistration: false
+        isLoadingRegistration: false,
       };
     }
     case UserActionTypes.REGISTER_USER_ERROR: {

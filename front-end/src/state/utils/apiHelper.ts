@@ -8,23 +8,30 @@ export default function apiCaller<T>(
     headers: {
       Accept: "application/json",
       Authorization: `Bearer ${localStorage.getItem("przychodnia-jwt")}`,
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: data ? JSON.stringify(data) : null
-  }).then((response) => {
-    return new Promise((resolve, reject) => {
-      if (response.status === 401) {
-        reject(new Error("401"));
-      }
-      if (response.status === 500) {
-        reject(new Error("Server critical error. Try again later."));
-      }
-      if (
-        (response.status >= 200 && response.status < 300) ||
-        response.status === 400
-      ) {
-        response.json().then((json) => resolve(json));
-      }
-    });
-  });
+    body: data ? JSON.stringify(data) : null,
+  }).then(
+    (response) =>
+      new Promise((resolve, reject) => {
+        if (response.status === 401) {
+          reject(new Error("401"));
+        }
+        if (response.status === 500) {
+          reject(new Error("Server critical error. Try again later."));
+        }
+        if (
+          (response.status >= 200 && response.status < 300) ||
+          response.status === 400
+        ) {
+          const contentType = response.headers.get("content-type")!;
+
+          if (contentType.startsWith("application/json;")) {
+            response.json().then((json) => resolve(json));
+          } else if (contentType.startsWith("text/plain;")) {
+            response.text().then((error) => reject(new Error(error)));
+          }
+        }
+      })
+  );
 }

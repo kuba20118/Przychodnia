@@ -8,13 +8,12 @@ import {
   setSelectedWorker,
   getSelectedWorkerVacationsAsync,
   getSelectedWorkerWorkScheduleAsync,
-  getSelectedWorkerVacationsLeftDaysAsync
+  getSelectedWorkerVacationsLeftDaysAsync,
 } from "../state/ducks/selected-worker/actions";
 import { ISelectedWorker } from "../state/ducks/selected-worker/types";
 import { IApplicationState } from "../state/ducks";
 import UserCard from "../components/CardUser";
 import { UserT } from "../state/ducks/user/types";
-import { Container } from "react-bootstrap";
 
 const Worker: React.FC<IRouteComponentProps> = (props) => {
   const dispatch = useDispatch();
@@ -24,7 +23,7 @@ const Worker: React.FC<IRouteComponentProps> = (props) => {
   );
 
   const worker: ISelectedWorker | undefined = useSelector(
-    ({ selectedWorker }: IApplicationState) => selectedWorker.worker
+    ({ selectedWorker }: IApplicationState) => selectedWorker.user.data
   );
 
   const searchWorker = useCallback(

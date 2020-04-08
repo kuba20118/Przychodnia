@@ -1,149 +1,197 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
-import {
-  Button,
-  Row,
-  Col,
-  FormControl,
-  FormGroup,
-  FormLabel
-} from "react-bootstrap";
-import ReactDatePicker from "react-datepicker";
-import { addDays, subDays, differenceInCalendarDays } from "date-fns/esm";
+import React, { useState, useRef, useEffect } from "react";
+import { Button, Row, Col, FormGroup, FormLabel, Form } from "react-bootstrap";
+import { addDays, subDays } from "date-fns/esm";
 import { UserT } from "../state/ducks/user/types";
-
-const initialCategories: string[] = [
-  "Urlop na żądanie",
-  "Urlop bezpłatny",
-  "Urlop ojcowski",
-  "Urlop macierzyński",
-  "Urlop rodzicielski",
-  "Urlop szkoleniowy",
-  "Zwolnienie lekarskie"
-];
+import { VacationsCategoryT } from "../state/ducks/vacations/types";
+import FormikWithRef from "./FormikWithRef";
+import * as Yup from "yup";
+import { FormikProps } from "formik";
+import { DatePickerField } from "./DatePickerField";
+import { LeftVacationsDaysT } from "../state/ducks/selected-worker/types";
+import LoadingButton from "./LoadingButton";
 
 export type VacationsFormDataT = {
-  readonly startDate: string;
-  readonly endDate: string;
-  readonly category: string;
+  fromDate: Date;
+  toDate: Date;
+  categoryId: string;
+  substitutionId: string;
 };
 
 type VacationsFormPropsT = {
-  readonly categories?: string[];
+  readonly categories?: VacationsCategoryT[];
   readonly potentialSubs?: UserT[];
-  readonly leftDays: number;
-  readonly onSubmit: (data: VacationsFormDataT) => void;
+  readonly leftVacationsDays?: LeftVacationsDaysT[];
+  readonly createNewVacation: (data: VacationsFormDataT) => void;
+  isLoading: boolean;
 };
 
+const initialVacationsFormData: VacationsFormDataT = {
+  fromDate: new Date(),
+  toDate: new Date(),
+  categoryId: "1",
+  substitutionId: "",
+};
+
+const validationSchema = Yup.object().shape({
+  fromDate: Yup.date().required("*To pole jest wymagane"),
+  toDate: Yup.date().required("*To pole jest wymagane"),
+  categoryId: Yup.number().required("*To pole jest wymagane"),
+  substitutionId: Yup.string().required("*To pole jest wymagane"),
+});
+
 const VacationsForm: React.FC<VacationsFormPropsT> = ({
-  categories = initialCategories,
+  categories,
   potentialSubs,
-  leftDays = 14,
-  onSubmit
+  leftVacationsDays,
+  createNewVacation,
+  isLoading,
 }) => {
-  const [startDate, setStartDate] = useState<Date>(new Date());
-  const [endDate, setEndDate] = useState<Date>(new Date());
-  const [category, setCategory] = useState(categories[0]);
-  const [subWorkerId, setSubWorkerId] = useState("");
+  const formik = useRef<FormikProps<any>>(null);
+  const [leftDays, setLeftDays] = useState(0);
 
-  const setCategorySelect = (e: ChangeEvent<HTMLSelectElement>) => {
-    setCategory(e.currentTarget.value);
-  };
+  useEffect(() => {
+    if (leftVacationsDays) {
+      setLeftDays(leftVacationsDays[0].leftDays);
+    }
+  }, [leftVacationsDays, setLeftDays]);
 
-  const setSubWorkerIdSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-    setSubWorkerId(e.currentTarget.value);
-  };
+  useEffect(() => {
+    if (!isLoading) {
+      formik?.current?.resetForm();
+      formik?.current?.setSubmitting(false);
+    }
+  }, [isLoading]);
 
-  const isDateOk = (from: Date, to: Date) => {
-    const difference = differenceInCalendarDays(to, from);
-    return difference >= 0 && difference <= leftDays;
-  };
+  const handleCategoryChange = (categoryId: string) => {
+    const categoryIdNum = parseInt(categoryId);
+    const category =
+      categories &&
+      categories.find((category) => category.idAbsence === categoryIdNum);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (isDateOk(startDate, endDate)) {
-      const vacationFormData: VacationsFormDataT = {
-        startDate: startDate.toDateString(),
-        endDate: endDate.toDateString(),
-        category: category
-      };
-
-      onSubmit(vacationFormData);
-    } else {
-      console.log("ERROR");
+    if (category) {
+      setLeftDays(category.limit);
     }
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <Row>
-          <Col md={6}>
-            <FormGroup>
-              <FormLabel>Typ urlopu</FormLabel>
-              <FormControl
-                as="select"
-                value={category}
-                onChange={setCategorySelect}
-              >
-                {categories &&
-                  categories.map((category, key) => (
-                    <option value={category} key={key}>
-                      {category}
-                    </option>
-                  ))}
-              </FormControl>
-            </FormGroup>
-          </Col>
-          <Col md={6}>
-            <FormLabel>Zastępstwo</FormLabel>
-            <FormControl
-              as="select"
-              value={subWorkerId}
-              onChange={setSubWorkerIdSelect}
-            >
-              {potentialSubs &&
-                potentialSubs.map((sub, key) => (
-                  <option
-                    value={sub.idUser}
-                    key={key}
-                  >{`${sub.firstName} ${sub.lastName}`}</option>
-                ))}
-            </FormControl>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={6} className="py-2">
-            <div className="block">
-              <FormLabel>Start</FormLabel>
-              <ReactDatePicker
-                title="Wybierz datę początkową"
-                selected={startDate}
-                onChange={(date: Date) => setStartDate(date)}
-              />
-            </div>
-          </Col>
-          <Col md={6} className="py-2">
-            <div className="block">
-              <FormLabel>Koniec</FormLabel>
-              <ReactDatePicker
-                title="Wybierz datę końcową"
-                selected={endDate}
-                onChange={(date: Date) => setEndDate(date)}
-                minDate={subDays(startDate, 0)}
-                maxDate={addDays(startDate, leftDays)}
-              />
-            </div>
-          </Col>
-        </Row>
-        <Row></Row>
-        <Row className="py-2">
-          <Col className="text-right">
-            <Button type="submit" className="btn-primary">
-              Przydziel urlop
-            </Button>
-          </Col>
-        </Row>
-      </form>
+      <FormikWithRef
+        ref={formik}
+        initialValues={initialVacationsFormData}
+        validationSchema={validationSchema}
+        onSubmit={(values, { setSubmitting, resetForm }) => {
+          setSubmitting(true);
+          createNewVacation(values);
+        }}
+      >
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          isSubmitting,
+        }) => (
+          <Form onSubmit={handleSubmit}>
+            <Row>
+              <Col md={6}>
+                <FormGroup>
+                  <Form.Label>Typ urlopu</Form.Label>
+                  <Form.Control
+                    as="select"
+                    name="categoryId"
+                    onChange={(e) => {
+                      handleCategoryChange(e.currentTarget.value);
+                      handleChange(e);
+                    }}
+                    onBlur={handleBlur}
+                    value={values.categoryId}
+                    className={
+                      touched.category && errors.category ? "error" : ""
+                    }
+                  >
+                    {categories &&
+                      categories.map((category, key) => (
+                        <option key={key} value={category.idAbsence}>
+                          {category.name}
+                        </option>
+                      ))}
+                  </Form.Control>
+                  {touched.categoryId && errors.categoryId ? (
+                    <div className="error-message">{errors.categoryId}</div>
+                  ) : null}
+                </FormGroup>
+              </Col>
+              <Col md={6}>
+                <Form.Label>Zastępstwo</Form.Label>
+                <Form.Control
+                  as="select"
+                  name="substitutionId"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.substitutionId}
+                  className={touched.category && errors.category ? "error" : ""}
+                >
+                  <option disabled value="">
+                    -- wybierz pracownika --
+                  </option>
+                  {potentialSubs &&
+                    potentialSubs.map((sub, key) => (
+                      <option key={key} value={sub.idUser}>
+                        {sub.firstName} {sub.lastName}
+                      </option>
+                    ))}
+                </Form.Control>
+                {touched.substitutionId && errors.substitutionId ? (
+                  <div className="error-message">{errors.substitutionId}</div>
+                ) : null}
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6} className="py-2">
+                <div className="block">
+                  <FormLabel>Start</FormLabel>
+                  <DatePickerField
+                    name="fromDate"
+                    value={values.fromDate}
+                    onChange={handleChange}
+                  />
+                  {touched.fromDate && errors.fromDate ? (
+                    <div className="error-message">{errors.fromDate}</div>
+                  ) : null}
+                </div>
+              </Col>
+              <Col md={6} className="py-2">
+                <div className="block">
+                  <FormLabel>Koniec</FormLabel>
+                  <DatePickerField
+                    name="toDate"
+                    selected={values.toDate}
+                    onChange={handleChange}
+                    minDate={subDays(values.fromDate, 0)}
+                    maxDate={addDays(values.fromDate, leftDays)}
+                  />
+                  {touched.toDate && errors.toDate ? (
+                    <div className="error-message">{errors.toDate}</div>
+                  ) : null}
+                </div>
+              </Col>
+            </Row>
+            <Row></Row>
+            <Row className="py-2">
+              <Col className="text-right">
+                <LoadingButton
+                  variant="primary"
+                  defaultText="Przydziel urlop"
+                  defaultType="submit"
+                  isLoading={isSubmitting}
+                ></LoadingButton>
+              </Col>
+            </Row>
+          </Form>
+        )}
+      </FormikWithRef>
     </>
   );
 };

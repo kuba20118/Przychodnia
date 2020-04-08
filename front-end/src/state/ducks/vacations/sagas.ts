@@ -1,6 +1,10 @@
 import { all, call, put, takeEvery, fork } from "redux-saga/effects";
-import { VacationsActionTypes, VacationsDataT } from "./types";
-import { fetchAllVacationsAsync, getVacationsTypesAsync } from "./actions";
+import {
+  VacationsActionTypes,
+  VacationsDataT,
+  VacationsCategoryT,
+} from "./types";
+import { fetchAllVacationsAsync, getVacationsCategoriesAsync } from "./actions";
 import apiCaller from "../../utils/apiHelper";
 
 function* handleFetchAllCurrentVacations() {
@@ -25,24 +29,34 @@ function* handleFetchAllCurrentVacations() {
   }
 }
 
-function* handleGetVacationsTypes() {
+function* handleGetVacationsCategories() {
   try {
-    const res: string[] | any = yield call(
+    const res: VacationsCategoryT[] | any = yield call(
       apiCaller,
       "GET",
-      "/users/vacations/types"
+      "/dictionarydata/absences"
     );
 
     if (res.errors) {
       throw new Error(res.errors);
     }
 
-    getVacationsTypesAsync.success(res);
+    const categories: VacationsCategoryT[] = res.map(
+      (res: VacationsCategoryT) => ({
+        idAbsence: res.idAbsence,
+        name: res.name,
+        limit: res.limit,
+      })
+    );
+
+    yield put(getVacationsCategoriesAsync.success(categories));
   } catch (err) {
     if (err instanceof Error) {
-      yield put(getVacationsTypesAsync.failure(err.message!));
+      yield put(getVacationsCategoriesAsync.failure(err.message!));
     } else {
-      yield put(getVacationsTypesAsync.failure("An unknown error occured."));
+      yield put(
+        getVacationsCategoriesAsync.failure("An unknown error occured.")
+      );
     }
   }
 }
@@ -54,10 +68,10 @@ function* watchfetchAllCurrentVacationsRequest(): Generator {
   );
 }
 
-function* watchGetVacationsTypes(): Generator {
+function* watchGetVacationsCategories(): Generator {
   yield takeEvery(
-    VacationsActionTypes.GET_VACATIONS_TYPES,
-    handleGetVacationsTypes
+    VacationsActionTypes.GET_VACATIONS_CATEGORIES,
+    handleGetVacationsCategories
   );
 }
 
@@ -67,6 +81,6 @@ function* watchGetVacationsTypes(): Generator {
 export default function* vacationsSaga() {
   yield all([
     fork(watchfetchAllCurrentVacationsRequest),
-    fork(watchGetVacationsTypes)
+    fork(watchGetVacationsCategories),
   ]);
 }

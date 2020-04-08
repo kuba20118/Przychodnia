@@ -1,13 +1,12 @@
 import {
   WorkScheduleActionTypes,
-  WorkScheduleApiResponseT,
   WorkScheduleStateT,
-  WorkScheduleDataT
+  WorkScheduleDataT,
 } from "./types";
 import { TypeConstant, Action, PayloadAction } from "typesafe-actions";
 
 export const initialWorkScheduleState: WorkScheduleStateT = {
-  loaded: false
+  loaded: false,
 };
 
 export const workerLeaveReducer = (

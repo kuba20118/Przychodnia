@@ -1,18 +1,20 @@
-import { all, call, put, takeEvery, fork } from "redux-saga/effects";
+import { all, call, put, takeEvery, fork, delay } from "redux-saga/effects";
 import {
   ISelectedWorkerVacations,
   SelectedWorkerActionTypes,
   SelectedWorkerIdT,
-  LeftVacationsDaysT
+  LeftVacationsDaysT,
+  ISelectedWorkerVacationCreateNew,
 } from "./types";
 import {
   getSelectedWorkerVacationsAsync,
   getSelectedWorkerWorkScheduleAsync,
   createSelectedWorkerVacationsAsync,
-  getSelectedWorkerVacationsLeftDaysAsync
+  getSelectedWorkerVacationsLeftDaysAsync,
 } from "./actions";
 import { IReducerAction } from "..";
 import apiCaller from "../../utils/apiHelper";
+import { activateAlert } from "../alert/actions";
 
 function* handleGetSelectedWorkerVacations(
   action: IReducerAction<SelectedWorkerIdT>
@@ -41,9 +43,10 @@ function* handleGetSelectedWorkerVacations(
 }
 
 function* handleCreateSelectedWorkerVacations(
-  action: IReducerAction<ISelectedWorkerVacations>
+  action: IReducerAction<ISelectedWorkerVacationCreateNew>
 ) {
   try {
+    yield delay(2000);
     const res: ISelectedWorkerVacations[] | any = yield call(
       apiCaller,
       "POST",
@@ -51,17 +54,29 @@ function* handleCreateSelectedWorkerVacations(
       {
         fromDate: action.payload.fromDate,
         toDate: action.payload.toDate,
-        idAbsence: 1
+        idAbsence: action.payload.absenceId,
+        substitutionId: action.payload.substitutionId,
       }
     );
-    console.log(res);
-    if (res.errors) {
-      throw Error(res.errors.id[0]);
-    }
 
     yield put(createSelectedWorkerVacationsAsync.success(res));
+
+    yield put(
+      activateAlert({
+        body: `Sukces! Urlop został pomyślnie dodany!`,
+        variant: "success",
+        showTime: 6000,
+      })
+    );
   } catch (err) {
     if (err instanceof Error) {
+      yield put(
+        activateAlert({
+          body: `${err}. Dodanie urlopu nie powiodło sie.`,
+          variant: "danger",
+          showTime: 6000,
+        })
+      );
       yield put(createSelectedWorkerVacationsAsync.failure(err.message!));
     } else {
       yield put(
@@ -161,6 +176,6 @@ export default function* selectedWorkerSaga() {
     fork(watchGetSelectedWorkerVacationsRequest),
     fork(watchCreateSelectedWorkerVacationsRequest),
     fork(watchGetSelectedWorkerVacationsLeftDaysRequest),
-    fork(watchGetSelectedWorkerWorkScheduleRequest)
+    fork(watchGetSelectedWorkerWorkScheduleRequest),
   ]);
 }

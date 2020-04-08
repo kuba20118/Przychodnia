@@ -6,7 +6,7 @@ import Card from "../components/Card";
 
 const WorkerEdit: React.FC = () => {
   const worker: ISelectedWorker | undefined = useSelector(
-    ({ selectedWorker }: IApplicationState) => selectedWorker.worker
+    ({ selectedWorker }: IApplicationState) => selectedWorker.user.data
   );
 
   return (

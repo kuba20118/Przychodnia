@@ -1,5 +1,9 @@
 import { createAsyncAction } from "typesafe-actions";
-import { VacationsActionTypes, VacationsDataT } from "./types";
+import {
+  VacationsActionTypes,
+  VacationsDataT,
+  VacationsCategoryT,
+} from "./types";
 
 export const fetchAllVacationsAsync = createAsyncAction(
   VacationsActionTypes.FETCH_ALL_CURRENT_VACATIONS,
@@ -7,8 +11,8 @@ export const fetchAllVacationsAsync = createAsyncAction(
   VacationsActionTypes.FETCH_ALL_CURRENT_VACATIONS_ERROR
 )<undefined, VacationsDataT[], string>();
 
-export const getVacationsTypesAsync = createAsyncAction(
-  VacationsActionTypes.GET_VACATIONS_TYPES,
-  VacationsActionTypes.GET_VACATIONS_TYPES_SUCCESS,
-  VacationsActionTypes.GET_VACATIONS_TYPES_ERROR
-)<undefined, string[], string>();
+export const getVacationsCategoriesAsync = createAsyncAction(
+  VacationsActionTypes.GET_VACATIONS_CATEGORIES,
+  VacationsActionTypes.GET_VACATIONS_CATEGORIES_SUCCESS,
+  VacationsActionTypes.GET_VACATIONS_CATEGORIES_ERROR
+)<undefined, VacationsCategoryT[], string>();

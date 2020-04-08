@@ -93,6 +93,7 @@ function* handleLogout(action: IReducerAction<UserIdT>) {
 
 function* handleRegister(action: IReducerAction<UserRegisterT>) {
   try {
+    yield delay(2000);
     const res: UserT | any = yield call(apiCaller, "POST", "/auth/register", {
       firstName: action.payload.firstName!,
       lastName: action.payload.lastName!,
@@ -105,22 +106,23 @@ function* handleRegister(action: IReducerAction<UserRegisterT>) {
       throw Error(res.errors);
     }
 
-    yield delay(2000);
     yield put(registerUserAsync.success(res));
 
-    const alert: AlertT = {
-      body: `Sukces! Użytkownik ${res?.firstName} ${res.lastName} został pomyślnie zarejestrowany!`,
-      variant: "success",
-      showTime: 6000,
-    };
-    yield put(activateAlert(alert));
+    yield put(
+      activateAlert({
+        body: `Sukces! Użytkownik ${res?.firstName} ${res.lastName} został pomyślnie zarejestrowany!`,
+        variant: "success",
+        showTime: 6000,
+      })
+    );
   } catch (err) {
-    const alert: AlertT = {
-      body: `Wystąpił błąd. Rejestracja nie powiodła się. Spróbuj ponownie później.`,
-      variant: "danger",
-      showTime: 6000,
-    };
-    yield put(activateAlert(alert));
+    yield put(
+      activateAlert({
+        body: `Wystąpił błąd. Rejestracja nie powiodła się. Spróbuj ponownie później.`,
+        variant: "danger",
+        showTime: 6000,
+      })
+    );
 
     if (err instanceof Error) {
       yield put(registerUserAsync.failure(err.stack!));
