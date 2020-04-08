@@ -58,7 +58,7 @@ const WorkerVacations: React.FC = () => {
           userId: selectedWorker.user.data?.idUser,
           fromDate: data.fromDate,
           toDate: data.toDate,
-          absenceId: parseInt(data.categoryId),
+          absenceId: data.categoryId,
           substitutionId: data.substitutionId,
         };
         dispatch(createSelectedWorkerVacationsAsync.request(newVacation));

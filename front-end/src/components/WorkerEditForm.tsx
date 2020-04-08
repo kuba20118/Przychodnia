@@ -116,7 +116,7 @@ const WorkerEditForm: React.FC<WorkerEditFormPropsT> = ({
                   onChange={(e) => {
                     formik.current?.setFieldValue(
                       "idRole",
-                      parseInt(e.currentTarget.value)
+                      parseInt(e.currentTarget.value, 10)
                     );
                   }}
                   onBlur={handleBlur}

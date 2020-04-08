@@ -13,7 +13,7 @@ import LoadingButton from "./LoadingButton";
 export type VacationsFormDataT = {
   fromDate: Date;
   toDate: Date;
-  categoryId: string;
+  categoryId: number;
   substitutionId: string;
 };
 
@@ -28,7 +28,7 @@ type VacationsFormPropsT = {
 const initialVacationsFormData: VacationsFormDataT = {
   fromDate: new Date(),
   toDate: new Date(),
-  categoryId: "1",
+  categoryId: 1,
   substitutionId: "",
 };
 
@@ -103,7 +103,10 @@ const VacationsForm: React.FC<VacationsFormPropsT> = ({
                     name="categoryId"
                     onChange={(e) => {
                       handleCategoryChange(e.currentTarget.value);
-                      handleChange(e);
+                      formik.current?.setFieldValue(
+                        "categoryId",
+                        parseInt(e.currentTarget.value, 10)
+                      );
                     }}
                     onBlur={handleBlur}
                     value={values.categoryId}

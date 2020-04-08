@@ -113,9 +113,13 @@ const RegistrationForm: React.FC<RegistrationFormPropsT> = ({
                 <Form.Control
                   as="select"
                   name="role"
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    formik.current?.setFieldValue(
+                      "role",
+                      parseInt(e.currentTarget.value, 10)
+                    );
+                  }}
                   onBlur={handleBlur}
-                  value={values.role}
                   className={touched.role && errors.role ? "error" : ""}
                 >
                   {roles.map((role, key) => (
