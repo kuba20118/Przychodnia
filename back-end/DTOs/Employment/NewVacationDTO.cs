@@ -6,6 +6,7 @@ namespace back_end.DTOs
     {
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
+        public int UserForReplacentId { get; set; }
         public int IdAbsence { get; set; }
 
     }
