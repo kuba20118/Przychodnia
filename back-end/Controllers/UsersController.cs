@@ -118,8 +118,9 @@ namespace back_end.Controllers
                 return Content("Użytkownik ma już w tym terminie zaplanowany urlop");
 
             var newVac = await _repo.AddNewVacation(id, newVacation);
+            var vacToReturn = _mapper.Map<VacationDTO>(newVac);
 
-            return Ok(newVac);
+            return Ok(vacToReturn);
         }
 
         #endregion
