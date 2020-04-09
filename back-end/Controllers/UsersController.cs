@@ -119,7 +119,7 @@ namespace back_end.Controllers
 
             var newVac = await _repo.AddNewVacation(id, newVacation);
 
-            return Ok(new { daysLeft, totalVacDays });
+            return Ok(newVac);
         }
 
         #endregion
