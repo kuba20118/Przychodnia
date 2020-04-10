@@ -32,7 +32,8 @@ namespace back_end.Data
                 {
                     FromTime = day.FromTime,
                     ToTime = day.ToTime,
-                    IdWsNavigation = ws
+                    IdWsNavigation = ws,
+                    Type = day.Type
                 };
 
                 dayList.Add(newDay);
