@@ -26,7 +26,7 @@ const createTableDataItem = (
   dataItem: ISelectedWorkerVacations,
   index: number
 ): string[] => [
-  index.toString(),
+  (index + 1).toString(),
   format(parseISO(dataItem.fromDate), "dd-MM-yyyy"),
   format(parseISO(dataItem.toDate), "dd-MM-yyyy"),
   dataItem.absenceType,

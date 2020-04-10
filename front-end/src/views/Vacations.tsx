@@ -11,6 +11,15 @@ import { UserT } from "../state/ducks/user/types";
 import Card from "../components/Card";
 import { format } from "date-fns";
 
+const tableHeader: CustomTableHeaderT = [
+  "#",
+  "Imię",
+  "Nazwisko",
+  "Od",
+  "Do",
+  "Typ",
+];
+
 const Vacations: React.FC = () => {
   const dispatch = useDispatch();
 
@@ -31,15 +40,6 @@ const Vacations: React.FC = () => {
     ({ user }: IApplicationState) => user.users
   );
 
-  const tableHeader: CustomTableHeaderT = [
-    "#",
-    "Imię",
-    "Nazwisko",
-    "Od",
-    "Do",
-    "Typ",
-  ];
-
   const tableCurrentData: CustomTableDataT | undefined =
     vacations &&
     users &&
@@ -50,7 +50,7 @@ const Vacations: React.FC = () => {
 
       if (user) {
         const data = [
-          index.toString(),
+          (index + 1).toString(),
           user!.firstName || "",
           user!.lastName || "",
           format(new Date(item.fromDate), "dd-MM-yyyy"),
