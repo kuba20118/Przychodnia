@@ -44,17 +44,27 @@ namespace back_end.Controllers
         [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateUser(int id, UserUpdateDTO userToUpdate)
         {
-            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-                return Unauthorized();
+            /*Dodać sprawdzanie roli*/
+            //if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            //return Unauthorized();
+
+            var userEmpl = await _repo.GetUserEmployment(id);
+            var empDTO = new EmplUpdateDTO
+            {
+                WorkingHours = userToUpdate.WorkingHours,
+                CurrentyEmployed = userToUpdate.CurrentyEmployed,
+                FireDate = userToUpdate.FireDate
+            };
+            _mapper.Map(empDTO, userEmpl);
 
             var userFromRepo = await _repo.GetUser(id);
-
             _mapper.Map(userToUpdate, userFromRepo);
 
+            var userToReturn = _mapper.Map<UserReturnDTO>(userFromRepo);
             if (await _repo.SaveAll())
-                return NoContent();
+                return Ok(userToReturn);
 
-            throw new Exception($"Błąd aktualizacji danych użytkownika o id: {id}");
+            return Content($"Błąd aktualizacji danych użytkownika o id: {id}");
         }
 
         [HttpPut("update/{id}/employment")]
