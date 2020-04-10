@@ -8,10 +8,9 @@ import {
   fetchAllUsersAsync,
 } from "../state/ducks/user/actions";
 import { useDispatch, useSelector } from "react-redux";
-import { UserIdT } from "../state/ducks/user/types";
 import { IApplicationState } from "../state/ducks";
-import { Container } from "react-bootstrap";
 import AlertComponent from "../components/AlertComponent";
+import { closeAlert } from "../state/ducks/alert/actions";
 
 const Admin: React.FC<RouteProps> = () => {
   const currentLocation = useLocation();
@@ -66,13 +65,14 @@ const Admin: React.FC<RouteProps> = () => {
   const alert = useSelector(
     ({ alert }: IApplicationState) => alert.currentAlert
   );
+  const removeAlert = useCallback(() => dispatch(closeAlert()), [dispatch]);
 
   return (
     <div className="wrapper">
       <Sidebar routes={routes} userRole={currentUser!.role} logoSrc="TODO" />
       <div className="main-panel">
         <AdminNavbar pageName={getPageNameText()} {...dispatchToNavbarProps} />
-        <AlertComponent alert={alert} />
+        <AlertComponent alert={alert} close={removeAlert} />
         <Switch>{getRoutes(routes)}</Switch>
       </div>
     </div>
