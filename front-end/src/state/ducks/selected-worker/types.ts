@@ -9,6 +9,7 @@ export interface ISelectedWorkerWorkSchedule extends WorkScheduleDataT {}
 export interface ISelectedWorkerVacationCreateNew extends VacationCreateNewT {}
 
 export type SelectedWorkerUpdateT = {
+  userId: UserIdT;
   idRole: number;
   firstName: UserT["firstName"];
   lastName: UserT["lastName"];
@@ -73,8 +74,4 @@ export enum SelectedWorkerActionTypes {
   UPDATE_SELECTED_WORKER = "@@selected-worker/UPDATE_SELECTED_WORKER",
   UPDATE_SELECTED_WORKER_SUCCESS = "@@selected-worker/UPDATE_SELECTED_WORKER_SUCCESS",
   UPDATE_SELECTED_WORKER_ERROR = "@@selected-worker/UPDATE_SELECTED_WORKER_ERROR",
-
-  UPDATE_SELECTED_WORKER_EMPLOYMENT = "@@selected-worker/UPDATE_SELECTED_EMPLOYMENT_WORKER",
-  UPDATE_SELECTED_WORKER_EMPLOYMENT_SUCCESS = "@@selected-worker/UPDATE_SELECTED_EMPLOYMENT_SUCCESS",
-  UPDATE_SELECTED_WORKER_EMPLOYMENT_ERROR = "@@selected-worker/UPDATE_SELECTED_EMPLOYMENT_ERROR",
 }

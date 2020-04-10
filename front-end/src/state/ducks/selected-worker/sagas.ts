@@ -5,12 +5,14 @@ import {
   SelectedWorkerIdT,
   LeftVacationsDaysT,
   ISelectedWorkerVacationCreateNew,
+  SelectedWorkerUpdateT,
 } from "./types";
 import {
   getSelectedWorkerVacationsAsync,
   getSelectedWorkerWorkScheduleAsync,
   createSelectedWorkerVacationsAsync,
   getSelectedWorkerVacationsLeftDaysAsync,
+  updateSelectedWorkerAsync,
 } from "./actions";
 import { IReducerAction } from "..";
 import apiCaller from "../../utils/apiHelper";
@@ -140,6 +142,49 @@ function* handleGetSelectedWorkerWorkSchedule(
   }
 }
 
+function* handleUpdateSelectedWorker(
+  action: IReducerAction<SelectedWorkerUpdateT>
+) {
+  try {
+    delay(2000);
+    const res: ISelectedWorkerVacations[] | any = yield call(
+      apiCaller,
+      "PUT",
+      `/users/update/${action.payload.userId}`,
+      {
+        firstName: action.payload.firstName,
+        lastName: action.payload.lastName,
+        idRole: action.payload.idRole,
+        fireDate: action.payload.fireDate,
+        currentlyEmployed: action.payload.currentlyEmployed,
+        workingHours: action.payload.workingHours,
+      }
+    );
+
+    yield put(updateSelectedWorkerAsync.success(res));
+    yield put(
+      activateAlert({
+        body: `Sukces! Użytkownik został pomyślnie zaktualizowny!`,
+        variant: "success",
+        showTime: 6000,
+      })
+    );
+  } catch (err) {
+    if (err instanceof Error) {
+      yield put(
+        activateAlert({
+          body: `${err}. Aktualizacja użytkownika nie powiodła się.`,
+          variant: "danger",
+          showTime: 6000,
+        })
+      );
+      yield put(updateSelectedWorkerAsync.failure(err.message!));
+    } else {
+      yield put(updateSelectedWorkerAsync.failure("An unknown error occured."));
+    }
+  }
+}
+
 function* watchGetSelectedWorkerVacationsRequest(): Generator {
   yield takeEvery(
     SelectedWorkerActionTypes.GET_SELECTED_WORKER_VACATIONS,
@@ -168,6 +213,13 @@ function* watchGetSelectedWorkerWorkScheduleRequest(): Generator {
   );
 }
 
+function* watchUpdateSelectedWorkerRequest(): Generator {
+  yield takeEvery(
+    SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER,
+    handleUpdateSelectedWorker
+  );
+}
+
 /**
  * @desc saga init, forks in effects, other sagas
  */
@@ -177,5 +229,6 @@ export default function* selectedWorkerSaga() {
     fork(watchCreateSelectedWorkerVacationsRequest),
     fork(watchGetSelectedWorkerVacationsLeftDaysRequest),
     fork(watchGetSelectedWorkerWorkScheduleRequest),
+    fork(watchUpdateSelectedWorkerRequest),
   ]);
 }

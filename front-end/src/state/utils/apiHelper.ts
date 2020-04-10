@@ -24,6 +24,10 @@ export default function apiCaller<T>(
           (response.status >= 200 && response.status < 300) ||
           response.status === 400
         ) {
+          if (response.status === 400) {
+            reject(new Error("Bad request"));
+          }
+
           const contentType = response.headers.get("content-type")!;
 
           if (contentType.startsWith("application/json;")) {

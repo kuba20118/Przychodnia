@@ -16,6 +16,7 @@ type WorkerEditFormPropsT = {
 };
 
 const initialUserRegisterData: SelectedWorkerUpdateT = {
+  userId: "",
   firstName: "",
   lastName: "",
   idRole: 1,
@@ -30,9 +31,9 @@ const validationSchema = Yup.object().shape({
     .max(100, "*Imię nie może być dłuższ niż 100 znaków")
     .required("*To pole jest wymagane"),
   lastName: Yup.string().required("*To pole jest wymagane"),
-  roleId: Yup.number().required(),
+  roleId: Yup.number(),
   fireDate: Yup.date().nullable(),
-  currentlyEmployed: Yup.boolean().required("*To pole jest wymagane"),
+  currentlyEmployed: Yup.boolean().nullable(),
   workingHours: Yup.number().required("*To pole jest wymagane"),
 });
 
@@ -58,7 +59,7 @@ const WorkerEditForm: React.FC<WorkerEditFormPropsT> = ({
         enableReinitialize={true}
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting, resetForm }) => {
+        onSubmit={(values, { setSubmitting }) => {
           setSubmitting(true);
           updateWorker(values);
         }}

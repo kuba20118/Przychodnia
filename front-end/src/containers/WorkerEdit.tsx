@@ -17,6 +17,7 @@ const createInitialFormValues = (
   worker?: ISelectedWorker
 ): SelectedWorkerUpdateT => {
   return {
+    userId: worker?.idUser!,
     firstName: worker?.firstName!,
     lastName: worker?.lastName!,
     idRole: roles.find((role) => role.name === worker?.role)?.idRole!,
