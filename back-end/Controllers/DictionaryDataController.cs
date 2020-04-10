@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using back_end.Data;
+using back_end.DTOs.Vacation;
 using Microsoft.AspNetCore.Mvc;
 using Przychodnia.API;
 
@@ -65,7 +67,8 @@ namespace back_end.Controllers
         [HttpGet("absences")]
         public async Task<IActionResult> GetAbsencesType()
         {
-            var absencesToReturn = await _repo.GetAbsences();
+            var absencesFromRepo = await _repo.GetAbsences();
+            var absencesToReturn = _mapper.Map<IEnumerable<AbsenceDTO>>(absencesFromRepo);
 
             return Ok(absencesToReturn);
         }

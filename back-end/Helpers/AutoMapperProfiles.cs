@@ -1,6 +1,7 @@
 using AutoMapper;
 using back_end.DTOs;
 using back_end.DTOs.Employment;
+using back_end.DTOs.Vacation;
 using Przychodnia.API;
 
 namespace back_end.Helpers
@@ -57,6 +58,8 @@ namespace back_end.Helpers
             .ForMember(dest => dest.Day, opt =>
                     opt.MapFrom(src => src.Day)
                     );
+
+            CreateMap<Absence, AbsenceDTO>();
         }
     }
 }

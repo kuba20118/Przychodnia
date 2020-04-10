@@ -114,7 +114,6 @@ namespace back_end.Controllers
         [HttpPost("vacations/{id}/new")]
         public async Task<IActionResult> SetUserNewVacation(int id, NewVacationDTO newVacation)
         {
-
             if (newVacation.FromDate > newVacation.ToDate || newVacation.FromDate.DayOfYear < DateTime.Now.DayOfYear)
                 return Content("Błędna data urlopu");
 
