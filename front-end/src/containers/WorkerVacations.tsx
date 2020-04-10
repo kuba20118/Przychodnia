@@ -22,6 +22,16 @@ import { isFuture, isPast } from "date-fns";
 import { getVacationsCategoriesAsync } from "../state/ducks/vacations/actions";
 import { VacationsCategoryT } from "../state/ducks/vacations/types";
 
+const createTableDataItem = (
+  dataItem: ISelectedWorkerVacations,
+  index: number
+): string[] => [
+  index.toString(),
+  format(parseISO(dataItem.fromDate), "dd-MM-yyyy"),
+  format(parseISO(dataItem.toDate), "dd-MM-yyyy"),
+  dataItem.absenceType,
+];
+
 const WorkerVacations: React.FC = () => {
   const dispatch = useDispatch();
   const users: UserT[] | undefined = useSelector(
@@ -68,16 +78,6 @@ const WorkerVacations: React.FC = () => {
   );
 
   const tableHeader: CustomTableHeaderT = ["#", "Od", "Do", "Typ"];
-
-  const createTableDataItem = (
-    dataItem: ISelectedWorkerVacations,
-    index: number
-  ): string[] => [
-    index.toString(),
-    format(parseISO(dataItem.fromDate), "dd-MM-yyyy"),
-    format(parseISO(dataItem.toDate), "dd-MM-yyyy"),
-    dataItem.absenceType,
-  ];
 
   const currentTableData: CustomTableDataT | undefined = useMemo(
     () =>

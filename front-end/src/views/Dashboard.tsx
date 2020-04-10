@@ -26,7 +26,7 @@ const Dashboard: React.FC = () => {
       "Wrzesień",
       "Październik",
       "Listopad",
-      "Grudzień"
+      "Grudzień",
     ],
     datasets: [
       {
@@ -48,10 +48,10 @@ const Dashboard: React.FC = () => {
           { x: 9, y: 121 },
           { x: 10, y: 55 },
           { x: 11, y: 77 },
-          { x: 12, y: 99 }
-        ]
-      }
-    ]
+          { x: 12, y: 99 },
+        ],
+      },
+    ],
   };
 
   const data = {
@@ -59,9 +59,9 @@ const Dashboard: React.FC = () => {
     datasets: [
       {
         data: [40, 60],
-        backgroundColor: ["orange", "green"]
-      }
-    ]
+        backgroundColor: ["orange", "green"],
+      },
+    ],
   };
 
   // var options = {
