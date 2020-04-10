@@ -40,8 +40,9 @@ namespace back_end.Controllers
             //var user = await _userRepo.GetUser(id);
 
             var ws = await _repo.GenerateUserWS(id, newWS);
+            var wsToReturn = _mapper.Map<WorkScheduleReturn>(ws);
 
-            return Ok(ws);
+            return Ok(wsToReturn);
         }
 
 
