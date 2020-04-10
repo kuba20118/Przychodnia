@@ -9,6 +9,7 @@ import CustomTable, {
 import { IApplicationState } from "../state/ducks";
 import { UserT } from "../state/ducks/user/types";
 import Card from "../components/Card";
+import { format } from "date-fns";
 
 const Vacations: React.FC = () => {
   const dispatch = useDispatch();
@@ -39,23 +40,26 @@ const Vacations: React.FC = () => {
     "Typ",
   ];
 
-  const tableData: CustomTableDataT | undefined =
+  const tableCurrentData: CustomTableDataT | undefined =
     vacations &&
     users &&
     vacations!.map((item, index) => {
-      const user: UserT | undefined = users.find(
-        (u) => u.idUser === item.userId
-      );
+      const user: UserT | undefined = users.find((u) => {
+        return u.idUser == item.idUser;
+      });
 
-      const data = [
-        index.toString(),
-        user!.firstName || "",
-        user!.lastName || "",
-        item.fromDate.toString(),
-        item.toDate.toString(),
-        item.absenceType,
-      ];
-      return data;
+      if (user) {
+        const data = [
+          index.toString(),
+          user!.firstName || "",
+          user!.lastName || "",
+          format(new Date(item.fromDate), "dd-MM-yyyy"),
+          format(new Date(item.toDate), "dd-MM-yyyy"),
+          item.absenceType,
+        ];
+        return data;
+      }
+      return [];
     });
 
   return (
@@ -65,8 +69,8 @@ const Vacations: React.FC = () => {
         subtitle={`Dane dotyczą wszystkich użytkowników`}
         content={
           <div className="content">
-            {tableData && tableData!.length > 0 ? (
-              <CustomTable header={tableHeader} data={tableData} />
+            {tableCurrentData && tableCurrentData!.length > 0 ? (
+              <CustomTable header={tableHeader} data={tableCurrentData} />
             ) : (
               <p>Obecnie nie ma żadnych urlopów.</p>
             )}

@@ -1,5 +1,5 @@
 export type VacationsDataT = {
-  userId: string;
+  idUser: string;
   fromDate: string;
   toDate: string;
   absenceType: VacationsCategoryT["name"];

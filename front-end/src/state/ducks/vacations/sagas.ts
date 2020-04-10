@@ -15,11 +15,7 @@ function* handleFetchAllCurrentVacations() {
       "/users/vacations"
     );
 
-    if (res.errors) {
-      throw new Error(res.errors);
-    }
-
-    fetchAllVacationsAsync.success(res);
+    yield put(fetchAllVacationsAsync.success(res));
   } catch (err) {
     if (err instanceof Error) {
       yield put(fetchAllVacationsAsync.failure(err.message!));
