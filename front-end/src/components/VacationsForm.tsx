@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Button, Row, Col, FormGroup, FormLabel, Form } from "react-bootstrap";
+import { Row, Col, FormGroup, FormLabel, Form } from "react-bootstrap";
 import { addDays, subDays } from "date-fns/esm";
 import { UserT } from "../state/ducks/user/types";
 import { VacationsCategoryT } from "../state/ducks/vacations/types";

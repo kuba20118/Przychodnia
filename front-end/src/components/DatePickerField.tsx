@@ -10,6 +10,7 @@ export const DatePickerField: React.FC<any> = ({ ...props }) => {
       {...field}
       {...props}
       selected={(field.value && new Date(field.value)) || null}
+      dateFormat="dd/MM/yyyy"
       onChange={(val) => {
         setFieldValue(field.name, val);
       }}

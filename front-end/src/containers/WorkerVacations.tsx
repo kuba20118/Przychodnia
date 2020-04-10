@@ -18,7 +18,7 @@ import { Row, Col } from "react-bootstrap";
 import { UserT } from "../state/ducks/user/types";
 import VacationsLeftDays from "../components/VacationsLeftDays";
 import { createSelectedWorkerVacationsAsync } from "../state/ducks/selected-worker/actions";
-import { isFuture, isPast } from "date-fns";
+import { isFuture, isPast, isToday } from "date-fns";
 import { getVacationsCategoriesAsync } from "../state/ducks/vacations/actions";
 import { VacationsCategoryT } from "../state/ducks/vacations/types";
 
@@ -84,7 +84,9 @@ const WorkerVacations: React.FC = () => {
       selectedWorker.vacation.data &&
       selectedWorker.vacation
         .data!.filter((item) => {
-          return isFuture(new Date(item.toDate));
+          return (
+            isFuture(new Date(item.toDate)) || isToday(new Date(item.toDate))
+          );
         })
         .map((item, index) => createTableDataItem(item, index)),
     [selectedWorker.vacation.data]
@@ -94,7 +96,10 @@ const WorkerVacations: React.FC = () => {
     () =>
       selectedWorker.vacation.data &&
       selectedWorker.vacation
-        .data!.filter((item) => isPast(new Date(item.toDate)))
+        .data!.filter(
+          (item) =>
+            isPast(new Date(item.toDate)) && !isToday(new Date(item.toDate))
+        )
         .map((item, index) => createTableDataItem(item, index)),
     [selectedWorker.vacation.data]
   );
