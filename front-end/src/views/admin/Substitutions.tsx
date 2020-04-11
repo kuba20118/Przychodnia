@@ -2,11 +2,11 @@ import React, { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CustomTable, {
   CustomTableHeaderT,
-  CustomTableDataT
-} from "../components/CustomTable";
-import { IApplicationState } from "../state/ducks";
-import { UserT } from "../state/ducks/user/types";
-import Card from "../components/Card";
+  CustomTableDataT,
+} from "../../components/CustomTable";
+import { IApplicationState } from "../../state/ducks";
+import { UserT } from "../../state/ducks/user/types";
+import Card from "../../components/Card";
 
 const Substitutions: React.FC = () => {
   const dispatch = useDispatch();

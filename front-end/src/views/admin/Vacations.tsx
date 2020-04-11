@@ -1,14 +1,14 @@
 import React, { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllVacationsAsync } from "../state/ducks/vacations/actions";
-import { VacationsDataT } from "../state/ducks/vacations/types";
+import { fetchAllVacationsAsync } from "../../state/ducks/vacations/actions";
+import { VacationsDataT } from "../../state/ducks/vacations/types";
 import CustomTable, {
   CustomTableHeaderT,
   CustomTableDataT,
-} from "../components/CustomTable";
-import { IApplicationState } from "../state/ducks";
-import { UserT } from "../state/ducks/user/types";
-import Card from "../components/Card";
+} from "../../components/CustomTable";
+import { IApplicationState } from "../../state/ducks";
+import { UserT } from "../../state/ducks/user/types";
+import Card from "../../components/Card";
 import { format } from "date-fns";
 
 const tableHeader: CustomTableHeaderT = [

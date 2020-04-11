@@ -19,6 +19,7 @@ import { authenticateAsync, setAuthFalse } from "../auth/actions";
 import apiCaller from "../../utils/apiHelper";
 import { activateAlert } from "../alert/actions";
 import { AlertT } from "../alert/types";
+import { AllRightsRoles } from "../role/types";
 
 function* handleLogin(action: IReducerAction<UserLoginT>) {
   try {
@@ -43,18 +44,23 @@ function* handleLogin(action: IReducerAction<UserLoginT>) {
         "przychodnia-user",
         JSON.stringify(res.userToReturn)
       );
+
+      // Handle Success login
+      yield put(loginUserAsync.success(res!.userToReturn));
+
+      // Set is authenticated to true
+      yield put(authenticateAsync.success());
+
+      if (AllRightsRoles.indexOf(res.userToReturn.role) >= 0) {
+        // redirect to admin dashboard
+        history.push("/admin/panel-glowny");
+      } else {
+        // redirect to normal user dashboard
+        history.push("/uzytkownik/panel-glowny");
+      }
     } else {
       throw new Error("The response is not valid");
     }
-
-    // Handle Success login
-    yield put(loginUserAsync.success(res!.userToReturn));
-
-    // Set is authenticated to true
-    yield put(authenticateAsync.success());
-
-    // redirect to admin dashboard
-    history.push("/admin/panel-glowny");
   } catch (err) {
     if (err instanceof Error) {
       if (err.message === "401") {

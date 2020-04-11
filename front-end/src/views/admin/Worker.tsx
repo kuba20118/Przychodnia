@@ -1,19 +1,19 @@
 import React, { useCallback } from "react";
 import { Switch, Route } from "react-router";
-import { IRouteComponentProps } from "../routing/routes";
-import Card from "../components/Card";
-import UsersSearch from "../components/UsersSearch";
+import { IRouteComponentProps } from "../../routing/routes";
+import Card from "../../components/Card";
+import UsersSearch from "../../components/UsersSearch";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setSelectedWorker,
   getSelectedWorkerVacationsAsync,
   getSelectedWorkerWorkScheduleAsync,
   getSelectedWorkerVacationsLeftDaysAsync,
-} from "../state/ducks/selected-worker/actions";
-import { ISelectedWorker } from "../state/ducks/selected-worker/types";
-import { IApplicationState } from "../state/ducks";
-import UserCard from "../components/CardUser";
-import { UserT } from "../state/ducks/user/types";
+} from "../../state/ducks/selected-worker/actions";
+import { ISelectedWorker } from "../../state/ducks/selected-worker/types";
+import { IApplicationState } from "../../state/ducks";
+import UserCard from "../../components/CardUser";
+import { UserT } from "../../state/ducks/user/types";
 
 const Worker: React.FC<IRouteComponentProps> = (props) => {
   const dispatch = useDispatch();

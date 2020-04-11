@@ -1,9 +1,6 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useCallback } from "react";
 import { Switch, useLocation, Route } from "react-router-dom";
-import {
-  fetchAllUsersAsync,
-  logoutUserAsync,
-} from "../state/ducks/user/actions";
+import { logoutUserAsync } from "../state/ducks/user/actions";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import Sidebar from "../components/Sidebar";
 import { IRouteComponentProps, RoutesType } from "../routing/routes";
@@ -12,13 +9,9 @@ import AlertComponent from "../components/AlertComponent";
 import { IApplicationState } from "../state/ducks";
 import { closeAlert } from "../state/ducks/alert/actions";
 
-const Admin: React.FC<IRouteComponentProps> = ({ childrenRoutes }) => {
+const User: React.FC<IRouteComponentProps> = ({ childrenRoutes }) => {
   const dispatch = useDispatch();
   const currentLocation = useLocation();
-
-  useEffect(() => {
-    dispatch(fetchAllUsersAsync.request());
-  }, []);
 
   const getChildrenRoutes = (routes: RoutesType[]) => {
     return routes.map((item, key) => {
@@ -86,4 +79,4 @@ const Admin: React.FC<IRouteComponentProps> = ({ childrenRoutes }) => {
   );
 };
 
-export default Admin;
+export default User;

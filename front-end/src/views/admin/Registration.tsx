@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import Card from "../components/Card";
-import RegistrationForm from "../components/RegistrationForm";
+import Card from "../../components/Card";
+import RegistrationForm from "../../components/RegistrationForm";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchRoleAsync } from "../state/ducks/role/actions";
-import { IApplicationState } from "../state/ducks";
-import { RoleT } from "../state/ducks/role/types";
-import { UserRegisterT } from "../state/ducks/user/types";
-import { registerUserAsync } from "../state/ducks/user/actions";
+import { fetchRoleAsync } from "../../state/ducks/role/actions";
+import { IApplicationState } from "../../state/ducks";
+import { RoleT } from "../../state/ducks/role/types";
+import { UserRegisterT } from "../../state/ducks/user/types";
+import { registerUserAsync } from "../../state/ducks/user/actions";
 import { Container } from "react-bootstrap";
 
 const Registration: React.FC = () => {

@@ -17,8 +17,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = (props) => {
   }
 
   if (redirectPath !== currentLocation.pathname) {
-    const renderComponent = () => <Redirect to={{ pathname: redirectPath }} />;
-    return <Route {...props} component={renderComponent} />;
+    return <Redirect to={{ pathname: redirectPath }} />;
   } else {
     return <Route {...props} />;
   }
