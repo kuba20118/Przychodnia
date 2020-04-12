@@ -5,7 +5,7 @@ import { AuthStateT } from "./state/ducks/auth/types";
 import { IApplicationState } from "./state/ducks";
 import { useSelector, shallowEqual } from "react-redux";
 import Login from "./views/Login";
-import { adminRoutes, userRoutes } from "./routing/routes";
+import { adminRoutes, userRoutes, RoutesType } from "./routing/routes";
 import { AllRightsRoles } from "./state/ducks/role/types";
 
 const App: React.FC = () => {
@@ -27,57 +27,32 @@ const App: React.FC = () => {
     return roles && roles.indexOf(role) >= 0;
   };
 
-  const getRoutes = () => {
-    return isAuthorized(AllRightsRoles, currentUser?.role!) ? (
-      <>
-        <ProtectedRoute
-          {...defaultProtectedRouteProps}
-          path={adminRoutes.path}
-          component={() => (
-            <adminRoutes.component childrenRoutes={adminRoutes.children} />
-          )}
-        />
-        <Route
-          path={["/login", "/"]}
-          render={(props) => {
-            if (authentication.isAuthenticated) {
-              return (
-                <Redirect
-                  to={adminRoutes.path + adminRoutes.children![0].path}
-                />
-              );
-            }
-            return <Login />;
-          }}
-        />
-      </>
-    ) : (
-      <>
-        <ProtectedRoute
-          {...defaultProtectedRouteProps}
-          path={userRoutes.path}
-          component={() => (
-            <adminRoutes.component childrenRoutes={userRoutes.children} />
-          )}
-        />
-        <Route
-          path={["/login", "/"]}
-          render={(props) => {
-            if (authentication.isAuthenticated) {
-              return (
-                <Redirect to={userRoutes.path + userRoutes.children![0].path} />
-              );
-            }
-            return <Login />;
-          }}
-        />
-      </>
-    );
-  };
+  const getRoutes = (routes: RoutesType) => (
+    <>
+      <ProtectedRoute
+        {...defaultProtectedRouteProps}
+        path={routes.path}
+        component={() => <routes.component childrenRoutes={routes.children} />}
+      />
+      <Route
+        path={["/login", "/"]}
+        render={(props) => {
+          if (authentication.isAuthenticated) {
+            return <Redirect to={routes.path + routes.children![0].path} />;
+          }
+          return <Login />;
+        }}
+      />
+    </>
+  );
 
   return (
     <>
-      <Switch>{getRoutes()}</Switch>
+      <Switch>
+        {isAuthorized(AllRightsRoles, currentUser?.role!)
+          ? getRoutes(adminRoutes)
+          : getRoutes(userRoutes)}
+      </Switch>
     </>
   );
 };
