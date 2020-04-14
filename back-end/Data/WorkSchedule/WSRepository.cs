@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using back_end.DTOs.Employment;
@@ -18,43 +19,64 @@ namespace back_end.Data
             _context = context;
         }
 
-        public async Task<Workschedule> GenerateUserWS(int userId, WorkScheduleNewDTO newWS)
+        public async Task<IEnumerable<Workschedule>> GenerateUserWS(int userId, WorkScheduleNewDTO newWS)
         {
             var user = await _context.User
                     .FirstOrDefaultAsync(u => u.IdUser == userId);
 
-            var ws = new Workschedule();
-            var dayList = new List<Day>();
+            var wsList = new List<Workschedule>();
+            if (newWS.Day.Count == 0)
+                return wsList;
 
-            foreach (var day in newWS.Day)
+            for (int i = 0; i < newWS.NumberOfWeeks; i++)
             {
-                var newDay = new Day
-                {
-                    FromTime = day.FromTime,
-                    ToTime = day.ToTime,
-                    IdWsNavigation = ws,
-                    Type = day.Type
-                };
+                var ws = new Workschedule();
+                var dayList = new List<Day>();
 
-                dayList.Add(newDay);
-                await _context.Day.AddAsync(newDay);
+                foreach (var day in newWS.Day)
+                {
+                    var newDay = new Day
+                    {
+                        FromTime = day.FromTime.AddDays(i * 7),
+                        ToTime = day.ToTime.AddDays(i * 7),
+                        IdWsNavigation = ws,
+                        Type = day.Type
+                    };
+
+                    dayList.Add(newDay);
+                    await _context.Day.AddAsync(newDay);
+                }
+
+                ws.IdUserNavigation = user;
+                ws.Day = dayList;
+
+                wsList.Add(ws);
+                await _context.Workschedule.AddAsync(ws);
             }
 
-            ws.IdUserNavigation = user;
-            ws.Day = dayList;
-
-
-            await _context.Workschedule.AddAsync(ws);
             await _context.SaveChangesAsync();
 
-            return ws;
+            return wsList;
         }
 
         public async Task<Workschedule> GetUserWS(int userId)
         {
-            var wsToReturn = await _context.Workschedule
+            var ws = await _context.Workschedule
                         .Include(d => d.Day)
-                        .FirstOrDefaultAsync(u => u.IdUser == userId);
+                        .Where(u => u.IdUser == userId)
+                        .ToListAsync();
+            var dayList = new List<Day>();
+
+            foreach (var item in ws.SelectMany(x => x.Day))
+            {
+                dayList.Add(item);
+            }
+
+            var wsToReturn = new Workschedule()
+            {
+                IdUser = userId,
+                Day = dayList
+            };
 
             return wsToReturn;
         }

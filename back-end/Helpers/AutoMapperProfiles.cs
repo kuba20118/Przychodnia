@@ -47,12 +47,15 @@ namespace back_end.Helpers
             CreateMap<EmplUpdateDTO, Employment>();
 
             CreateMap<DayDTO, Day>();
+            CreateMap<DayNewDTO, Day>();
             CreateMap<Day, DayDTO>();
+            CreateMap<Day, DayNewDTO>();
             // .ForMember(dest => dest.DayOfYear, opt =>
             //         opt.MapFrom(src => src.FromTime.DayOfYear)
             // );
 
             CreateMap<WorkScheduleNewDTO, Workschedule>();
+            CreateMap<Workschedule, WorkScheduleNewDTO>();
 
             CreateMap<Workschedule, WorkScheduleReturn>()
             .ForMember(dest => dest.Day, opt =>
