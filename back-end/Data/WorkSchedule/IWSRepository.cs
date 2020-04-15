@@ -9,6 +9,8 @@ namespace back_end.Data
     {
         Task<Workschedule> GetUserWS(int userId);
         Task<IEnumerable<Workschedule>> GetWorkSchedules();
-        Task<IEnumerable<Workschedule>> GenerateUserWS(int userId, WorkScheduleNewDTO newWS);
+        Task<Workschedule> GenerateUserWS(int userId, WorkScheduleNewDTO newWS, List<Day> vacList);
+        Task<Day> GetDayByNumber(int userId, int dayNumber);
+        List<Day> VacationDaysToList(IEnumerable<Vacation> daylist);
     }
 }

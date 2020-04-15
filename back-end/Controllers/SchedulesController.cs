@@ -31,7 +31,7 @@ namespace back_end.Controllers
         public async Task<IActionResult> GetUserWorkSchedule(int id)
         {
             var ws = await _repo.GetUserWS(id);
-            var wsToReturn = _mapper.Map<IEnumerable<WorkScheduleReturn>>(ws);
+            var wsToReturn = _mapper.Map<WorkScheduleReturn>(ws);
 
             return Ok(wsToReturn);
         }
@@ -39,37 +39,20 @@ namespace back_end.Controllers
         [HttpPost("generate/{id}")]
         public async Task<IActionResult> GenerateUserWorkSchedule(int id, WorkScheduleNewDTO newWS)
         {
-            var wsFromRepo = await _repo.GetUserWS(id);
-            var wsFromParams = _mapper.Map<Workschedule>(newWS);
+            if(await _userRepo.GetUser(id) == null)
+                return Content("Brak usera o podanym id");
+            
+            if(newWS.Day.Count != 7)
+                return Content("Wymagane jest podanie całego tygodnia");
 
-            foreach (var item in wsFromParams.Day.Reverse<Day>())
-            {
-                if (wsFromRepo.Day.Any(d => d.FromTime.DayOfYear == item.FromTime.DayOfYear))
-                {
-                    wsFromParams.Day.Remove(item);
-                }
-            }
-
-            //var user = await _userRepo.GetUser(id);
-            //var test = _mapper.Map<Workschedule>(newWS);
-            //var newList = new List<Day>();
-            // if (x != null)
-            // {
-            //     foreach (var item in test.Day.Reverse<Day>())
-            //     {
-            //         if (x.Day.Any(d => d.FromTime.DayOfYear == item.FromTime.DayOfYear))
-            //         {
-            //             //test.Day.Remove(item);
-            //         }
-            //     }
-            // }
-            //test.Day = newList;
-            //_mapper.Map(test, newWS);
-            var ws = _mapper.Map<WorkScheduleNewDTO>(wsFromParams);
-            var wsRet = await _repo.GenerateUserWS(id, ws);
-            //var wsToReturn = _mapper.Map<IEnumerable<WorkScheduleReturn>>(ws);
-            var wsToReturn = _mapper.Map<WorkScheduleReturn>(wsRet);
-            return Ok(wsFromParams);
+            if(newWS.NumberOfWeeks < 1)
+                return Content("Podaj liczbę tygodni");
+            
+            var userVacation = await _userRepo.GetVacations(id);
+            var vacDayList = _repo.VacationDaysToList(userVacation);
+            var wsRsult = await _repo.GenerateUserWS(id, newWS,vacDayList);
+            var wsToReturn = _mapper.Map<WorkScheduleReturn>(wsRsult);
+            return Ok(wsToReturn);
         }
 
 

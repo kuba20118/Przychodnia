@@ -109,6 +109,7 @@ namespace back_end.Data
             return (int)isAvailable.LeftDays;
         }
 
+        
         public async Task<Vacation> AddNewVacation(int userId, NewVacationDTO newVacation)
         {
 
@@ -126,10 +127,14 @@ namespace back_end.Data
             var vacLeft = await _context.Leftvacationdays
                         .Where(x => x.IdUser == userId)
                         .Where(x => x.IdAbsence == newVacation.IdAbsence)
-                        .FirstAsync();
+                        .FirstOrDefaultAsync();
 
             var totalVacDays = (newVacation.ToDate - newVacation.FromDate).Days + 1;
             vacLeft.LeftDays -= totalVacDays;
+            
+            // var dayFromRepo = await _context.Day
+            //         .Where(u => u.IdWsNavigation.IdUser == userId)
+            //         .FirstOrDefaultAsync(d => d.FromTime.DayOfYear == dayNumber);
 
             await _context.Vacation.AddAsync(newVac);
             await _context.SaveChangesAsync();
