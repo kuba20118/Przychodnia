@@ -5,7 +5,9 @@ import {
   SelectedWorkerIdT,
   LeftVacationsDaysT,
   ISelectedWorkerVacationCreateNew,
+  ISelectedWorkerWorkScheduleCreateNew,
   SelectedWorkerUpdateT,
+  ISelectedWorkerWorkSchedule,
 } from "./types";
 import {
   getSelectedWorkerVacationsAsync,
@@ -13,6 +15,7 @@ import {
   createSelectedWorkerVacationsAsync,
   getSelectedWorkerVacationsLeftDaysAsync,
   updateSelectedWorkerAsync,
+  createSelectedWorkerWorkScheduleAsync,
 } from "./actions";
 import { IReducerAction } from "..";
 import apiCaller from "../../utils/apiHelper";
@@ -123,12 +126,10 @@ function* handleGetSelectedWorkerWorkSchedule(
     const res: ISelectedWorkerVacations[] | any = yield call(
       apiCaller,
       "GET",
-      `/users/workschedule/${action.payload}`
+      `/schedules/${action.payload}`
     );
 
-    if (res.errors) {
-      throw Error(res.errors.id[0]);
-    }
+    console.log("WS res:", res);
 
     yield put(getSelectedWorkerWorkScheduleAsync.success(res));
   } catch (err) {
@@ -137,6 +138,51 @@ function* handleGetSelectedWorkerWorkSchedule(
     } else {
       yield put(
         getSelectedWorkerWorkScheduleAsync.failure("An unknown error occured.")
+      );
+    }
+  }
+}
+
+function* handleCreateSelectedWorkerWorkSchedule(
+  action: IReducerAction<ISelectedWorkerWorkScheduleCreateNew>
+) {
+  try {
+    yield delay(2000);
+    const res: ISelectedWorkerWorkSchedule[] | any = yield call(
+      apiCaller,
+      "POST",
+      `/users/vacations/${action.payload.idUser}/new`,
+      {
+        day: action.payload.day,
+        numOfWeeks: action.payload.numOfWeeks,
+      }
+    );
+
+    console.log(res);
+    yield put(createSelectedWorkerWorkScheduleAsync.success(res));
+
+    yield put(
+      activateAlert({
+        body: `Sukces! Nowy grafik został pomyślnie wygenerowany!`,
+        variant: "success",
+        showTime: 6000,
+      })
+    );
+  } catch (err) {
+    if (err instanceof Error) {
+      yield put(
+        activateAlert({
+          body: `${err}. Wygenerowanie grafiku nie powiodło sie.`,
+          variant: "danger",
+          showTime: 6000,
+        })
+      );
+      yield put(createSelectedWorkerWorkScheduleAsync.failure(err.message!));
+    } else {
+      yield put(
+        createSelectedWorkerWorkScheduleAsync.failure(
+          "An unknown error occured."
+        )
       );
     }
   }
@@ -213,6 +259,13 @@ function* watchGetSelectedWorkerWorkScheduleRequest(): Generator {
   );
 }
 
+function* watchCreateSelectedWorkerWorkScheduleRequest(): Generator {
+  yield takeEvery(
+    SelectedWorkerActionTypes.CREATE_SELECTED_WORKER_WORK_SCHEDULE,
+    handleCreateSelectedWorkerWorkSchedule
+  );
+}
+
 function* watchUpdateSelectedWorkerRequest(): Generator {
   yield takeEvery(
     SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER,
@@ -229,6 +282,7 @@ export default function* selectedWorkerSaga() {
     fork(watchCreateSelectedWorkerVacationsRequest),
     fork(watchGetSelectedWorkerVacationsLeftDaysRequest),
     fork(watchGetSelectedWorkerWorkScheduleRequest),
+    fork(watchCreateSelectedWorkerWorkScheduleRequest),
     fork(watchUpdateSelectedWorkerRequest),
   ]);
 }

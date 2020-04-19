@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { Calendar, momentLocalizer, Event } from "react-big-calendar";
+import React from "react";
+import { Calendar, momentLocalizer, Event, Formats } from "react-big-calendar";
 import moment from "moment";
 const localizer = momentLocalizer(moment);
 
 /**
  * @descr Events interpreted as one-day working block
  */
-const myEvents: Event[] = [
+const initialCalendarDays: Event[] = [
   {
     title: "Praca",
     start: new Date("2020-03-20T10:00:00"),
@@ -14,22 +14,27 @@ const myEvents: Event[] = [
   },
 ];
 
+const formats: Formats = {
+  dateFormat: "dd",
+  timeGutterFormat: "HH:mm",
+};
+
 export type WorkingScheduleCalendarPropsT = {
-  readonly events?: Event[];
+  readonly calendarDays?: Event[];
   readonly deleteQuestionText?: string;
+  readonly setCalendarDays: (days: Event[]) => void;
 };
 
 const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
-  events = myEvents,
+  calendarDays = initialCalendarDays,
   deleteQuestionText = "Czy chcesz usunąć ten blok?",
+  setCalendarDays,
 }) => {
-  const [eventsState, setEventsState] = useState<Event[]>(events);
-
   const isSelectionOverlaping = (
     start: Date | string,
     end: Date | string
   ): boolean => {
-    const eventIsBelow = eventsState.findIndex((event: Event) =>
+    const eventIsBelow = calendarDays.findIndex((event: Event) =>
       event
         ? (start >= event.start! && start <= event.end!) ||
           (end >= event.start! && end <= event.end!)
@@ -42,7 +47,8 @@ const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
     <>
       <Calendar
         localizer={localizer}
-        events={eventsState}
+        formats={formats}
+        events={calendarDays}
         startAccessor="start"
         endAccessor="end"
         defaultView={"week"}
@@ -67,13 +73,13 @@ const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
             end: new Date(slot.end),
           };
 
-          setEventsState([...eventsState, newEvent]);
+          setCalendarDays([...calendarDays, newEvent]);
         }}
         onSelectEvent={(event) => {
           const r = window.confirm(deleteQuestionText);
 
           if (r) {
-            setEventsState(eventsState.filter((e) => e !== event));
+            setCalendarDays(calendarDays.filter((e) => e !== event));
           }
         }}
       />

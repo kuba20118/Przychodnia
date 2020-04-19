@@ -2,11 +2,7 @@ import { all, put, takeEvery, fork } from "redux-saga/effects";
 import { WorkScheduleDataT, WorkScheduleActionTypes } from "./types";
 import { IReducerAction } from "..";
 import history from "../../../routing/history";
-import {
-  createWorkScheduleAsync,
-  updateWorkScheduleAsync,
-  fetchWorkScheduleAsync
-} from "./actions";
+import { createWorkScheduleAsync, updateWorkScheduleAsync } from "./actions";
 
 function* handleCreateWorkSchedule(action: IReducerAction<WorkScheduleDataT>) {
   try {

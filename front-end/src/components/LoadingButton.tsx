@@ -6,20 +6,25 @@ export type LoadingButtonPropsT = {
   defaultType: ButtonProps["type"];
   isLoading: boolean;
   variant: ButtonProps["variant"] & SpinnerProps["variant"];
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  disabled?: boolean;
 };
 
 const LoadingButton: React.FC<LoadingButtonPropsT> = ({
   defaultText,
   defaultType,
   isLoading = false,
-  variant = "primary"
+  variant = "primary",
+  onClick = () => {},
+  disabled = true,
 }) => {
   return (
     <Button
       variant={variant}
       type={defaultType}
-      disabled={isLoading}
+      disabled={isLoading || disabled}
       className="btn-animate"
+      onClick={onClick}
     >
       {isLoading ? (
         <>

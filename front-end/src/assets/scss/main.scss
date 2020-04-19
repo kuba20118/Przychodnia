@@ -7,7 +7,6 @@
 @import "lib/global";
 @import "lib/responsive";
 
-@import "lib/datepicker";
 @import "lib/buttons";
 @import "lib/cards";
 @import "lib/search";
@@ -18,3 +17,7 @@
 @import "lib/navbar";
 @import "lib/main-panel";
 @import "lib/login";
+
+// Third parties
+@import "lib/third-party/react-calendar";
+@import "lib/third-party/react-datepicker";

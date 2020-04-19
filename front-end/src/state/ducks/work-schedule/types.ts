@@ -1,13 +1,15 @@
+import { UserIdT } from "../user/types";
+
 export type WorkScheduleDayT = {
-  id: number;
+  idDay: number;
   fromTime: Date;
   toTime: Date;
+  type: string;
 };
 
 export type WorkScheduleDataT = {
-  idWorkSchedule: number;
-  idUser: number;
-  days: WorkScheduleDayT[];
+  idUser: UserIdT;
+  day: WorkScheduleDayT[];
 };
 
 export type WorkScheduleStateT = {
@@ -15,9 +17,16 @@ export type WorkScheduleStateT = {
   loaded: boolean;
 };
 
-export type WorkScheduleApiFetchT = {
-  userId: number;
-  weekNumber: number;
+export type WorkScheduleGenerateDayT = {
+  fromTime: Date;
+  toTime: Date;
+  type: string;
+};
+
+export type WorkScheduleCreateNewT = {
+  idUser: UserIdT;
+  day: WorkScheduleGenerateDayT[];
+  numOfWeeks: number;
 };
 
 export enum WorkScheduleActionTypes {

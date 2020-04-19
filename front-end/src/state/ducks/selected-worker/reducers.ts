@@ -120,7 +120,7 @@ const initialSelectedWorkerWorkScheduleState: SelectedWorkerWorkScheduleStateT =
 const selectedWorkerWorkScheduleReducer = (
   state: SelectedWorkerWorkScheduleStateT = initialSelectedWorkerWorkScheduleState,
   action: Action<TypeConstant> &
-    PayloadAction<TypeConstant, ISelectedWorkerWorkSchedule[] & string>
+    PayloadAction<TypeConstant, ISelectedWorkerWorkSchedule & string>
 ): SelectedWorkerWorkScheduleStateT => {
   switch (action.type) {
     case SelectedWorkerActionTypes.GET_SELECTED_WORKER_WORK_SCHEDULE: {
@@ -134,6 +134,19 @@ const selectedWorkerWorkScheduleReducer = (
       };
     }
     case SelectedWorkerActionTypes.GET_SELECTED_WORKER_WORK_SCHEDULE_ERROR: {
+      return { ...state, isLoading: false, error: action.payload };
+    }
+    case SelectedWorkerActionTypes.CREATE_SELECTED_WORKER_WORK_SCHEDULE: {
+      return { ...state, isLoading: true };
+    }
+    case SelectedWorkerActionTypes.CREATE_SELECTED_WORKER_WORK_SCHEDULE_SUCCESS: {
+      return {
+        ...state,
+        isLoading: false,
+        data: action.payload,
+      };
+    }
+    case SelectedWorkerActionTypes.CREATE_SELECTED_WORKER_WORK_SCHEDULE_ERROR: {
       return { ...state, isLoading: false, error: action.payload };
     }
     default:

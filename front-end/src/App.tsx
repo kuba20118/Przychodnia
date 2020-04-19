@@ -35,6 +35,7 @@ const App: React.FC = () => {
         component={() => <routes.component childrenRoutes={routes.children} />}
       />
       <Route
+        exact
         path={["/login", "/"]}
         render={(props) => {
           if (authentication.isAuthenticated) {
