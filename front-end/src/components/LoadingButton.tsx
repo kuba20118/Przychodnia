@@ -16,7 +16,7 @@ const LoadingButton: React.FC<LoadingButtonPropsT> = ({
   isLoading = false,
   variant = "primary",
   onClick = () => {},
-  disabled = true,
+  disabled = false,
 }) => {
   return (
     <Button
