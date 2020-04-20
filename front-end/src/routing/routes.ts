@@ -96,7 +96,7 @@ export const adminRoutes: RoutesType = {
 export const userRoutes: RoutesType = {
   path: "/uzytkownik",
   name: "Użytkownik",
-  component: User,
+  component: UserLayout,
   layout: "",
   children: [
     {
