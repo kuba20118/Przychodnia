@@ -10,12 +10,12 @@ import { DatePickerField } from "./DatePickerField";
 import { LeftVacationsDaysT } from "../state/ducks/selected-worker/types";
 import LoadingButton from "./LoadingButton";
 
-export type VacationsFormDataT = {
-  fromDate: Date;
-  toDate: Date;
-  categoryId: number;
-  substitutionId: string;
-};
+  export type VacationsFormDataT = {
+    fromDate: Date;
+    toDate: Date;
+    categoryId: number;
+    substitutionId: string;
+  };
 
 type VacationsFormPropsT = {
   readonly categories?: VacationsCategoryT[];

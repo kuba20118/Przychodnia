@@ -11,6 +11,13 @@ export type VacationsCategoryT = {
   limit: number;
 };
 
+export type VacationsFormDataT = {
+  fromDate: Date;
+  toDate: Date;
+  categoryId: number;
+  substitutionId: string;
+};
+
 export type VacationsStateT = {
   allVacations: VacationsDataT[];
   categories: VacationsCategoryT[];

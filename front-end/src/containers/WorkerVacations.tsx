@@ -3,34 +3,30 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   SelectedWorkerStateT,
   ISelectedWorker,
-  ISelectedWorkerVacations,
   ISelectedWorkerVacationCreateNew,
 } from "../state/ducks/selected-worker/types";
 import { IApplicationState } from "../state/ducks";
-import VacationsForm, { VacationsFormDataT } from "../components/VacationsForm";
+import VacationsForm from "../components/VacationsForm";
 import Card from "../components/Card";
 import CustomTable, {
   CustomTableDataT,
   CustomTableHeaderT,
 } from "../components/CustomTable";
-import { format, parseISO } from "date-fns/esm";
 import { Row, Col } from "react-bootstrap";
 import { UserT } from "../state/ducks/user/types";
 import VacationsLeftDays from "../components/VacationsLeftDays";
 import { createSelectedWorkerVacationsAsync } from "../state/ducks/selected-worker/actions";
-import { isFuture, isPast, isToday } from "date-fns";
 import { getVacationsCategoriesAsync } from "../state/ducks/vacations/actions";
-import { VacationsCategoryT } from "../state/ducks/vacations/types";
-
-const createTableDataItem = (
-  dataItem: ISelectedWorkerVacations,
-  index: number
-): string[] => [
-  (index + 1).toString(),
-  format(parseISO(dataItem.fromDate), "dd-MM-yyyy"),
-  format(parseISO(dataItem.toDate), "dd-MM-yyyy"),
-  dataItem.absenceType,
-];
+import {
+  VacationsCategoryT,
+  VacationsFormDataT,
+} from "../state/ducks/vacations/types";
+import {
+  createCurrentVacationsTableData,
+  createHistoryVacationsTableData,
+  createNewVacationObject,
+  getPotentialsSubs,
+} from "../state/ducks/vacations/operations";
 
 const WorkerVacations: React.FC = () => {
   const dispatch = useDispatch();
@@ -44,33 +40,22 @@ const WorkerVacations: React.FC = () => {
     ({ selectedWorker }: IApplicationState) => selectedWorker
   );
 
-  const getVacationsCategoriersRequest = useCallback(
-    () => dispatch(getVacationsCategoriesAsync.request()),
-    [dispatch]
-  );
-
   useEffect(() => {
-    getVacationsCategoriersRequest();
+    dispatch(getVacationsCategoriesAsync.request());
   }, []);
 
-  const potentialSubs: ISelectedWorker[] | undefined =
-    users &&
-    users.filter(
-      (user) =>
-        user.idUser !== selectedWorker.user.data?.idUser &&
-        user.role === selectedWorker.user.data?.role
-    );
+  const potentialSubs: ISelectedWorker[] | undefined = useMemo(
+    () => getPotentialsSubs(users, selectedWorker.user.data),
+    [users, selectedWorker]
+  );
 
   const createWorkerVacationRequest = useCallback(
     (data: VacationsFormDataT) => {
       if (selectedWorker.user.data?.idUser) {
-        const newVacation: ISelectedWorkerVacationCreateNew = {
-          userId: selectedWorker.user.data?.idUser,
-          fromDate: data.fromDate,
-          toDate: data.toDate,
-          absenceId: data.categoryId,
-          substitutionId: data.substitutionId,
-        };
+        const newVacation: ISelectedWorkerVacationCreateNew = createNewVacationObject(
+          selectedWorker.user.data?.idUser,
+          data
+        );
         dispatch(createSelectedWorkerVacationsAsync.request(newVacation));
       }
     },
@@ -80,27 +65,12 @@ const WorkerVacations: React.FC = () => {
   const tableHeader: CustomTableHeaderT = ["#", "Od", "Do", "Typ"];
 
   const currentTableData: CustomTableDataT | undefined = useMemo(
-    () =>
-      selectedWorker.vacation.data &&
-      selectedWorker.vacation
-        .data!.filter((item) => {
-          return (
-            isFuture(new Date(item.toDate)) || isToday(new Date(item.toDate))
-          );
-        })
-        .map((item, index) => createTableDataItem(item, index)),
+    () => createCurrentVacationsTableData(selectedWorker.vacation.data),
     [selectedWorker.vacation.data]
   );
 
   const historyTableData: CustomTableDataT | undefined = useMemo(
-    () =>
-      selectedWorker.vacation.data &&
-      selectedWorker.vacation
-        .data!.filter(
-          (item) =>
-            isPast(new Date(item.toDate)) && !isToday(new Date(item.toDate))
-        )
-        .map((item, index) => createTableDataItem(item, index)),
+    () => createHistoryVacationsTableData(selectedWorker.vacation.data),
     [selectedWorker.vacation.data]
   );
 
