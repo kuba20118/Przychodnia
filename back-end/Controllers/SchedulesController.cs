@@ -55,6 +55,27 @@ namespace back_end.Controllers
             return Ok(wsToReturn);
         }
 
+        [HttpPost("generate")]
+        public async Task<IActionResult> GenerateWorkSchedule(WorkScheduleNewDTO newWS)
+        {
+            // if(await _userRepo.GetUser(id) == null)
+            //     return Content("Brak usera o podanym id");
+            
+            if(newWS.Day.Count != 7)
+                return Content("Wymagane jest podanie całego tygodnia");
+
+            if(newWS.NumberOfWeeks < 1)
+                return Content("Podaj liczbę tygodni");
+            
+            var users = await _userRepo.GetUsers();
+
+            // var userVacation = await _userRepo.GetVacations(id);
+            // var vacDayList = _repo.VacationDaysToList(userVacation);
+            var wsRsult = await _repo.GenerateWS(users, newWS);
+            var wsToReturn = _mapper.Map<IEnumerable<WorkScheduleReturn>>(wsRsult);
+            return Ok(wsToReturn);
+        }
+
 
     }
 }

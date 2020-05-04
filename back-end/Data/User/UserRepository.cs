@@ -33,6 +33,7 @@ namespace back_end.Data
                         .Where(u => u.IdEmplNavigation.CurrentyEmployed == 1)
                         .Include(e => e.IdEmplNavigation)
                         .Include(r => r.IdRoleNavigation)
+                        .Include(v => v.Vacation)
                         .ToListAsync();
 
 
@@ -108,8 +109,6 @@ namespace back_end.Data
 
             return (int)isAvailable.LeftDays;
         }
-
-        
         public async Task<Vacation> AddNewVacation(int userId, NewVacationDTO newVacation)
         {
 

@@ -33,7 +33,7 @@ namespace back_end.Data
                     var newDay = new Day
                     {
                         FromTime = fromTime,
-                        ToTime = toTime,
+                        ToTime = toTime,             
                         Type = vac.IdAbsenceVacNavigation.Name
                     };
                     dayList.Add(newDay);
@@ -55,14 +55,14 @@ namespace back_end.Data
                 var dayList = new List<Day>();
 
                 foreach (var day in newWS.Day)
-                {   
+                {
                     Day newDay;
                     var fromTime = day.FromTime.AddDays(i * 7);
                     var toTime = day.ToTime.AddDays(i * 7);
 
                     var vacDay = vacList.FirstOrDefault(d => d.FromTime.DayOfYear == fromTime.DayOfYear);
                     var currentDay = wsFromRepo.Day.FirstOrDefault(d => d.FromTime.DayOfYear == fromTime.DayOfYear);
-                    if(vacDay != null && (currentDay == null || currentDay.Type == "Praca"))
+                    if (vacDay != null && (currentDay == null || currentDay.Type == "Praca"))
                     {
                         newDay = vacDay;
                         dayList.Add(newDay);
@@ -89,7 +89,6 @@ namespace back_end.Data
                 wsList.Add(ws);
                 await _context.Workschedule.AddAsync(ws);
             }
-
             await _context.SaveChangesAsync();
 
             var wsToReturn = await GetUserWS(userId);
@@ -132,5 +131,62 @@ namespace back_end.Data
             throw new System.NotImplementedException();
         }
 
+        public async Task<Workschedule> GenerateWS(IEnumerable<User> users, WorkScheduleNewDTO newWS)
+        {
+            foreach (var user in users)
+            {
+                var wsFromRepo = await GetUserWS(user.IdUser);
+                var wsList = new List<Workschedule>();
+
+                var userVac = await _context.Vacation
+                       .Where(u => u.IdUserVac == user.IdUser)
+                       .Include(a => a.IdAbsenceVacNavigation)
+                       .Include(u => u.IdUserVacNavigation)
+                       .ToListAsync();
+
+                var vacList = VacationDaysToList(userVac);
+                for (int i = 0; i < newWS.NumberOfWeeks; i++)
+                {
+                    var ws = new Workschedule();
+                    var dayList = new List<Day>();
+
+                    foreach (var day in newWS.Day)
+                    {
+                        Day newDay;
+                        var fromTime = day.FromTime.AddDays(i * 7);
+                        var toTime = day.ToTime.AddDays(i * 7);
+
+                        var vacDay = vacList.FirstOrDefault(d => d.FromTime.DayOfYear == fromTime.DayOfYear);
+                        var currentDay = wsFromRepo.Day.FirstOrDefault(d => d.FromTime.DayOfYear == fromTime.DayOfYear);
+                        if (vacDay != null && (currentDay == null || currentDay.Type == "praca"))
+                        {
+                            newDay = vacDay;
+                            dayList.Add(newDay);
+                            await _context.Day.AddAsync(newDay);
+                        }
+                        else if (currentDay == null)
+                        {
+                            newDay = new Day
+                            {
+                                FromTime = fromTime,
+                                ToTime = toTime,
+                                IdWsNavigation = ws,
+                                Type = "Praca"
+                            };
+
+                            dayList.Add(newDay);
+                            await _context.Day.AddAsync(newDay);
+                        }
+                    }
+                    ws.IdUserNavigation = user;
+                    ws.Day = dayList;
+
+                    wsList.Add(ws);
+                    await _context.Workschedule.AddAsync(ws);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            return null;
+        }
     }
 }
