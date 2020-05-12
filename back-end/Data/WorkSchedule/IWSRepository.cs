@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using back_end.DTOs.Employment;
+using back_end.DTOs.WorkSchedule;
 using Przychodnia.API;
 
 namespace back_end.Data
@@ -14,5 +16,7 @@ namespace back_end.Data
 
         Task<Day> GetDayByNumber(int userId, int dayNumber);
         List<Day> VacationDaysToList(IEnumerable<Vacation> daylist);
+        Task<Day> CheckIfDayExists(int userId, DateTime day);
+        Task<Day> UpdateDay(int userId, DayUpdateDTO day);
     }
 }

@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using back_end.DTOs.Employment;
+using back_end.DTOs.WorkSchedule;
 using Microsoft.EntityFrameworkCore;
 using Przychodnia.API;
 
@@ -33,7 +35,7 @@ namespace back_end.Data
                     var newDay = new Day
                     {
                         FromTime = fromTime,
-                        ToTime = toTime,             
+                        ToTime = toTime,
                         Type = vac.IdAbsenceVacNavigation.Name
                     };
                     dayList.Add(newDay);
@@ -139,10 +141,10 @@ namespace back_end.Data
                 var wsList = new List<Workschedule>();
 
                 var userVac = await _context.Vacation
-                       .Where(u => u.IdUserVac == user.IdUser)
-                       .Include(a => a.IdAbsenceVacNavigation)
-                       .Include(u => u.IdUserVacNavigation)
-                       .ToListAsync();
+                    .Where(u => u.IdUserVac == user.IdUser)
+                    .Include(a => a.IdAbsenceVacNavigation)
+                    .Include(u => u.IdUserVacNavigation)
+                    .ToListAsync();
 
                 var vacList = VacationDaysToList(userVac);
                 for (int i = 0; i < newWS.NumberOfWeeks; i++)
@@ -187,6 +189,28 @@ namespace back_end.Data
                 }
             }
             return null;
+        }
+
+        public async Task<Day> CheckIfDayExists(int userId, DateTime day)
+        {
+            var userWs = await GetUserWS(userId);
+            return userWs.Day.FirstOrDefault(x => x.FromTime.DayOfYear == day.DayOfYear);
+        }
+
+        public async Task<Day> UpdateDay(int userId, DayUpdateDTO newDay)
+        {
+            //var userWs = await GetUserWS(userId);
+
+            var day = await _context.Day
+                    .Where(x => x.FromTime.DayOfYear == newDay.FromTime.DayOfYear)
+                    .FirstOrDefaultAsync(x => x.IdWsNavigation.IdUser == userId);
+            day.FromTime = newDay.FromTime;
+            day.ToTime = newDay.ToTime;
+            day.Type = newDay.Type;
+        
+            _context.Day.Update(day);
+            await _context.SaveChangesAsync();
+            return day;
         }
     }
 }

@@ -2,6 +2,7 @@ using AutoMapper;
 using back_end.DTOs;
 using back_end.DTOs.Employment;
 using back_end.DTOs.Vacation;
+using back_end.DTOs.WorkSchedule;
 using Przychodnia.API;
 
 namespace back_end.Helpers
