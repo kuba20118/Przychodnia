@@ -1,15 +1,15 @@
 import React from "react";
 import { Nav, Navbar } from "react-bootstrap";
 
-type AdminNavbarPropsT = {
+type NavbarComponentPropsT = {
   readonly pageName?: string;
   readonly logoutUserAsyncRequest: () => void;
 };
 
-const AdminNavbar: React.FC<AdminNavbarPropsT> = ({
+const NavbarComponent: React.FC<NavbarComponentPropsT> = ({
   pageName,
-  logoutUserAsyncRequest
-}: AdminNavbarPropsT) => {
+  logoutUserAsyncRequest,
+}: NavbarComponentPropsT) => {
   const onLogout = (e: React.MouseEvent<any>) => {
     e.preventDefault();
     logoutUserAsyncRequest();
@@ -30,4 +30,4 @@ const AdminNavbar: React.FC<AdminNavbarPropsT> = ({
   );
 };
 
-export default AdminNavbar;
+export default NavbarComponent;

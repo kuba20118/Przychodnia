@@ -18,9 +18,16 @@ export type WorkScheduleStateT = {
 };
 
 export type WorkScheduleGenerateDayT = {
-  fromTime: Date;
-  toTime: Date;
-  type: string;
+  fromTime?: string;
+  toTime?: string;
+  type?: string;
+};
+
+export type WorkScheduleUpdateDayT = {
+  userId: UserIdT;
+  fromTime: string;
+  toTime: string;
+  type?: string;
 };
 
 export type WorkScheduleCreateNewT = {

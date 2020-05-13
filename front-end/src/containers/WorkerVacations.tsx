@@ -6,15 +6,15 @@ import {
   ISelectedWorkerVacationCreateNew,
 } from "../state/ducks/selected-worker/types";
 import { IApplicationState } from "../state/ducks";
-import VacationsForm from "../components/VacationsForm";
-import Card from "../components/Card";
+import VacationsForm from "../components/vacations/VacationsForm";
+import Card from "../components/card/Card";
 import CustomTable, {
   CustomTableDataT,
   CustomTableHeaderT,
 } from "../components/CustomTable";
 import { Row, Col } from "react-bootstrap";
 import { UserT } from "../state/ducks/user/types";
-import VacationsLeftDays from "../components/VacationsLeftDays";
+import VacationsLeftDays from "../components/vacations/VacationsLeftDays";
 import { createSelectedWorkerVacationsAsync } from "../state/ducks/selected-worker/actions";
 import { getVacationsCategoriesAsync } from "../state/ducks/vacations/actions";
 import {

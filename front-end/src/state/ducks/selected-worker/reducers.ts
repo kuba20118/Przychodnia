@@ -9,6 +9,8 @@ import {
   SelectedWorkerUserStateT,
   SelectedWorkerVacationsStateT,
   SelectedWorkerWorkScheduleStateT,
+  ISelectedWorkerScheduleUpdateDayT,
+  ISelectedWorkerScheduleDay,
 } from "./types";
 import { TypeConstant, Action, PayloadAction } from "typesafe-actions";
 import { combineReducers } from "redux";
@@ -120,7 +122,10 @@ const initialSelectedWorkerWorkScheduleState: SelectedWorkerWorkScheduleStateT =
 const selectedWorkerWorkScheduleReducer = (
   state: SelectedWorkerWorkScheduleStateT = initialSelectedWorkerWorkScheduleState,
   action: Action<TypeConstant> &
-    PayloadAction<TypeConstant, ISelectedWorkerWorkSchedule & string>
+    PayloadAction<
+      TypeConstant,
+      ISelectedWorkerWorkSchedule & ISelectedWorkerScheduleDay & string
+    >
 ): SelectedWorkerWorkScheduleStateT => {
   switch (action.type) {
     case SelectedWorkerActionTypes.GET_SELECTED_WORKER_WORK_SCHEDULE: {
@@ -147,6 +152,24 @@ const selectedWorkerWorkScheduleReducer = (
       };
     }
     case SelectedWorkerActionTypes.CREATE_SELECTED_WORKER_WORK_SCHEDULE_ERROR: {
+      return { ...state, isLoading: false, error: action.payload };
+    }
+    case SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_SCHEDULE_DAY: {
+      return { ...state, isLoading: true };
+    }
+    case SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_SCHEDULE_DAY_SUCCESS: {
+      return {
+        ...state,
+        isLoading: false,
+        data: {
+          ...state.data!,
+          day: state.data!.day.map((day) =>
+            day.idDay === action.payload.idDay ? action.payload : day
+          ),
+        },
+      };
+    }
+    case SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_SCHEDULE_DAY_ERROR: {
       return { ...state, isLoading: false, error: action.payload };
     }
     default:

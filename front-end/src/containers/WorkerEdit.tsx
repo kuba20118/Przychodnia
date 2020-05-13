@@ -6,7 +6,7 @@ import {
 } from "../state/ducks/selected-worker/types";
 import { IApplicationState } from "../state/ducks";
 import { useSelector, useDispatch } from "react-redux";
-import Card from "../components/Card";
+import Card from "../components/card/Card";
 import WorkerEditForm from "../components/WorkerEditForm";
 import { RoleT } from "../state/ducks/role/types";
 import { updateSelectedWorkerAsync } from "../state/ducks/selected-worker/actions";

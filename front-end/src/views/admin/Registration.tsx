@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import Card from "../../components/Card";
-import RegistrationForm from "../../components/RegistrationForm";
+import Card from "../../components/card/Card";
+import RegistrationForm from "../../components/auth/RegistrationForm";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRoleAsync } from "../../state/ducks/role/actions";
 import { IApplicationState } from "../../state/ducks";

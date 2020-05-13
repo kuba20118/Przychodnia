@@ -4,7 +4,7 @@ import { logoutUserAsync } from "../state/ducks/user/actions";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import Sidebar from "../components/Sidebar";
 import { IRouteComponentProps, RoutesType } from "../routing/routes";
-import AdminNavbar from "../components/AdminNavbar";
+import NavbarComponent from "../components/NavbarComponent";
 import AlertComponent from "../components/AlertComponent";
 import { IApplicationState } from "../state/ducks";
 import { closeAlert } from "../state/ducks/alert/actions";
@@ -68,7 +68,7 @@ const User: React.FC<IRouteComponentProps> = ({ childrenRoutes }) => {
         logoSrc="TODO"
       />
       <div className="main-panel">
-        <AdminNavbar
+        <NavbarComponent
           pageName={getPageNameText(childrenRoutes!)}
           {...dispatchToNavbarProps}
         />

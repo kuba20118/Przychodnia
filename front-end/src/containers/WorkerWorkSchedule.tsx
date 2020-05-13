@@ -3,15 +3,21 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   ISelectedWorkerWorkScheduleCreateNew,
   SelectedWorkerStateT,
+  ISelectedWorkerScheduleGenerateDay,
+  ISelectedWorkerScheduleUpdateDayT,
 } from "../state/ducks/selected-worker/types";
 import { IApplicationState } from "../state/ducks";
-import WorkScheduleCalendar from "../components/WorkScheduleCalendar";
+import WorkScheduleCalendar from "../components/work-schedule/WorkScheduleCalendar";
 import { FormGroup, FormControl, FormLabel, Col, Row } from "react-bootstrap";
 import LoadingButton from "../components/LoadingButton";
-import { createSelectedWorkerWorkScheduleAsync } from "../state/ducks/selected-worker/actions";
+import {
+  createSelectedWorkerWorkScheduleAsync,
+  updateSelectedWorkerScheduleDayAsync,
+} from "../state/ducks/selected-worker/actions";
 import {
   tranformDaysToCalendarEvents,
   tranformCalendarEventsToDays,
+  transformCalendarEventToDay,
 } from "../state/ducks/work-schedule/operations";
 import { Event } from "react-big-calendar";
 
@@ -51,11 +57,20 @@ const WorkerWorkSchedule: React.FC = () => {
     }
   };
 
+  const updateDay = (event: Event) => {
+    const day: ISelectedWorkerScheduleUpdateDayT = {
+      userId: user.data?.idUser!,
+      ...transformCalendarEventToDay(event),
+    };
+    dispatch(updateSelectedWorkerScheduleDayAsync.request(day));
+  };
+
   return (
     <div className="content">
       <WorkScheduleCalendar
         calendarDays={calendarDays}
         setCalendarDays={setCalendarDays}
+        updateDay={updateDay}
       />
       <Row className="pt-3">
         <Col className="text-right">

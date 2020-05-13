@@ -1,6 +1,6 @@
 import React, { useState, FormEvent } from "react";
 import { FormGroup, FormLabel, FormControl, Button } from "react-bootstrap";
-import { UserLoginT } from "../state/ducks/user/types";
+import { UserLoginT } from "../../state/ducks/user/types";
 
 type LoginFormPropsT = {
   readonly onSubmit: (userLogin: UserLoginT) => void;

@@ -1,9 +1,8 @@
 import React from "react";
-import { UserT } from "../state/ducks/user/types";
-import { ISelectedWorker } from "../state/ducks/selected-worker/types";
+import { UserT } from "../../state/ducks/user/types";
+import { ISelectedWorker } from "../../state/ducks/selected-worker/types";
 import { format, parseISO } from "date-fns";
-import { FaUserAlt } from "react-icons/fa";
-import DefaultUserImg from "../assets/images/default-user.jpg";
+import DefaultUserImg from "../../assets/images/default-user.jpg";
 
 type UserCardPropsT = {
   readonly user: UserT | ISelectedWorker;
@@ -17,7 +16,7 @@ const initialSelectedUser: UserT = {
   role: "",
   workingHours: 0,
   currentlyEmployed: false,
-  hireDate: ""
+  hireDate: "",
 };
 
 const UserCard: React.FC<UserCardPropsT> = ({ user = initialSelectedUser }) => {

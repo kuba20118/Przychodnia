@@ -8,7 +8,7 @@ import CustomTable, {
 } from "../../components/CustomTable";
 import { IApplicationState } from "../../state/ducks";
 import { UserT } from "../../state/ducks/user/types";
-import Card from "../../components/Card";
+import Card from "../../components/card/Card";
 import { format } from "date-fns";
 
 const tableHeader: CustomTableHeaderT = [

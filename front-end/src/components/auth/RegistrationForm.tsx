@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import { Form, Col } from "react-bootstrap";
-import { UserRegisterT } from "../state/ducks/user/types";
-import { RoleT } from "../state/ducks/role/types";
-import LoadingButton from "./LoadingButton";
+import { UserRegisterT } from "../../state/ducks/user/types";
+import { RoleT } from "../../state/ducks/role/types";
+import LoadingButton from "../LoadingButton";
 import { FormikProps } from "formik";
 import * as Yup from "yup";
-import FormikWithRef from "./FormikWithRef";
+import FormikWithRef from "../helpers/FormikWithRef";
 
 type RegistrationFormPropsT = {
   readonly registerUser: (data: UserRegisterT) => void;

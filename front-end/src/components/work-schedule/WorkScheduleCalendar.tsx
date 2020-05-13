@@ -1,6 +1,12 @@
 import React from "react";
 import { Calendar, momentLocalizer, Event, Formats } from "react-big-calendar";
 import moment from "moment";
+moment.locale("ko", {
+  week: {
+    dow: 1,
+    doy: 1,
+  },
+});
 const localizer = momentLocalizer(moment);
 
 /**
@@ -23,12 +29,14 @@ export type WorkingScheduleCalendarPropsT = {
   readonly calendarDays?: Event[];
   readonly deleteQuestionText?: string;
   readonly setCalendarDays: (days: Event[]) => void;
+  readonly updateDay: (day: Event) => void;
 };
 
 const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
   calendarDays = initialCalendarDays,
   deleteQuestionText = "Czy chcesz usunąć ten blok?",
   setCalendarDays,
+  updateDay,
 }) => {
   const isSelectionOverlaping = (
     start: Date | string,
@@ -74,6 +82,7 @@ const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
           };
 
           setCalendarDays([...calendarDays, newEvent]);
+          updateDay(newEvent);
         }}
         onSelectEvent={(event) => {
           const r = window.confirm(deleteQuestionText);

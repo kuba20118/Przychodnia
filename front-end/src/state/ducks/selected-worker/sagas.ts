@@ -8,6 +8,9 @@ import {
   ISelectedWorkerWorkScheduleCreateNew,
   SelectedWorkerUpdateT,
   ISelectedWorkerWorkSchedule,
+  ISelectedWorkerScheduleDay,
+  ISelectedWorkerScheduleGenerateDay,
+  ISelectedWorkerScheduleUpdateDayT,
 } from "./types";
 import {
   getSelectedWorkerVacationsAsync,
@@ -16,6 +19,7 @@ import {
   getSelectedWorkerVacationsLeftDaysAsync,
   updateSelectedWorkerAsync,
   createSelectedWorkerWorkScheduleAsync,
+  updateSelectedWorkerScheduleDayAsync,
 } from "./actions";
 import { IReducerAction } from "..";
 import apiCaller from "../../utils/apiHelper";
@@ -129,8 +133,6 @@ function* handleGetSelectedWorkerWorkSchedule(
       `/schedules/${action.payload}`
     );
 
-    console.log("WS res:", res);
-
     yield put(getSelectedWorkerWorkScheduleAsync.success(res));
   } catch (err) {
     if (err instanceof Error) {
@@ -151,14 +153,13 @@ function* handleCreateSelectedWorkerWorkSchedule(
     const res: ISelectedWorkerWorkSchedule[] | any = yield call(
       apiCaller,
       "POST",
-      `/users/vacations/${action.payload.idUser}/new`,
+      `/schedules/generate/${action.payload.idUser}`,
       {
         day: action.payload.day,
-        numOfWeeks: action.payload.numOfWeeks,
+        numberOfWeeks: action.payload.numOfWeeks,
       }
     );
 
-    console.log(res);
     yield put(createSelectedWorkerWorkScheduleAsync.success(res));
 
     yield put(
@@ -181,6 +182,49 @@ function* handleCreateSelectedWorkerWorkSchedule(
     } else {
       yield put(
         createSelectedWorkerWorkScheduleAsync.failure(
+          "An unknown error occured."
+        )
+      );
+    }
+  }
+}
+
+function* handleUpdateSelectedWorkerScheduleDay(
+  action: IReducerAction<ISelectedWorkerScheduleUpdateDayT>
+) {
+  try {
+    const res: ISelectedWorkerScheduleDay[] | any = yield call(
+      apiCaller,
+      "PUT",
+      `/schedules/updateday/${action.payload.userId}`,
+      {
+        fromTime: action.payload.fromTime,
+        toTime: action.payload.toTime,
+        type: action.payload.type,
+      }
+    );
+
+    yield put(updateSelectedWorkerScheduleDayAsync.success(res));
+    yield put(
+      activateAlert({
+        body: `Sukces! Dzień został pomyślnie zaktualizowny!`,
+        variant: "success",
+        showTime: 1500,
+      })
+    );
+  } catch (err) {
+    if (err instanceof Error) {
+      yield put(
+        activateAlert({
+          body: `${err}. Aktualizacja dnia nie powiodła się.`,
+          variant: "danger",
+          showTime: 1500,
+        })
+      );
+      yield put(updateSelectedWorkerScheduleDayAsync.failure(err.message!));
+    } else {
+      yield put(
+        updateSelectedWorkerScheduleDayAsync.failure(
           "An unknown error occured."
         )
       );
@@ -266,6 +310,13 @@ function* watchCreateSelectedWorkerWorkScheduleRequest(): Generator {
   );
 }
 
+function* watchUpdateSelectedWorkerScheduleDayRequest(): Generator {
+  yield takeEvery(
+    SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_SCHEDULE_DAY,
+    handleUpdateSelectedWorkerScheduleDay
+  );
+}
+
 function* watchUpdateSelectedWorkerRequest(): Generator {
   yield takeEvery(
     SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER,
@@ -283,6 +334,7 @@ export default function* selectedWorkerSaga() {
     fork(watchGetSelectedWorkerVacationsLeftDaysRequest),
     fork(watchGetSelectedWorkerWorkScheduleRequest),
     fork(watchCreateSelectedWorkerWorkScheduleRequest),
+    fork(watchUpdateSelectedWorkerScheduleDayRequest),
     fork(watchUpdateSelectedWorkerRequest),
   ]);
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { LeftVacationsDaysT } from "../state/ducks/selected-worker/types";
+import { LeftVacationsDaysT } from "../../state/ducks/selected-worker/types";
 
 export type VacationsLeftDaysProptT = {
   leftDays?: LeftVacationsDaysT[];

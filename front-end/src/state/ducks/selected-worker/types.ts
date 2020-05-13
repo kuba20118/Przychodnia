@@ -1,7 +1,12 @@
-import { WorkScheduleCreateNewT } from "./../work-schedule/types";
+import {
+  WorkScheduleCreateNewT,
+  WorkScheduleDayT,
+  WorkScheduleGenerateDayT,
+  WorkScheduleDataT,
+  WorkScheduleUpdateDayT,
+} from "./../work-schedule/types";
 import { UserT, UserIdT } from "../user/types";
 import { VacationsDataT, VacationCreateNewT } from "../vacations/types";
-import { WorkScheduleDataT } from "../work-schedule/types";
 
 export type SelectedWorkerIdT = UserIdT;
 export interface ISelectedWorker extends UserT {}
@@ -10,6 +15,11 @@ export interface ISelectedWorkerWorkSchedule extends WorkScheduleDataT {}
 export interface ISelectedWorkerVacationCreateNew extends VacationCreateNewT {}
 export interface ISelectedWorkerWorkScheduleCreateNew
   extends WorkScheduleCreateNewT {}
+export interface ISelectedWorkerScheduleDay extends WorkScheduleDayT {}
+export interface ISelectedWorkerScheduleGenerateDay
+  extends WorkScheduleGenerateDayT {}
+export interface ISelectedWorkerScheduleUpdateDayT
+  extends WorkScheduleUpdateDayT {}
 
 export type SelectedWorkerUpdateT = {
   userId: UserIdT;
@@ -77,6 +87,10 @@ export enum SelectedWorkerActionTypes {
   CREATE_SELECTED_WORKER_WORK_SCHEDULE = "@@selected-worker/CREATE_SELECTED_WORKER_WORK_SCHEDULE",
   CREATE_SELECTED_WORKER_WORK_SCHEDULE_SUCCESS = "@@selected-worker/CREATE_SELECTED_WORKER_WORK_SCHEDULE_SUCCESS",
   CREATE_SELECTED_WORKER_WORK_SCHEDULE_ERROR = "@@selected-worker/CREATE_SELECTED_WORKER_WORK_SCHEDULE_ERROR",
+
+  UPDATE_SELECTED_WORKER_SCHEDULE_DAY = "@@selected-worker/UPDATE_SELECTED_WORKER_SCHEDULE_DAY",
+  UPDATE_SELECTED_WORKER_SCHEDULE_DAY_SUCCESS = "@@selected-worker/UPDATE_SELECTED_WORKER_SCHEDULE_DAY_SUCCESS",
+  UPDATE_SELECTED_WORKER_SCHEDULE_DAY_ERROR = "@@selected-worker/UPDATE_SELECTED_WORKER_SCHEDULE_DAY_ERROR",
 
   UPDATE_SELECTED_WORKER = "@@selected-worker/UPDATE_SELECTED_WORKER",
   UPDATE_SELECTED_WORKER_SUCCESS = "@@selected-worker/UPDATE_SELECTED_WORKER_SUCCESS",

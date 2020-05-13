@@ -1,17 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Row, Col, FormGroup, FormLabel, Form } from "react-bootstrap";
 import { addDays, subDays } from "date-fns/esm";
-import { UserT } from "../state/ducks/user/types";
+import { UserT } from "../../state/ducks/user/types";
 import {
   VacationsCategoryT,
   VacationsFormDataT,
-} from "../state/ducks/vacations/types";
-import FormikWithRef from "./FormikWithRef";
+} from "../../state/ducks/vacations/types";
+import FormikWithRef from "../helpers/FormikWithRef";
 import * as Yup from "yup";
 import { FormikProps } from "formik";
-import { DatePickerField } from "./DatePickerField";
-import { LeftVacationsDaysT } from "../state/ducks/selected-worker/types";
-import LoadingButton from "./LoadingButton";
+import { DatePickerField } from "../helpers/DatePickerField";
+import { LeftVacationsDaysT } from "../../state/ducks/selected-worker/types";
+import LoadingButton from "../LoadingButton";
 
 type VacationsFormPropsT = {
   readonly categories?: VacationsCategoryT[];

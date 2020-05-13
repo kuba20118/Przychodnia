@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import LoginForm from "../components/LoginForm";
+import LoginForm from "../components/auth/LoginForm";
 import { loginUserAsync } from "../state/ducks/user/actions";
 import { Container } from "react-bootstrap";
 import { UserLoginT } from "../state/ducks/user/types";
