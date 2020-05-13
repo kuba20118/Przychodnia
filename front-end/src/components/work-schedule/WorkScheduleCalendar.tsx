@@ -1,5 +1,6 @@
 import React from "react";
 import { Calendar, momentLocalizer, Event, Formats } from "react-big-calendar";
+import { isSameDay } from "date-fns";
 import moment from "moment";
 moment.locale("ko", {
   week: {
@@ -30,6 +31,7 @@ export type WorkingScheduleCalendarPropsT = {
   readonly deleteQuestionText?: string;
   readonly setCalendarDays: (days: Event[]) => void;
   readonly updateDay: (day: Event) => void;
+  readonly onDeleteCalendarDay: (day: Event) => void;
 };
 
 const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
@@ -37,6 +39,7 @@ const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
   deleteQuestionText = "Czy chcesz usunąć ten blok?",
   setCalendarDays,
   updateDay,
+  onDeleteCalendarDay,
 }) => {
   const isSelectionOverlaping = (
     start: Date | string,
@@ -49,6 +52,13 @@ const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
         : false
     );
     return eventIsBelow > 0 ? true : false;
+  };
+
+  const workScheduleDayAlreadyExists = (start: Date | string) => {
+    const formatedStart = typeof start == "string" ? new Date(start) : start;
+    return calendarDays.find((event: Event) => {
+      return isSameDay(event.start!, formatedStart);
+    });
   };
 
   return (
@@ -66,13 +76,19 @@ const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
           work_week: true,
         }}
         onSelecting={(range) => {
-          if (isSelectionOverlaping(range.start, range.end)) {
+          if (
+            isSelectionOverlaping(range.start, range.end) ||
+            workScheduleDayAlreadyExists(range.start)
+          ) {
             return false;
           }
           return true;
         }}
         onSelectSlot={(slot) => {
-          if (isSelectionOverlaping(slot.start, slot.end)) {
+          if (
+            isSelectionOverlaping(slot.start, slot.end) ||
+            workScheduleDayAlreadyExists(slot.start)
+          ) {
             return;
           }
 
@@ -86,8 +102,8 @@ const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
         }}
         onSelectEvent={(event) => {
           const r = window.confirm(deleteQuestionText);
-
           if (r) {
+            onDeleteCalendarDay(event);
             setCalendarDays(calendarDays.filter((e) => e !== event));
           }
         }}

@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   ISelectedWorkerWorkScheduleCreateNew,
   SelectedWorkerStateT,
-  ISelectedWorkerScheduleGenerateDay,
   ISelectedWorkerScheduleUpdateDayT,
 } from "../state/ducks/selected-worker/types";
 import { IApplicationState } from "../state/ducks";
@@ -18,6 +17,7 @@ import {
   tranformDaysToCalendarEvents,
   tranformCalendarEventsToDays,
   transformCalendarEventToDay,
+  canCalendarDayBeUpdated,
 } from "../state/ducks/work-schedule/operations";
 import { Event } from "react-big-calendar";
 
@@ -25,6 +25,7 @@ const WorkerWorkSchedule: React.FC = () => {
   const dispatch = useDispatch();
   const [numOfWeeks, setNumOfWeeks] = useState<string>("1");
   const [calendarDays, setCalendarDays] = useState<Event[]>();
+  const [deletedCalendarDays, setDeletedCalendarDays] = useState<Event[]>([]);
   const { workSchedule, user }: SelectedWorkerStateT = useSelector(
     ({ selectedWorker }: IApplicationState) => selectedWorker
   );
@@ -58,11 +59,17 @@ const WorkerWorkSchedule: React.FC = () => {
   };
 
   const updateDay = (event: Event) => {
+    if (!canCalendarDayBeUpdated(event, deletedCalendarDays)) return;
+
     const day: ISelectedWorkerScheduleUpdateDayT = {
       userId: user.data?.idUser!,
-      ...transformCalendarEventToDay(event),
+      ...transformCalendarEventToDay(event, "Praca"),
     };
     dispatch(updateSelectedWorkerScheduleDayAsync.request(day));
+  };
+
+  const onDeleteCalendarDay = (event: Event) => {
+    setDeletedCalendarDays([...deletedCalendarDays, event]);
   };
 
   return (
@@ -71,6 +78,7 @@ const WorkerWorkSchedule: React.FC = () => {
         calendarDays={calendarDays}
         setCalendarDays={setCalendarDays}
         updateDay={updateDay}
+        onDeleteCalendarDay={onDeleteCalendarDay}
       />
       <Row className="pt-3">
         <Col className="text-right">

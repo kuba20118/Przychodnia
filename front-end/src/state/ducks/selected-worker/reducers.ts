@@ -14,6 +14,7 @@ import {
 } from "./types";
 import { TypeConstant, Action, PayloadAction } from "typesafe-actions";
 import { combineReducers } from "redux";
+import { isSameDay } from "date-fns";
 
 const initialSelectedWorkerUserState: SelectedWorkerUserStateT = {
   data: undefined,
@@ -164,7 +165,9 @@ const selectedWorkerWorkScheduleReducer = (
         data: {
           ...state.data!,
           day: state.data!.day.map((day) =>
-            day.idDay === action.payload.idDay ? action.payload : day
+            isSameDay(new Date(day.fromTime), new Date(action.payload.fromTime))
+              ? action.payload
+              : day
           ),
         },
       };

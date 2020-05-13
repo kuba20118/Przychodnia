@@ -34,6 +34,8 @@ export default function apiCaller<T>(
             response.json().then((json) => resolve(json));
           } else if (contentType.startsWith("text/plain;")) {
             response.text().then((error) => reject(new Error(error)));
+          } else {
+            reject(new Error("No content"));
           }
         }
       })

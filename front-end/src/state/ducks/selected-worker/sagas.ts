@@ -196,7 +196,7 @@ function* handleUpdateSelectedWorkerScheduleDay(
     const res: ISelectedWorkerScheduleDay[] | any = yield call(
       apiCaller,
       "PUT",
-      `/schedules/updateday/${action.payload.userId}`,
+      `/schedules/edit/${action.payload.userId}`,
       {
         fromTime: action.payload.fromTime,
         toTime: action.payload.toTime,

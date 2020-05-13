@@ -1,6 +1,6 @@
 import { WorkScheduleDayT, WorkScheduleGenerateDayT } from "./types";
 import { Event } from "react-big-calendar";
-import { differenceInHours } from "date-fns";
+import { differenceInHours, isSameDay } from "date-fns";
 
 const isAllDay = (from: Date, to: Date): boolean =>
   differenceInHours(to, from) === 23;
@@ -31,7 +31,9 @@ export const tranformDaysToCalendarEvents = (
 export const tranformCalendarEventsToDays = (
   events: Event[]
 ): WorkScheduleGenerateDayT[] => {
-  const days = events.map(transformCalendarEventToDay).sort(sortDaysAscending);
+  const days = events
+    .map((event) => transformCalendarEventToDay(event, event.title))
+    .sort(sortDaysAscending);
 
   const fullWeekLength = 7;
   if (days.length < 5 || days.length === fullWeekLength) return days;
@@ -57,10 +59,19 @@ export const tranformCalendarEventsToDays = (
   return days;
 };
 
-export const transformCalendarEventToDay = (event: Event) => {
+export const transformCalendarEventToDay = (event: Event, type?: string) => {
   return {
     fromTime: event.start!.toISOString(),
     toTime: event.end!.toISOString(),
-    type: event.title,
+    type: type,
   };
+};
+
+export const canCalendarDayBeUpdated = (
+  calendarDay: Event,
+  deletedCalendarDays?: Event[]
+) => {
+  return deletedCalendarDays!.find((deletedDay) =>
+    isSameDay(deletedDay.start!, calendarDay.start!)
+  );
 };
