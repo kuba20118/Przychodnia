@@ -28,7 +28,6 @@ namespace back_end.Data
             return user;
         }
 
-
         public async Task<IEnumerable<User>> GetUsers()
         {
             var users = await _context.User
@@ -151,11 +150,22 @@ namespace back_end.Data
             var totalVacDays = (newVacation.ToDate - newVacation.FromDate).Days + 1;
             vacLeft.LeftDays -= totalVacDays;
             
-            // var dayFromRepo = await _context.Day
-            //         .Where(u => u.IdWsNavigation.IdUser == userId)
-            //         .FirstOrDefaultAsync(d => d.FromTime.DayOfYear == dayNumber);
+            //zastepstwo
+
+            var userForReplacemt = await GetUser(newVacation.UserForReplacentId);
+            var replacement = await _context.Absence
+                    .FirstOrDefaultAsync(x => x.IdAbsence == 9);
+            var newReplacement = new Vacation
+            {
+                FromDate = newVacation.FromDate.ToUniversalTime(),
+                ToDate = newVacation.ToDate.ToUniversalTime(),
+                IdUserVacNavigation = userForReplacemt,
+                IdAbsenceVacNavigation = replacement
+            };
+
 
             await _context.Vacation.AddAsync(newVac);
+            await _context.Vacation.AddAsync(newReplacement);
             await _context.SaveChangesAsync();
 
             return newVac;
