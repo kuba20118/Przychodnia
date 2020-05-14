@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using back_end.DTOs;
+using back_end.DTOs.Vacation;
 using Przychodnia.API;
 
 namespace back_end.Data
@@ -13,6 +14,7 @@ namespace back_end.Data
 
         Task<Employment> GetUserEmployment(int userId);
 
+        Task<Vacationrequest> AddNewVacationRequest(int userId, NewVacationRequestDTO request);
         Task<IEnumerable<Vacation>> GetAllVacations();
         Task<IEnumerable<Vacation>> GetVacations(int userId);
         Task<IEnumerable<Leftvacationdays>> GetLeftVacationDays(int userId);

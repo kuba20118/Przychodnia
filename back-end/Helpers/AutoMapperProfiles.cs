@@ -11,6 +11,10 @@ namespace back_end.Helpers
     {
         public AutoMapperProfiles()
         {
+
+            CreateMap<NewVacationRequestDTO, Vacationrequest>();
+            CreateMap<Vacationrequest, NewVacationRequestDTO>();
+
             CreateMap<User, UserReturnDTO>()
                 .ForMember(dest => dest.WorkingHours, opt =>
                     opt.MapFrom(src => src.IdEmplNavigation.WorkingHours)
@@ -29,6 +33,7 @@ namespace back_end.Helpers
                     );
 
             CreateMap<UserUpdateDTO, User>();
+
 
             CreateMap<Vacation, VacationDTO>()
                 .ForMember(dest => dest.AbsenceType, opt =>

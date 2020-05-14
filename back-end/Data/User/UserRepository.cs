@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using back_end.DTOs;
+using back_end.DTOs.Vacation;
 using back_end.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Przychodnia.API;
@@ -27,6 +28,7 @@ namespace back_end.Data
             return user;
         }
 
+
         public async Task<IEnumerable<User>> GetUsers()
         {
             var users = await _context.User
@@ -38,6 +40,24 @@ namespace back_end.Data
 
 
             return users;
+        }
+
+        public async Task<Vacationrequest> AddNewVacationRequest(int userId, NewVacationRequestDTO request)
+        {
+            var user = await GetUser(userId);
+            var newReq = new Vacationrequest
+            {
+                FromDate = request.FromDate.ToUniversalTime(),
+                ToDate = request.ToDate.ToUniversalTime(),
+                Reason = request.Reason,
+                IdUserNavigation = user,
+                IdAbsence = request.IdAbsence
+            };
+
+            await _context.Vacationrequest.AddAsync(newReq);
+            await _context.SaveChangesAsync();
+
+            return newReq;
         }
 
         public async Task<Employment> GetUserEmployment(int userId)
