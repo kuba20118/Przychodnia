@@ -5,10 +5,11 @@ namespace Przychodnia.API
 {
     public partial class User
     {
-        public User()
+               public User()
         {
             Leftvacationdays = new HashSet<Leftvacationdays>();
             Vacation = new HashSet<Vacation>();
+            Vacationrequest = new HashSet<Vacationrequest>();
             Workschedule = new HashSet<Workschedule>();
         }
 
@@ -25,6 +26,7 @@ namespace Przychodnia.API
         public virtual Role IdRoleNavigation { get; set; }
         public virtual ICollection<Leftvacationdays> Leftvacationdays { get; set; }
         public virtual ICollection<Vacation> Vacation { get; set; }
+        public virtual ICollection<Vacationrequest> Vacationrequest { get; set; }
         public virtual ICollection<Workschedule> Workschedule { get; set; }
     }
 }

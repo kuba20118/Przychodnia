@@ -14,7 +14,7 @@ namespace Przychodnia.API
             : base(options)
         {
         }
-public virtual DbSet<Absence> Absence { get; set; }
+        public virtual DbSet<Absence> Absence { get; set; }
         public virtual DbSet<Day> Day { get; set; }
         public virtual DbSet<Employment> Employment { get; set; }
         public virtual DbSet<Leftvacationdays> Leftvacationdays { get; set; }
@@ -279,6 +279,9 @@ public virtual DbSet<Absence> Absence { get; set; }
                 entity.HasIndex(e => e.IdAbsence)
                     .HasName("idAbsence_idx");
 
+                entity.HasIndex(e => e.IdUser)
+                    .HasName("idUser_idx");
+
                 entity.Property(e => e.IdRequest)
                     .HasColumnName("idRequest")
                     .HasColumnType("int(11)");
@@ -287,6 +290,10 @@ public virtual DbSet<Absence> Absence { get; set; }
 
                 entity.Property(e => e.IdAbsence)
                     .HasColumnName("idAbsence")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.IdUser)
+                    .HasColumnName("idUser")
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.Reason)
@@ -301,6 +308,12 @@ public virtual DbSet<Absence> Absence { get; set; }
                     .HasForeignKey(d => d.IdAbsence)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("idAbsence");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.Vacationrequest)
+                    .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("idUserReq");
             });
 
             modelBuilder.Entity<Workschedule>(entity =>
