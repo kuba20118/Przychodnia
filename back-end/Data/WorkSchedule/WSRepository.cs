@@ -29,13 +29,13 @@ namespace back_end.Data
                 var days = vac.ToDate.DayOfYear - vac.FromDate.DayOfYear + 1;
                 for (int i = 0; i < days; i++)
                 {
-                    var fromTime = vac.FromDate.AddDays(i);
-                    var toTime = fromTime.AddHours(23).AddMinutes(59).AddSeconds(59);
+                    var fromTime = vac.FromDate.AddDays(i).ToUniversalTime();
+                    var toTime = fromTime.AddHours(23).AddMinutes(59).AddSeconds(59).ToUniversalTime();
 
                     var newDay = new Day
                     {
-                        FromTime = fromTime,
-                        ToTime = toTime,
+                        FromTime = fromTime.ToUniversalTime(),
+                        ToTime = toTime.ToUniversalTime(),
                         Type = vac.IdAbsenceVacNavigation.Name
                     };
                     dayList.Add(newDay);
@@ -59,8 +59,8 @@ namespace back_end.Data
                 foreach (var day in newWS.Day)
                 {
                     Day newDay;
-                    var fromTime = day.FromTime.AddDays(i * 7);
-                    var toTime = day.ToTime.AddDays(i * 7);
+                    var fromTime = day.FromTime.AddDays(i * 7).ToUniversalTime();
+                    var toTime = day.ToTime.AddDays(i * 7).ToUniversalTime();
 
                     var vacDay = vacList.FirstOrDefault(d => d.FromTime.DayOfYear == fromTime.DayOfYear);
                     var currentDay = wsFromRepo.Day.FirstOrDefault(d => d.FromTime.DayOfYear == fromTime.DayOfYear);
@@ -74,8 +74,8 @@ namespace back_end.Data
                     {
                         newDay = new Day
                         {
-                            FromTime = fromTime,
-                            ToTime = toTime,
+                            FromTime = fromTime.ToUniversalTime(),
+                            ToTime = toTime.ToUniversalTime(),
                             IdWsNavigation = ws,
                             Type = "Praca"
                         };
@@ -155,8 +155,8 @@ namespace back_end.Data
                     foreach (var day in newWS.Day)
                     {
                         Day newDay;
-                        var fromTime = day.FromTime.AddDays(i * 7);
-                        var toTime = day.ToTime.AddDays(i * 7);
+                        var fromTime = day.FromTime.AddDays(i * 7).ToUniversalTime();
+                        var toTime = day.ToTime.AddDays(i * 7).ToUniversalTime();
 
                         var vacDay = vacList.FirstOrDefault(d => d.FromTime.DayOfYear == fromTime.DayOfYear);
                         var currentDay = wsFromRepo.Day.FirstOrDefault(d => d.FromTime.DayOfYear == fromTime.DayOfYear);
@@ -170,8 +170,8 @@ namespace back_end.Data
                         {
                             newDay = new Day
                             {
-                                FromTime = fromTime,
-                                ToTime = toTime,
+                                FromTime = fromTime.ToUniversalTime(),
+                                ToTime = toTime.ToUniversalTime(),
                                 IdWsNavigation = ws,
                                 Type = "Praca"
                             };
@@ -204,8 +204,8 @@ namespace back_end.Data
             var day = await _context.Day
                     .Where(x => x.FromTime.DayOfYear == newDay.FromTime.DayOfYear)
                     .FirstOrDefaultAsync(x => x.IdWsNavigation.IdUser == userId);
-            day.FromTime = newDay.FromTime;
-            day.ToTime = newDay.ToTime;
+            day.FromTime = newDay.FromTime.ToUniversalTime();
+            day.ToTime = newDay.ToTime.ToUniversalTime();
             day.Type = newDay.Type;
         
             _context.Day.Update(day);

@@ -79,7 +79,7 @@ namespace back_end.Data
         public async Task<IEnumerable<Vacation>> GetAllVacations()
         {
             var usersVac = await _context.Vacation
-                        .Where(d => d.FromDate.DayOfYear <= DateTime.Now.DayOfYear && d.ToDate.DayOfYear >= DateTime.Now.DayOfYear)
+                        .Where(d => d.FromDate.DayOfYear <= DateTime.UtcNow.DayOfYear && d.ToDate.DayOfYear >= DateTime.UtcNow.DayOfYear)
                         .Include(a => a.IdAbsenceVacNavigation)
                         .Include(u => u.IdUserVacNavigation)
                         .ToListAsync();
@@ -117,8 +117,8 @@ namespace back_end.Data
                     .FirstOrDefaultAsync(x => x.IdAbsence == newVacation.IdAbsence);
             var newVac = new Vacation
             {
-                FromDate = newVacation.FromDate,
-                ToDate = newVacation.ToDate,
+                FromDate = newVacation.FromDate.ToUniversalTime(),
+                ToDate = newVacation.ToDate.ToUniversalTime(),
                 IdUserVacNavigation = user,
                 IdAbsenceVacNavigation = absence
             };

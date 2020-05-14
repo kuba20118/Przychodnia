@@ -55,7 +55,7 @@ namespace back_end.Controllers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddHours(12),
+                Expires = DateTime.UtcNow.AddHours(12),
                 SigningCredentials = creds
             };
 

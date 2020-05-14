@@ -44,7 +44,7 @@ namespace back_end.Data
 
             var newEmpl = new Employment()
             {
-                HireDate = DateTime.Now,
+                HireDate = DateTime.UtcNow,
                 CurrentyEmployed = 1,
                 WorkingHours = 8,
             };
