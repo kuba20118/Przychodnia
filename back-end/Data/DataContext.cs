@@ -14,14 +14,14 @@ namespace Przychodnia.API
             : base(options)
         {
         }
-
-        public virtual DbSet<Absence> Absence { get; set; }
+public virtual DbSet<Absence> Absence { get; set; }
         public virtual DbSet<Day> Day { get; set; }
         public virtual DbSet<Employment> Employment { get; set; }
         public virtual DbSet<Leftvacationdays> Leftvacationdays { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<Vacation> Vacation { get; set; }
+        public virtual DbSet<Vacationrequest> Vacationrequest { get; set; }
         public virtual DbSet<Workschedule> Workschedule { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -31,6 +31,7 @@ namespace Przychodnia.API
                 optionsBuilder.UseMySql("server=localhost;database=przychodniadb;user=user;password=password;treattinyasboolean=true", x => x.ServerVersion("5.7.29-mysql"));
             }
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Absence>(entity =>
@@ -266,6 +267,40 @@ namespace Przychodnia.API
                     .HasForeignKey(d => d.IdUserVac)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("idUserVac");
+            });
+
+            modelBuilder.Entity<Vacationrequest>(entity =>
+            {
+                entity.HasKey(e => e.IdRequest)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("vacationrequest");
+
+                entity.HasIndex(e => e.IdAbsence)
+                    .HasName("idAbsence_idx");
+
+                entity.Property(e => e.IdRequest)
+                    .HasColumnName("idRequest")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.FromDate).HasColumnType("datetime");
+
+                entity.Property(e => e.IdAbsence)
+                    .HasColumnName("idAbsence")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Reason)
+                    .HasColumnType("varchar(45)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_polish_ci");
+
+                entity.Property(e => e.ToDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.IdAbsenceNavigation)
+                    .WithMany(p => p.Vacationrequest)
+                    .HasForeignKey(d => d.IdAbsence)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("idAbsence");
             });
 
             modelBuilder.Entity<Workschedule>(entity =>

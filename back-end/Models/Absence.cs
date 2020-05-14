@@ -9,6 +9,7 @@ namespace Przychodnia.API
         {
             Leftvacationdays = new HashSet<Leftvacationdays>();
             Vacation = new HashSet<Vacation>();
+            Vacationrequest = new HashSet<Vacationrequest>();
         }
 
         public int IdAbsence { get; set; }
@@ -17,5 +18,6 @@ namespace Przychodnia.API
 
         public virtual ICollection<Leftvacationdays> Leftvacationdays { get; set; }
         public virtual ICollection<Vacation> Vacation { get; set; }
+        public virtual ICollection<Vacationrequest> Vacationrequest { get; set; }
     }
 }
