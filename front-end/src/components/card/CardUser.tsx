@@ -23,7 +23,7 @@ const UserCard: React.FC<UserCardPropsT> = ({ user = initialSelectedUser }) => {
   return (
     <div className="card card-user">
       <div className="content">
-        <p className="title">DANE UŻYTKOWNIKA</p>
+        <p className="title">Dane użytkownika</p>
         <hr />
         <div className="info">
           <div className="info__img">

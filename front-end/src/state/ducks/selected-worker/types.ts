@@ -6,13 +6,18 @@ import {
   WorkScheduleUpdateDayT,
 } from "./../work-schedule/types";
 import { UserT, UserIdT } from "../user/types";
-import { VacationsDataT, VacationCreateNewT } from "../vacations/types";
+import {
+  VacationsDataT,
+  VacationCreateNewT,
+  VacationRequestT,
+} from "../vacations/types";
 
 export type SelectedWorkerIdT = UserIdT;
 export interface ISelectedWorker extends UserT {}
 export interface ISelectedWorkerVacations extends VacationsDataT {}
 export interface ISelectedWorkerWorkSchedule extends WorkScheduleDataT {}
 export interface ISelectedWorkerVacationCreateNew extends VacationCreateNewT {}
+export interface ISelectedWorkerVacationRequest extends VacationRequestT {}
 export interface ISelectedWorkerWorkScheduleCreateNew
   extends WorkScheduleCreateNewT {}
 export interface ISelectedWorkerScheduleDay extends WorkScheduleDayT {}
@@ -47,9 +52,11 @@ export type SelectedWorkerUserStateT = {
 export type SelectedWorkerVacationsStateT = {
   data?: ISelectedWorkerVacations[];
   leftDays?: LeftVacationsDaysT[];
+  requests?: ISelectedWorkerVacationRequest[];
   isLoadingData: boolean;
   isLoadingLeftDays: boolean;
   isLoadingCreateData: boolean;
+  isLoadingGetRequests: boolean;
   error?: string;
 };
 
@@ -79,6 +86,10 @@ export enum SelectedWorkerActionTypes {
   CREATE_SELECTED_WORKER_VACATIONS = "@@selected-worker/CREATE_SELECTED_WORKER_VACATIONS",
   CREATE_SELECTED_WORKER_VACATIONS_SUCCESS = "@@selected-worker/CREATE_SELECTED_WORKER_VACATIONS_SUCCESS",
   CREATE_SELECTED_WORKER_VACATIONS_ERROR = "@@selected-worker/CREATE_SELECTED_WORKER_VACATIONS_ERROR",
+
+  GET_SELECTED_WORKER_VACATION_REQUESTS = "@@selected-worker/GET_SELECTED_WORKER_VACATION_REQUESTS",
+  GET_SELECTED_WORKER_VACATION_REQUESTS_SUCCESS = "@@selected-worker/GET_SELECTED_WORKER_VACATION_REQUESTS_SUCCESS",
+  GET_SELECTED_WORKER_VACATION_REQUESTS_ERROR = "@@selected-worker/GET_SELECTED_WORKER_VACATION_REQUESTS_ERROR",
 
   GET_SELECTED_WORKER_WORK_SCHEDULE = "@@selected-worker/GET_SELECTED_WORKER_WORK_SCHEDULE",
   GET_SELECTED_WORKER_WORK_SCHEDULE_SUCCESS = "@@selected-worker/GET_SELECTED_WORKER_WORK_SCHEDULE_SUCCESS",

@@ -11,6 +11,7 @@ import {
   SelectedWorkerWorkScheduleStateT,
   ISelectedWorkerScheduleUpdateDayT,
   ISelectedWorkerScheduleDay,
+  ISelectedWorkerVacationRequest,
 } from "./types";
 import { TypeConstant, Action, PayloadAction } from "typesafe-actions";
 import { combineReducers } from "redux";
@@ -53,9 +54,11 @@ export const selectedWorkerUserReducer = (
 const initialSelectedWorkerVacationsState: SelectedWorkerVacationsStateT = {
   data: undefined,
   leftDays: undefined,
+  requests: undefined,
   isLoadingData: false,
   isLoadingLeftDays: false,
   isLoadingCreateData: false,
+  isLoadingGetRequests: false,
 };
 
 const selectedWorkerVacationsReducer = (
@@ -66,6 +69,7 @@ const selectedWorkerVacationsReducer = (
       ISelectedWorkerVacations[] &
         ISelectedWorkerVacations &
         LeftVacationsDaysT[] &
+        ISelectedWorkerVacationRequest[] &
         string
     >
 ): SelectedWorkerVacationsStateT => {
@@ -108,6 +112,19 @@ const selectedWorkerVacationsReducer = (
         isLoadingCreateData: false,
         error: action.payload,
       };
+    }
+    case SelectedWorkerActionTypes.GET_SELECTED_WORKER_VACATION_REQUESTS: {
+      return { ...state, isLoadingGetRequests: true };
+    }
+    case SelectedWorkerActionTypes.GET_SELECTED_WORKER_VACATION_REQUESTS_SUCCESS: {
+      return {
+        ...state,
+        isLoadingGetRequests: false,
+        requests: action.payload,
+      };
+    }
+    case SelectedWorkerActionTypes.GET_SELECTED_WORKER_VACATION_REQUESTS_ERROR: {
+      return { ...state, isLoadingGetRequests: false, error: action.payload };
     }
     default: {
       return state;

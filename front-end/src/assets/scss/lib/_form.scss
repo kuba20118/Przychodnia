@@ -11,3 +11,10 @@ form {
     font-size: 0.8em;
   }
 }
+
+.form-vacations {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: inherit;
+}

@@ -32,6 +32,14 @@ export type VacationCreateNewT = {
   substitutionId: string;
 };
 
+export type VacationRequestT = {
+  idRequest: number;
+  fromDate: string;
+  toDate: string;
+  reason: string;
+  idAbsence: number;
+};
+
 export enum VacationsActionTypes {
   FETCH_ALL_CURRENT_VACATIONS = "@@vacations/FETCH_ALL_CURRENT_VACATIONS",
   FETCH_ALL_CURRENT_VACATIONS_SUCCESS = "@@vacations/FETCH_ALL_CURRENT_VACATIONS_SUCCESS",

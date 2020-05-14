@@ -9,8 +9,9 @@ type CardPropsT = {
 const Card: React.FC<CardPropsT> = ({ title, subtitle, content }) => (
   <div className="card">
     <div className="header">
-      <h4 className="title">{title}</h4>
+      <p className="title">{title}</p>
       <p className="subtitle">{subtitle!}</p>
+      <hr />
     </div>
     <div className="content">{content}</div>
   </div>

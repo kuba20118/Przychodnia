@@ -9,8 +9,8 @@ import {
   SelectedWorkerUpdateT,
   ISelectedWorkerWorkSchedule,
   ISelectedWorkerScheduleDay,
-  ISelectedWorkerScheduleGenerateDay,
   ISelectedWorkerScheduleUpdateDayT,
+  ISelectedWorkerVacationRequest,
 } from "./types";
 import {
   getSelectedWorkerVacationsAsync,
@@ -20,6 +20,7 @@ import {
   updateSelectedWorkerAsync,
   createSelectedWorkerWorkScheduleAsync,
   updateSelectedWorkerScheduleDayAsync,
+  getSelectedWorkerVacationRequestsAsync,
 } from "./actions";
 import { IReducerAction } from "..";
 import apiCaller from "../../utils/apiHelper";
@@ -116,6 +117,30 @@ function* handleGetSelectedWorkerVacationsLeftDays(
     } else {
       yield put(
         getSelectedWorkerVacationsLeftDaysAsync.failure(
+          "An unknown error occured."
+        )
+      );
+    }
+  }
+}
+
+function* handleGetSelectedWorkerVacationRequests(
+  action: IReducerAction<SelectedWorkerIdT>
+) {
+  try {
+    const res: ISelectedWorkerVacationRequest[] | any = yield call(
+      apiCaller,
+      "GET",
+      `/users/vacations/${action.payload}/requests`
+    );
+
+    yield put(getSelectedWorkerVacationRequestsAsync.success(res));
+  } catch (err) {
+    if (err instanceof Error) {
+      yield put(getSelectedWorkerVacationRequestsAsync.failure(err.message!));
+    } else {
+      yield put(
+        getSelectedWorkerVacationRequestsAsync.failure(
           "An unknown error occured."
         )
       );
@@ -296,6 +321,13 @@ function* watchGetSelectedWorkerVacationsLeftDaysRequest(): Generator {
   );
 }
 
+function* watchGetSelectedWorkerVacationRequestsRequest(): Generator {
+  yield takeEvery(
+    SelectedWorkerActionTypes.GET_SELECTED_WORKER_VACATION_REQUESTS,
+    handleGetSelectedWorkerVacationRequests
+  );
+}
+
 function* watchGetSelectedWorkerWorkScheduleRequest(): Generator {
   yield takeEvery(
     SelectedWorkerActionTypes.GET_SELECTED_WORKER_WORK_SCHEDULE,
@@ -332,6 +364,7 @@ export default function* selectedWorkerSaga() {
     fork(watchGetSelectedWorkerVacationsRequest),
     fork(watchCreateSelectedWorkerVacationsRequest),
     fork(watchGetSelectedWorkerVacationsLeftDaysRequest),
+    fork(watchGetSelectedWorkerVacationRequestsRequest),
     fork(watchGetSelectedWorkerWorkScheduleRequest),
     fork(watchCreateSelectedWorkerWorkScheduleRequest),
     fork(watchUpdateSelectedWorkerScheduleDayRequest),
