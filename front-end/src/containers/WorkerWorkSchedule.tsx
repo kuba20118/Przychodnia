@@ -18,6 +18,7 @@ import {
   tranformCalendarEventsToDays,
   transformCalendarEventToDay,
   canCalendarDayBeUpdated,
+  prepareDaysToGenerate,
 } from "../state/ducks/work-schedule/operations";
 import { Event } from "react-big-calendar";
 
@@ -43,7 +44,9 @@ const WorkerWorkSchedule: React.FC = () => {
 
     if (user?.data && calendarDays) {
       try {
-        const dataDays = tranformCalendarEventsToDays(calendarDays);
+        const dataDays = prepareDaysToGenerate(
+          tranformCalendarEventsToDays(calendarDays)
+        );
 
         const generateWSData: ISelectedWorkerWorkScheduleCreateNew = {
           idUser: user.data?.idUser,

@@ -1,6 +1,8 @@
 import { WorkScheduleDayT, WorkScheduleGenerateDayT } from "./types";
 import { Event } from "react-big-calendar";
-import { differenceInHours, isSameDay } from "date-fns";
+import { differenceInHours, isSameDay, isSameWeek } from "date-fns";
+
+const fullWeekLength = 7;
 
 const isAllDay = (from: Date, to: Date): boolean =>
   differenceInHours(to, from) === 23;
@@ -30,41 +32,46 @@ export const tranformDaysToCalendarEvents = (
 
 export const tranformCalendarEventsToDays = (
   events: Event[]
-): WorkScheduleGenerateDayT[] => {
-  const days = events
-    .map((event) => transformCalendarEventToDay(event, event.title))
-    .sort(sortDaysAscending);
-
-  const fullWeekLength = 7;
-  if (days.length < 5 || days.length === fullWeekLength) return days;
-
-  const daysToAdd = Math.abs(days.length - fullWeekLength);
-  let tempLastDay = days[days.length - 1];
-
-  for (let i = 0; i < daysToAdd; i++) {
-    const nextDay = new Date(tempLastDay.fromTime).getUTCDate() + 1;
-    const newDate = new Date();
-    newDate.setUTCDate(nextDay);
-    newDate.setUTCHours(0, 0, 0);
-
-    const nullDay = {
-      fromTime: newDate.toISOString(),
-      toTime: newDate.toISOString(),
-      type: "Praca",
-    };
-    tempLastDay = nullDay;
-
-    days.push(nullDay);
-  }
-  return days;
-};
+): WorkScheduleGenerateDayT[] =>
+  events.map((event) => transformCalendarEventToDay(event, "Praca"));
 
 export const transformCalendarEventToDay = (event: Event, type?: string) => {
   return {
-    fromTime: event.start!.toISOString(),
-    toTime: event.end!.toISOString(),
+    fromTime: event.start!.toUTCString(),
+    toTime: event.end!.toUTCString(),
     type: type,
   };
+};
+
+const createGenerateDayNull = (date: Date): WorkScheduleGenerateDayT => {
+  return {
+    fromTime: date.toUTCString(),
+    toTime: date.toUTCString(),
+    type: "Praca",
+  };
+};
+
+const getNextDay = (date: Date, num: number) => {
+  const nextDay = date.getUTCDate() + num;
+  const newDate = new Date();
+  newDate.setUTCDate(nextDay);
+  newDate.setUTCHours(0, 0, 0);
+
+  return newDate;
+};
+
+export const prepareDaysToGenerate = (days: WorkScheduleGenerateDayT[]) => {
+  const lastWeekDays = getLastWeekDays(days);
+  const leftDays: WorkScheduleGenerateDayT[] = [];
+
+  for (let i = 0; i < fullWeekLength; i++) {
+    if (!(i in lastWeekDays)) {
+      const date = getNextDay(new Date(lastWeekDays[0].fromTime!), i + 1);
+      leftDays.push(createGenerateDayNull(date));
+    }
+  }
+
+  return lastWeekDays.concat(leftDays).sort(sortDaysAscending);
 };
 
 export const canCalendarDayBeUpdated = (
@@ -74,4 +81,14 @@ export const canCalendarDayBeUpdated = (
   return deletedCalendarDays!.find((deletedDay) =>
     isSameDay(deletedDay.start!, calendarDay.start!)
   );
+};
+
+export const getLastWeekDays = (
+  days: WorkScheduleGenerateDayT[]
+): WorkScheduleGenerateDayT[] => {
+  const lastDay = days.sort(sortDaysAscending)[days.length - 1];
+
+  return days.filter((day) => {
+    return isSameWeek(new Date(day.fromTime!), new Date(lastDay.fromTime!));
+  });
 };
