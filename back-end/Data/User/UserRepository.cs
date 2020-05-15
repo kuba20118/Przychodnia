@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using back_end.DTOs;
+using back_end.DTOs.Vacation;
 using back_end.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Przychodnia.API;
@@ -38,6 +39,24 @@ namespace back_end.Data
 
 
       return users;
+    }
+
+    public async Task<Vacationrequest> AddNewVacationRequest(int userId, NewVacationRequestDTO request)
+    {
+      var user = await GetUser(userId);
+      var newReq = new Vacationrequest
+      {
+        FromDate = request.FromDate,
+        ToDate = request.ToDate,
+        Reason = request.Reason,
+        IdUserNavigation = user,
+        IdAbsence = request.IdAbsence
+      };
+
+      await _context.Vacationrequest.AddAsync(newReq);
+      await _context.SaveChangesAsync();
+
+      return newReq;
     }
 
     public async Task<Employment> GetUserEmployment(int userId)
@@ -131,11 +150,22 @@ namespace back_end.Data
       var totalVacDays = (newVacation.ToDate - newVacation.FromDate).Days + 1;
       vacLeft.LeftDays -= totalVacDays;
 
-      // var dayFromRepo = await _context.Day
-      //         .Where(u => u.IdWsNavigation.IdUser == userId)
-      //         .FirstOrDefaultAsync(d => d.FromTime.DayOfYear == dayNumber);
+      //zastepstwo
+
+      var userForReplacemt = await GetUser(newVacation.UserForReplacentId);
+      var replacement = await _context.Absence
+              .FirstOrDefaultAsync(x => x.IdAbsence == 9);
+      var newReplacement = new Vacation
+      {
+        FromDate = newVacation.FromDate,
+        ToDate = newVacation.ToDate,
+        IdUserVacNavigation = userForReplacemt,
+        IdAbsenceVacNavigation = replacement
+      };
+
 
       await _context.Vacation.AddAsync(newVac);
+      await _context.Vacation.AddAsync(newReplacement);
       await _context.SaveChangesAsync();
 
       return newVac;

@@ -112,7 +112,7 @@ namespace back_end.Controllers
     }
 
     [HttpPost("vacations/{id}/new")]
-    public async Task<IActionResult> SetUserNewVacation(int id, NewVacationDTO newVacation)
+    public async Task<IActionResult> AddUserNewVacation(int id, NewVacationDTO newVacation)
     {
       if (newVacation.FromDate > newVacation.ToDate || newVacation.FromDate.DayOfYear < DateTime.Now.DayOfYear)
         return Content("Błędna data urlopu");
@@ -125,6 +125,9 @@ namespace back_end.Controllers
 
       if (await _repo.CheckIfOverlapping(id, newVacation))
         return Content("Użytkownik ma już w tym terminie zaplanowany urlop");
+
+      if (await _repo.CheckIfOverlapping(newVacation.UserForReplacentId, newVacation))
+        return Content("Użytkownik na zastepstwo ma w tym terminie zaplanowany urlop");
 
       var newVac = await _repo.AddNewVacation(id, newVacation);
       var vacToReturn = _mapper.Map<VacationDTO>(newVac);
