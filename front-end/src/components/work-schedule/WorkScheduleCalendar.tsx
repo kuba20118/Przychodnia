@@ -2,12 +2,14 @@ import React from "react";
 import { Calendar, momentLocalizer, Event, Formats } from "react-big-calendar";
 import { isSameDay } from "date-fns";
 import moment from "moment";
-moment.locale("ko", {
+
+moment.locale("pl", {
   week: {
     dow: 1,
     doy: 1,
   },
 });
+
 const localizer = momentLocalizer(moment);
 
 /**

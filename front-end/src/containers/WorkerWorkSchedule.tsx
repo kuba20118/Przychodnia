@@ -74,7 +74,6 @@ const WorkerWorkSchedule: React.FC = () => {
   const onDeleteCalendarDay = (event: Event) => {
     setDeletedCalendarDays([...deletedCalendarDays, event]);
   };
-
   return (
     <div className="content">
       <WorkScheduleCalendar

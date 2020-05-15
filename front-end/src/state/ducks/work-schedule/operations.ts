@@ -1,6 +1,7 @@
 import { WorkScheduleDayT, WorkScheduleGenerateDayT } from "./types";
 import { Event } from "react-big-calendar";
 import { differenceInHours, isSameDay, isSameWeek } from "date-fns";
+import formatToString from "../../utils/date/formatToString";
 
 const fullWeekLength = 7;
 
@@ -37,25 +38,25 @@ export const tranformCalendarEventsToDays = (
 
 export const transformCalendarEventToDay = (event: Event, type?: string) => {
   return {
-    fromTime: event.start!.toUTCString(),
-    toTime: event.end!.toUTCString(),
+    fromTime: formatToString(event.start!),
+    toTime: formatToString(event.end!),
     type: type,
   };
 };
 
 const createGenerateDayNull = (date: Date): WorkScheduleGenerateDayT => {
   return {
-    fromTime: date.toUTCString(),
-    toTime: date.toUTCString(),
+    fromTime: formatToString(date),
+    toTime: formatToString(date),
     type: "Praca",
   };
 };
 
 const getNextDay = (date: Date, num: number) => {
-  const nextDay = date.getUTCDate() + num;
+  const nextDay = date.getDate() + num;
   const newDate = new Date();
-  newDate.setUTCDate(nextDay);
-  newDate.setUTCHours(0, 0, 0);
+  newDate.setDate(nextDay);
+  newDate.setHours(0, 0, 0);
 
   return newDate;
 };

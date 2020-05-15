@@ -2,8 +2,8 @@ import { UserIdT } from "../user/types";
 
 export type WorkScheduleDayT = {
   idDay: number;
-  fromTime: Date;
-  toTime: Date;
+  fromTime: string;
+  toTime: string;
   type: string;
 };
 
