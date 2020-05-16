@@ -3,11 +3,21 @@ import {
   VacationsActionTypes,
   VacationsDataT,
   VacationsCategoryT,
+  VacationRequestT,
+  VacationRequestCreateT,
 } from "./types";
-import { fetchAllVacationsAsync, getVacationsCategoriesAsync } from "./actions";
+import {
+  fetchAllVacationsAsync,
+  getVacationsCategoriesAsync,
+  getUserVacationsAsync,
+  createUserVacationRequestAsync,
+  getUserVacationRequestsAsync,
+} from "./actions";
 import apiCaller from "../../utils/apiHelper";
+import { UserIdT } from "../user/types";
+import { IReducerAction } from "..";
 
-function* handleFetchAllCurrentVacations() {
+function* handleFetchAllCurrentVacationsRequest() {
   try {
     const res: VacationsDataT[] | any = yield call(
       apiCaller,
@@ -25,7 +35,7 @@ function* handleFetchAllCurrentVacations() {
   }
 }
 
-function* handleGetVacationsCategories() {
+function* handleGetVacationsCategoriesRequest() {
   try {
     const res: VacationsCategoryT[] | any = yield call(
       apiCaller,
@@ -57,17 +67,106 @@ function* handleGetVacationsCategories() {
   }
 }
 
+function* handleGetUserVacationsRequest(action: IReducerAction<UserIdT>) {
+  try {
+    const res: VacationsDataT[] | any = yield call(
+      apiCaller,
+      "GET",
+      `/users/vacations/${action.payload}`
+    );
+
+    yield put(getUserVacationsAsync.success(res));
+  } catch (err) {
+    if (err instanceof Error) {
+      yield put(getUserVacationsAsync.failure(err.message!));
+    } else {
+      yield put(getUserVacationsAsync.failure("An unknown error occured."));
+    }
+  }
+}
+
+function* handleCreateUserVacationRequestRequest(
+  action: IReducerAction<VacationRequestCreateT>
+) {
+  try {
+    const res: VacationRequestT[] | any = yield call(
+      apiCaller,
+      "GET",
+      `/vacations/request/add/${action.payload.userId}`,
+      {
+        fromDate: action.payload.fromDate,
+        toDate: action.payload.toDate,
+        reason: action.payload.reason,
+        idAbsence: action.payload.idAbsence,
+      }
+    );
+
+    yield put(createUserVacationRequestAsync.success(res));
+  } catch (err) {
+    if (err instanceof Error) {
+      yield put(createUserVacationRequestAsync.failure(err.message!));
+    } else {
+      yield put(
+        createUserVacationRequestAsync.failure("An unknown error occured.")
+      );
+    }
+  }
+}
+
+function* handleGetUserVacationRequestsRequest(
+  action: IReducerAction<UserIdT>
+) {
+  try {
+    const res: VacationRequestT[] | any = yield call(
+      apiCaller,
+      "GET",
+      `/vacations/requests/${action.payload}`
+    );
+
+    yield put(getUserVacationRequestsAsync.success(res));
+  } catch (err) {
+    if (err instanceof Error) {
+      yield put(getUserVacationRequestsAsync.failure(err.message!));
+    } else {
+      yield put(
+        getUserVacationRequestsAsync.failure("An unknown error occured.")
+      );
+    }
+  }
+}
+
 function* watchfetchAllCurrentVacationsRequest(): Generator {
   yield takeEvery(
     VacationsActionTypes.FETCH_ALL_CURRENT_VACATIONS,
-    handleFetchAllCurrentVacations
+    handleFetchAllCurrentVacationsRequest
   );
 }
 
-function* watchGetVacationsCategories(): Generator {
+function* watchGetVacationsCategoriesRequest(): Generator {
   yield takeEvery(
     VacationsActionTypes.GET_VACATIONS_CATEGORIES,
-    handleGetVacationsCategories
+    handleGetVacationsCategoriesRequest
+  );
+}
+
+function* watchGetUserVacationsRequest(): Generator {
+  yield takeEvery(
+    VacationsActionTypes.GET_USER_VACATIONS,
+    handleGetUserVacationsRequest
+  );
+}
+
+function* watchCreateUserVacationRequestRequest(): Generator {
+  yield takeEvery(
+    VacationsActionTypes.CREATE_USER_VACATION_REQUEST,
+    handleCreateUserVacationRequestRequest
+  );
+}
+
+function* watchGetUserVacationRequestsRequest(): Generator {
+  yield takeEvery(
+    VacationsActionTypes.CREATE_USER_VACATION_REQUEST,
+    handleGetUserVacationRequestsRequest
   );
 }
 
@@ -77,6 +176,9 @@ function* watchGetVacationsCategories(): Generator {
 export default function* vacationsSaga() {
   yield all([
     fork(watchfetchAllCurrentVacationsRequest),
-    fork(watchGetVacationsCategories),
+    fork(watchGetVacationsCategoriesRequest),
+    fork(watchGetUserVacationsRequest),
+    fork(watchCreateUserVacationRequestRequest),
+    fork(watchGetUserVacationRequestsRequest),
   ]);
 }

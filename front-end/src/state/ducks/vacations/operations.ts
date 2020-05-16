@@ -1,4 +1,4 @@
-import { VacationsFormDataT } from "./types";
+import { VacationsFormDataT, VacationsDataT } from "./types";
 import { UserIdT, UserT } from "./../user/types";
 import { format } from "date-fns/esm";
 import { parseISO } from "date-fns/esm";
@@ -10,7 +10,7 @@ import {
 import { isFuture, isPast, isToday } from "date-fns";
 
 const createTableDataItem = (
-  dataItem: ISelectedWorkerVacations,
+  dataItem: VacationsDataT,
   index: number
 ): string[] => [
   (index + 1).toString(),
@@ -19,9 +19,7 @@ const createTableDataItem = (
   dataItem.absenceType,
 ];
 
-export const createCurrentVacationsTableData = (
-  data?: ISelectedWorkerVacations[]
-) =>
+export const createCurrentVacationsTableData = (data?: VacationsDataT[]) =>
   data &&
   data
     .filter((item) => {
@@ -29,9 +27,7 @@ export const createCurrentVacationsTableData = (
     })
     .map((item, index) => createTableDataItem(item, index));
 
-export const createHistoryVacationsTableData = (
-  data?: ISelectedWorkerVacations[]
-) =>
+export const createHistoryVacationsTableData = (data?: VacationsDataT[]) =>
   data &&
   data!
     .filter(
@@ -60,3 +56,12 @@ export const getPotentialsSubs = (
     (worker) =>
       worker.idUser !== currWorker.idUser && worker.role === currWorker.role
   );
+
+export const createCurrentUserTableData = (userVacations?: VacationsDataT[]) =>
+  userVacations &&
+  userVacations.map((item, index) => [
+    (index + 1).toString(),
+    format(new Date(item.fromDate), "dd-MM-yyyy"),
+    format(new Date(item.toDate), "dd-MM-yyyy"),
+    item.absenceType,
+  ]);
