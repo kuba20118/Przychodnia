@@ -15,6 +15,7 @@ namespace back_end.Data
         Task<Employment> GetUserEmployment(int userId);
 
         Task<Vacationrequest> AddNewVacationRequest(int userId, NewVacationRequestDTO request);
+        Task<IEnumerable<Vacationrequest>> GetUserRequests(int userId);
         Task<IEnumerable<Vacation>> GetAllVacations();
         Task<IEnumerable<Vacation>> GetVacations(int userId);
         Task<IEnumerable<Leftvacationdays>> GetLeftVacationDays(int userId);
