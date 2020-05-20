@@ -171,5 +171,14 @@ namespace back_end.Data
       return newVac;
 
     }
+
+     public async Task<IEnumerable<Vacationrequest>> GetUserRequests(int userId)
+        {
+            var requests = await _context.Vacationrequest
+                .Where(x => x.IdUser == userId)
+                .Include(x => x.IdAbsenceNavigation)
+                .ToListAsync();
+            return requests;
+        }
   }
 }

@@ -13,13 +13,12 @@ namespace back_end.Data
         Task<User> GetUser(int id);
 
         Task<Employment> GetUserEmployment(int userId);
-
         Task<Vacationrequest> AddNewVacationRequest(int userId, NewVacationRequestDTO request);
         Task<IEnumerable<Vacation>> GetAllVacations();
+        Task<IEnumerable<Vacationrequest>> GetUserRequests(int userId);
         Task<IEnumerable<Vacation>> GetVacations(int userId);
         Task<IEnumerable<Leftvacationdays>> GetLeftVacationDays(int userId);
         Task<bool> CheckIfOverlapping(int userId, NewVacationDTO newVacation);
-
         Task<int> GetDaysLeft(int userId, int absenseId, int days);
         Task<Vacation> AddNewVacation(int userId, NewVacationDTO newVacation);
 

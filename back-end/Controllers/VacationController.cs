@@ -28,6 +28,20 @@ namespace back_end.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet("request/{id}")]
+        public async Task<IActionResult> GetUserVacationRequests(int id)
+        {
+            if (await _userRepo.GetUser(id) == null)
+                return Content("Brak usera o podanym id");
+
+            if (await _userRepo.GetUserRequests(id) == null)
+                return Content("Brak próśb o urlop");
+
+            var requestsFromRepo = await _userRepo.GetUserRequests(id);
+            var result = _mapper.Map<IEnumerable<NewVacationRequestDTO>>(requestsFromRepo);
+            return Ok(result);
+        }
+
         [HttpPost("request/add/{id}")]
         public async Task<IActionResult> AddVacationRequest(int id, NewVacationRequestDTO newRequest)
         {
@@ -43,9 +57,9 @@ namespace back_end.Controllers
             if (daysLeft < totalVacDays)
                 return Content("Nie można udzielić urlopu. Brak dni do wybrania");
 
-            var req = await _userRepo.AddNewVacationRequest(id, newRequest);
-            var result = _mapper.Map<NewVacationRequestDTO>(req);
-            return Ok(result);
+            await _userRepo.AddNewVacationRequest(id, newRequest);
+            //var result = _mapper.Map<NewVacationRequestDTO>(req);
+            return Ok();
         }
     }
 }
