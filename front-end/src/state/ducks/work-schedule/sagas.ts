@@ -1,29 +1,32 @@
 import { all, put, takeEvery, fork } from "redux-saga/effects";
 import { WorkScheduleDataT, WorkScheduleActionTypes } from "./types";
 import { IReducerAction } from "..";
-import history from "../../../routing/history";
-import { createWorkScheduleAsync, updateWorkScheduleAsync } from "./actions";
+import { getUserWorkScheduleAsync } from "./actions";
+import apiCaller from "../../utils/apiHelper";
+import { UserIdT } from "../user/types";
 
-function* handleCreateWorkSchedule(action: IReducerAction<WorkScheduleDataT>) {
+function* handleGetUserWorkSchedule(action: IReducerAction<UserIdT>) {
   try {
-    // const res: any = yield fakeCreateWorkSchedule(action.payload);
+    const res: WorkScheduleDataT[] | any = yield apiCaller(
+      "GET",
+      `/schedules/${action.payload}`
+    );
 
-    createWorkScheduleAsync.success(action.payload);
-
-    // history.push("/login", { message: "Wylogowano pomyślnie." });
+    console.log(res);
+    yield put(getUserWorkScheduleAsync.success(res));
   } catch (err) {
     if (err instanceof Error) {
-      yield put(createWorkScheduleAsync.failure(err.stack!));
+      yield put(getUserWorkScheduleAsync.failure(err.stack!));
     } else {
-      yield put(createWorkScheduleAsync.failure("An unknown error occured."));
+      yield put(getUserWorkScheduleAsync.failure("An unknown error occured."));
     }
   }
 }
 
-function* watchCreateWorkScheduleRequest(): Generator {
+function* watchGetUserWorkScheduleRequest(): Generator {
   yield takeEvery(
-    WorkScheduleActionTypes.CREATE_WORK_SCHEDULE,
-    handleCreateWorkSchedule
+    WorkScheduleActionTypes.GET_USER_WORK_SCHEDULE,
+    handleGetUserWorkSchedule
   );
 }
 
@@ -31,5 +34,5 @@ function* watchCreateWorkScheduleRequest(): Generator {
  * @desc saga init, forks in effects, other sagas
  */
 export default function* workScheduleSaga() {
-  yield all([fork(watchCreateWorkScheduleRequest)]);
+  yield all([fork(watchGetUserWorkScheduleRequest)]);
 }

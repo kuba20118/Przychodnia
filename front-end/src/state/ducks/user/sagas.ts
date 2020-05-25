@@ -56,7 +56,7 @@ function* handleLogin(action: IReducerAction<UserLoginT>) {
         history.push("/admin/panel-glowny");
       } else {
         // redirect to normal user dashboard
-        history.push("/uzytkownik/panel-glowny");
+        history.push("/uzytkownik/grafik");
       }
     } else {
       throw new Error("The response is not valid");

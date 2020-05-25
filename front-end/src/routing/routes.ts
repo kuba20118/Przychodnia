@@ -11,7 +11,6 @@ import WorkerVacations from "../containers/WorkerVacations";
 import WorkerWorkSchedule from "../containers/WorkerWorkSchedule";
 import WorkerEdit from "../containers/WorkerEdit";
 import Help from "../views/Help";
-import DashboardUserView from "../views/user/Dashboard";
 import VacationsUserView from "../views/user/Vacations";
 import WorkScheduleUserView from "../views/user/WorkSchedule";
 import User from "../layouts/User";
@@ -100,21 +99,15 @@ export const userRoutes: RoutesType = {
   layout: "",
   children: [
     {
-      path: "/panel-glowny",
-      name: "Panel główny",
-      component: DashboardUserView,
+      path: "/grafik",
+      name: "Grafik",
+      component: WorkScheduleUserView,
       layout: "/uzytkownik",
     },
     {
       path: "/urlop",
       name: "Urlop",
       component: VacationsUserView,
-      layout: "/uzytkownik",
-    },
-    {
-      path: "/grafik",
-      name: "Grafik",
-      component: WorkScheduleUserView,
       layout: "/uzytkownik",
     },
   ],

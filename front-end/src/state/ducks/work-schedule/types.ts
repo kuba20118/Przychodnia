@@ -14,6 +14,8 @@ export type WorkScheduleDataT = {
 
 export type WorkScheduleStateT = {
   current?: WorkScheduleDataT;
+  userWorkSchedule?: WorkScheduleDataT;
+  isLoadingUserWorkSchedule: boolean;
   loaded: boolean;
 };
 
@@ -46,4 +48,7 @@ export enum WorkScheduleActionTypes {
   UPDATE_WORK_SCHEDULE = "@@work-schedule/UPDATE_WORK_SCHEDULE",
   UPDATE_WORK_SCHEDULE_SUCCESS = "@@work-schedule/UPDATE_WORK_SCHEDULE_SUCCESS",
   UPDATE_WORK_SCHEDULE_ERROR = "@@work-schedule/UPDATE_WORK_SCHEDULE_ERROR",
+  GET_USER_WORK_SCHEDULE = "@@work-schedule/GET_USER_WORK_SCHEDULE",
+  GET_USER_WORK_SCHEDULE_SUCCESS = "@@work-schedule/GET_USER_WORK_SCHEDULE_SUCCESS",
+  GET_USER_WORK_SCHEDULE_ERROR = "@@work-schedule/GET_USER_WORK_SCHEDULE_ERROR",
 }
