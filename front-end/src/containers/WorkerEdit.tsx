@@ -16,13 +16,14 @@ const createInitialFormValues = (
   roles: RoleT[],
   worker?: ISelectedWorker
 ): SelectedWorkerUpdateT => {
+  console.log(worker);
   return {
     userId: worker?.idUser!,
     firstName: worker?.firstName!,
     lastName: worker?.lastName!,
     idRole: roles.find((role) => role.name === worker?.role)?.idRole!,
     fireDate: worker?.fireDate!,
-    currentlyEmployed: worker?.currentlyEmployed!,
+    currentyEmployed: worker?.currentyEmployed!,
     workingHours: worker?.workingHours!,
   };
 };

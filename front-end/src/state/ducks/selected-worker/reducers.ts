@@ -40,7 +40,7 @@ export const selectedWorkerUserReducer = (
       return { ...state, isLoadingUpdate: true };
     }
     case SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_SUCCESS: {
-      return { ...state, isLoadingUpdate: false };
+      return { ...state, isLoadingUpdate: false, data: action.payload };
     }
     case SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_ERROR: {
       return { ...state, isLoadingUpdate: false, error: action.payload };

@@ -18,6 +18,12 @@ import {
 export const setSelectedWorker = (worker: ISelectedWorker) =>
   action(SelectedWorkerActionTypes.SET_SELECTED_WORKER, worker);
 
+export const updateSelectedWorkerAsync = createAsyncAction(
+  SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER,
+  SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_SUCCESS,
+  SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_ERROR
+)<SelectedWorkerUpdateT, ISelectedWorker, string>();
+
 // --------------------------------
 // vacagtions
 
@@ -69,9 +75,3 @@ export const updateSelectedWorkerScheduleDayAsync = createAsyncAction(
   SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_SCHEDULE_DAY_SUCCESS,
   SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_SCHEDULE_DAY_ERROR
 )<ISelectedWorkerScheduleUpdateDayT, ISelectedWorkerScheduleDay, string>();
-
-export const updateSelectedWorkerAsync = createAsyncAction(
-  SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER,
-  SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_SUCCESS,
-  SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_ERROR
-)<SelectedWorkerUpdateT, ISelectedWorker, string>();

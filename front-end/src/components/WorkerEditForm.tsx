@@ -21,7 +21,7 @@ const initialUserRegisterData: SelectedWorkerUpdateT = {
   lastName: "",
   idRole: 1,
   fireDate: "",
-  currentlyEmployed: true,
+  currentyEmployed: true,
   workingHours: 0,
 };
 
@@ -33,7 +33,7 @@ const validationSchema = Yup.object().shape({
   lastName: Yup.string().required("*To pole jest wymagane"),
   roleId: Yup.number(),
   fireDate: Yup.date().nullable(),
-  currentlyEmployed: Yup.boolean().nullable(),
+  currentyEmployed: Yup.boolean(),
   workingHours: Yup.number().required("*To pole jest wymagane"),
 });
 
@@ -60,6 +60,7 @@ const WorkerEditForm: React.FC<WorkerEditFormPropsT> = ({
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
+          console.log(values);
           setSubmitting(true);
           updateWorker(values);
         }}
@@ -137,21 +138,19 @@ const WorkerEditForm: React.FC<WorkerEditFormPropsT> = ({
               >
                 <Form.Check
                   type="checkbox"
-                  name="currentlyEmployed"
+                  name="currentyEmployed"
                   label="Aktualnie zatrudniony"
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  value={values.currentlyEmployed}
+                  checked={values.currentyEmployed}
                   className={
-                    touched.currentlyEmployed && errors.currentlyEmployed
+                    touched.currentyEmployed && errors.currentyEmployed
                       ? "error"
                       : ""
                   }
                 />
-                {touched.currentlyEmployed && errors.currentlyEmployed ? (
-                  <div className="error-message">
-                    {errors.currentlyEmployed}
-                  </div>
+                {touched.currentyEmployed && errors.currentyEmployed ? (
+                  <div className="error-message">{errors.currentyEmployed}</div>
                 ) : null}
               </Form.Group>
             </Form.Row>

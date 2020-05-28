@@ -8,6 +8,7 @@ import {
 import { TypeConstant, Action, PayloadAction } from "typesafe-actions";
 
 export const initialUserState: UserStateT = {
+  users: [],
   isLoadingUsers: false,
   isLoadingRegistration: false,
   isLoadingLogin: false,

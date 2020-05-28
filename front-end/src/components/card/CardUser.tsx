@@ -15,7 +15,7 @@ const initialSelectedUser: UserT = {
   mail: "",
   role: "",
   workingHours: 0,
-  currentlyEmployed: false,
+  currentyEmployed: false,
   hireDate: "",
 };
 

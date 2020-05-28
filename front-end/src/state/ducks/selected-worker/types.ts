@@ -32,7 +32,7 @@ export type SelectedWorkerUpdateT = {
   firstName: UserT["firstName"];
   lastName: UserT["lastName"];
   workingHours: UserT["workingHours"];
-  currentlyEmployed: UserT["currentlyEmployed"];
+  currentyEmployed: UserT["currentyEmployed"];
   fireDate: UserT["fireDate"];
 };
 

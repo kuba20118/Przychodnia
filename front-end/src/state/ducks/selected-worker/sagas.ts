@@ -11,6 +11,7 @@ import {
   ISelectedWorkerScheduleDay,
   ISelectedWorkerScheduleUpdateDayT,
   ISelectedWorkerVacationRequest,
+  ISelectedWorker,
 } from "./types";
 import {
   getSelectedWorkerVacationsAsync,
@@ -262,7 +263,7 @@ function* handleUpdateSelectedWorker(
 ) {
   try {
     delay(2000);
-    const res: ISelectedWorkerVacations[] | any = yield call(
+    const res: ISelectedWorker | any = yield call(
       apiCaller,
       "PUT",
       `/users/update/${action.payload.userId}`,
@@ -271,11 +272,11 @@ function* handleUpdateSelectedWorker(
         lastName: action.payload.lastName,
         idRole: action.payload.idRole,
         fireDate: action.payload.fireDate,
-        currentlyEmployed: action.payload.currentlyEmployed,
+        currentyEmployed: action.payload.currentyEmployed,
         workingHours: action.payload.workingHours,
       }
     );
-
+    console.log(res);
     yield put(updateSelectedWorkerAsync.success(res));
     yield put(
       activateAlert({
