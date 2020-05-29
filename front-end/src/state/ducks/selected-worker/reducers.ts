@@ -4,7 +4,7 @@ import {
   ISelectedWorker,
   ISelectedWorkerVacations,
   ISelectedWorkerWorkSchedule,
-  LeftVacationsDaysT,
+  ISelectedWorkerLeftVacationsDaysT,
   SelectedWorkerUpdateT,
   SelectedWorkerUserStateT,
   SelectedWorkerVacationsStateT,
@@ -68,7 +68,7 @@ const selectedWorkerVacationsReducer = (
       TypeConstant,
       ISelectedWorkerVacations[] &
         ISelectedWorkerVacations &
-        LeftVacationsDaysT[] &
+        ISelectedWorkerLeftVacationsDaysT[] &
         ISelectedWorkerVacationRequest[] &
         string
     >

@@ -5,7 +5,7 @@ import { format, parseISO } from "date-fns";
 import DefaultUserImg from "../../assets/images/default-user.jpg";
 
 type UserCardPropsT = {
-  readonly user: UserT | ISelectedWorker;
+  readonly user?: UserT | ISelectedWorker;
 };
 
 const initialSelectedUser: UserT = {
@@ -49,7 +49,9 @@ const UserCard: React.FC<UserCardPropsT> = ({ user = initialSelectedUser }) => {
             </p>
             <p>
               <b>Data zatrudnienia: </b>
-              {format(parseISO(user.hireDate!), "dd-MM-yyyy")}
+              {user.hireDate
+                ? format(parseISO(user!.hireDate!), "dd-MM-yyyy")
+                : ""}
             </p>
             <p>
               <b>Dziennie pracuje: </b>

@@ -3,11 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getUserVacationsAsync,
   createUserVacationRequestAsync,
+  getVacationsCategoriesAsync,
+  getUserLeftVacationsDaysAsync,
 } from "../../state/ducks/vacations/actions";
 import { createCurrentUserTableData } from "../../state/ducks/vacations/operations";
 import {
-  VacationsDataT,
-  VacationRequestT,
+  VacationsStateT,
+  VacationRequestCreateT,
+  VacationRequestCreateFormT,
 } from "../../state/ducks/vacations/types";
 import CustomTable, {
   CustomTableHeaderT,
@@ -16,48 +19,61 @@ import CustomTable, {
 import { IApplicationState } from "../../state/ducks";
 import { UserT, UserIdT } from "../../state/ducks/user/types";
 import Card from "../../components/card/Card";
+import UserVacationsRequestForm from "../../components/user/UserVacationsRequestForm";
+import formatToString from "../../state/utils/date/formatToString";
 
 const tableHeader: CustomTableHeaderT = ["#", "Od", "Do", "Typ"];
 
 const UserVacations: React.FC = () => {
   const dispatch = useDispatch();
 
-  const getUserVacations = useCallback(
-    (userId: UserIdT) => dispatch(getUserVacationsAsync.request(userId)),
-    [dispatch]
-  );
-
   const currentUser: UserT | undefined = useSelector(
     ({ user }: IApplicationState) => user.currentUser
   );
 
-  const userVacations: VacationsDataT[] | undefined = useSelector(
-    ({ vacations }: IApplicationState) => vacations.userVacations
+  const vacations: VacationsStateT = useSelector(
+    ({ vacations }: IApplicationState) => vacations
   );
 
   useEffect(() => {
-    if (currentUser) getUserVacations(currentUser.idUser);
+    if (currentUser) {
+      dispatch(getUserVacationsAsync.request(currentUser.idUser));
+      dispatch(getUserLeftVacationsDaysAsync.request(currentUser.idUser));
+      dispatch(getVacationsCategoriesAsync.request());
+    }
   }, [currentUser]);
 
-  const createUserVacationRequest = useCallback(
-    (vacationRequest: VacationRequestT) =>
-      dispatch(createUserVacationRequestAsync.request(vacationRequest)),
-    [dispatch]
-  );
+  const handleCreateVacationsRequest = (data: VacationRequestCreateFormT) => {
+    if (!currentUser) return;
+
+    const createVacationsRequestData: VacationRequestCreateT = {
+      userId: currentUser?.idUser,
+      fromDate: formatToString(data.fromDate),
+      toDate: formatToString(data.toDate),
+      reason: data.reason,
+      idAbsence: data.idAbsence,
+    };
+
+    dispatch(
+      createUserVacationRequestAsync.request(createVacationsRequestData)
+    );
+  };
 
   const tableCurrentData:
     | CustomTableDataT
-    | undefined = createCurrentUserTableData(userVacations);
+    | undefined = createCurrentUserTableData(vacations.userVacations);
 
   return (
     <div className="content">
       <Card
         title="Prośba o urlop"
-        // subtitle={`Prośba zostanie przesłana do twojego przełożonego.`}
         content={
-          <div className="content">
-            <p>Tutaj będzie można złożyć prośbę.</p>
-          </div>
+          <UserVacationsRequestForm
+            leftVacationsDays={vacations.userLeftVacationsDays}
+            submitRequest={handleCreateVacationsRequest}
+            absenceCategories={vacations.categories}
+            isLoading={vacations.isLoadingUserVacationRequests}
+          />
         }
       />
       <Card

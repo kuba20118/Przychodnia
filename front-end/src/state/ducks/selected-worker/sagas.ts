@@ -3,7 +3,7 @@ import {
   ISelectedWorkerVacations,
   SelectedWorkerActionTypes,
   SelectedWorkerIdT,
-  LeftVacationsDaysT,
+  ISelectedWorkerLeftVacationsDaysT,
   ISelectedWorkerVacationCreateNew,
   ISelectedWorkerWorkScheduleCreateNew,
   SelectedWorkerUpdateT,
@@ -101,7 +101,7 @@ function* handleGetSelectedWorkerVacationsLeftDays(
   action: IReducerAction<SelectedWorkerIdT>
 ) {
   try {
-    const res: LeftVacationsDaysT[] | any = yield call(
+    const res: ISelectedWorkerLeftVacationsDaysT[] | any = yield call(
       apiCaller,
       "GET",
       `/users/vacations/${action.payload}/left`
@@ -132,7 +132,7 @@ function* handleGetSelectedWorkerVacationRequests(
     const res: ISelectedWorkerVacationRequest[] | any = yield call(
       apiCaller,
       "GET",
-      `/users/vacations/${action.payload}/requests`
+      `/vacation/request/${action.payload}`
     );
 
     yield put(getSelectedWorkerVacationRequestsAsync.success(res));

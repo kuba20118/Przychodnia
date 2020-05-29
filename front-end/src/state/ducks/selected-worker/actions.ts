@@ -5,7 +5,6 @@ import {
   ISelectedWorkerVacations,
   ISelectedWorkerWorkSchedule,
   SelectedWorkerIdT,
-  LeftVacationsDaysT,
   ISelectedWorkerVacationCreateNew,
   ISelectedWorkerWorkScheduleCreateNew,
   SelectedWorkerUpdateT,
@@ -13,6 +12,7 @@ import {
   ISelectedWorkerScheduleGenerateDay,
   ISelectedWorkerScheduleUpdateDayT,
   ISelectedWorkerVacationRequest,
+  ISelectedWorkerLeftVacationsDaysT,
 } from "./types";
 
 export const setSelectedWorker = (worker: ISelectedWorker) =>
@@ -37,7 +37,7 @@ export const getSelectedWorkerVacationsLeftDaysAsync = createAsyncAction(
   SelectedWorkerActionTypes.GET_SELECTED_WORKER_VACATIONS_LEFT_DAYS,
   SelectedWorkerActionTypes.GET_SELECTED_WORKER_VACATIONS_LEFT_DAYS_SUCCESS,
   SelectedWorkerActionTypes.GET_SELECTED_WORKER_VACATIONS_LEFT_DAYS_ERROR
-)<SelectedWorkerIdT, LeftVacationsDaysT[], string>();
+)<SelectedWorkerIdT, ISelectedWorkerLeftVacationsDaysT[], string>();
 
 export const createSelectedWorkerVacationsAsync = createAsyncAction(
   SelectedWorkerActionTypes.CREATE_SELECTED_WORKER_VACATIONS,

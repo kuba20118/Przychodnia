@@ -4,6 +4,7 @@ import {
   VacationsDataT,
   VacationsCategoryT,
   VacationRequestT,
+  LeftVacationsDaysT,
 } from "./types";
 import { TypeConstant, Action, PayloadAction } from "typesafe-actions";
 
@@ -11,6 +12,7 @@ export const initialVacationsState: VacationsStateT = {
   allVacations: [],
   userVacations: [],
   userVacationRequests: [],
+  userLeftVacationsDays: [],
   categories: [],
   isLoading: false,
   isLoadingUserVacations: false,
@@ -25,7 +27,8 @@ export const vacationsReducer = (
       VacationsDataT[] &
         VacationsCategoryT[] &
         VacationRequestT[] &
-        VacationRequestT
+        VacationRequestT &
+        LeftVacationsDaysT[]
     >
 ): VacationsStateT => {
   switch (action.type) {
@@ -84,6 +87,18 @@ export const vacationsReducer = (
     }
     case VacationsActionTypes.GET_USER_VACATION_REQUESTS_ERROR: {
       return { ...state, isLoadingUserVacationRequests: false };
+    }
+    case VacationsActionTypes.GET_USER_LEFT_VACATIONS_DAYS: {
+      return { ...state };
+    }
+    case VacationsActionTypes.GET_USER_LEFT_VACATIONS_DAYS_SUCCESS: {
+      return {
+        ...state,
+        userLeftVacationsDays: action.payload,
+      };
+    }
+    case VacationsActionTypes.GET_USER_LEFT_VACATIONS_DAYS_ERROR: {
+      return { ...state };
     }
     default:
       return state;

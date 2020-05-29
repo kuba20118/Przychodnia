@@ -28,12 +28,14 @@ export type VacationCreateNewT = {
   substitutionId: string;
 };
 
+export type VacationRequestIdT = number;
 export type VacationRequestT = {
-  idRequest: number;
+  idRequest: VacationRequestIdT;
   fromDate: string;
   toDate: string;
   reason: string;
   idAbsence: number;
+  absence: string;
 };
 
 export type VacationRequestCreateT = {
@@ -44,10 +46,32 @@ export type VacationRequestCreateT = {
   idAbsence: number;
 };
 
+export type VacationRequestCreateFormT = {
+  fromDate: Date;
+  toDate: Date;
+  reason: string;
+  idAbsence: number;
+};
+
+export type VacationRequestSubmitT = {
+  fromDate: Date;
+  toDate: Date;
+  reason: string;
+  idAbsence: number;
+  substitutionId: string;
+};
+
+export type LeftVacationsDaysT = {
+  userId: UserIdT;
+  leftDays: number;
+  vacationType: string;
+};
+
 export type VacationsStateT = {
   allVacations: VacationsDataT[];
   userVacations: VacationsDataT[];
   userVacationRequests: VacationRequestT[];
+  userLeftVacationsDays: LeftVacationsDaysT[];
   categories: VacationsCategoryT[];
   isLoading: boolean;
   isLoadingUserVacations: boolean;
@@ -70,4 +94,7 @@ export enum VacationsActionTypes {
   GET_USER_VACATION_REQUESTS = "@@user/GET_USER_VACATION_REQUESTS",
   GET_USER_VACATION_REQUESTS_SUCCESS = "@@user/GET_USER_VACATION_REQUESTS_SUCCESS",
   GET_USER_VACATION_REQUESTS_ERROR = "@@user/GET_USER_VACATION_REQUESTS_ERROR",
+  GET_USER_LEFT_VACATIONS_DAYS = "@@user/GET_USER_LEFT_VACATIONS_DAYS",
+  GET_USER_LEFT_VACATIONS_DAYS_SUCCESS = "@@user/GET_USER_LEFT_VACATIONS_DAYS_SUCCESS",
+  GET_USER_LEFT_VACATIONS_DAYS_ERROR = "@@user/GET_USER_LEFT_VACATIONS_DAYS_ERROR",
 }

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Row,
   Col,
@@ -7,54 +7,53 @@ import {
   Form,
   Container,
 } from "react-bootstrap";
+import LoadingButton from "../LoadingButton";
 import { addDays, subDays } from "date-fns/esm";
-import { UserT } from "../../state/ducks/user/types";
 import {
+  VacationRequestCreateT,
   VacationsCategoryT,
-  VacationsFormDataT,
   LeftVacationsDaysT,
+  VacationRequestCreateFormT,
 } from "../../state/ducks/vacations/types";
 import FormikWithRef from "../helpers/FormikWithRef";
 import * as Yup from "yup";
 import { FormikProps } from "formik";
 import { DatePickerField } from "../helpers/DatePickerField";
-import LoadingButton from "../LoadingButton";
 
-type VacationsFormPropsT = {
-  readonly categories?: VacationsCategoryT[];
-  readonly potentialSubs?: UserT[];
-  readonly leftVacationsDays?: LeftVacationsDaysT[];
-  readonly createNewVacation: (data: VacationsFormDataT) => void;
-  isLoading: boolean;
-};
-
-const initialVacationsFormData: VacationsFormDataT = {
+const initialUserVacationsRequest: VacationRequestCreateFormT = {
   fromDate: new Date(),
   toDate: new Date(),
-  categoryId: 1,
-  substitutionId: "",
+  reason: "",
+  idAbsence: 1,
 };
 
 const validationSchema = Yup.object().shape({
   fromDate: Yup.date().required("*To pole jest wymagane"),
   toDate: Yup.date().required("*To pole jest wymagane"),
-  categoryId: Yup.number().required("*To pole jest wymagane"),
-  substitutionId: Yup.string().required("*To pole jest wymagane"),
+  reason: Yup.string().max(100),
+  idAbsence: Yup.string().required("*To pole jest wymagane"),
 });
 
-const VacationsForm: React.FC<VacationsFormPropsT> = ({
-  categories,
-  potentialSubs,
-  leftVacationsDays,
-  createNewVacation,
+type UserVactionRequestFormType = {
+  readonly isLoading: boolean;
+  readonly absenceCategories: VacationsCategoryT[];
+  readonly leftVacationsDays?: LeftVacationsDaysT[];
+  readonly submitRequest: (requestFormData: VacationRequestCreateFormT) => void;
+};
+
+const UserVacationsRequestForm: React.FC<UserVactionRequestFormType> = ({
   isLoading,
+  absenceCategories,
+  leftVacationsDays,
+  submitRequest,
 }) => {
   const formik = useRef<FormikProps<any>>(null);
   const [leftDays, setLeftDays] = useState(0);
 
   useEffect(() => {
-    if (leftVacationsDays) {
-      setLeftDays(leftVacationsDays[0].leftDays);
+    console.log(leftVacationsDays);
+    if (leftVacationsDays!.length > 1) {
+      setLeftDays(leftVacationsDays![0].leftDays);
     }
   }, [leftVacationsDays, setLeftDays]);
 
@@ -68,8 +67,10 @@ const VacationsForm: React.FC<VacationsFormPropsT> = ({
   const handleCategoryChange = (categoryId: string) => {
     const categoryIdNum = parseInt(categoryId);
     const category =
-      categories &&
-      categories.find((category) => category.idAbsence === categoryIdNum);
+      absenceCategories &&
+      absenceCategories.find(
+        (category) => category.idAbsence === categoryIdNum
+      );
 
     if (category) {
       setLeftDays(category.limit);
@@ -80,11 +81,11 @@ const VacationsForm: React.FC<VacationsFormPropsT> = ({
     <>
       <FormikWithRef
         ref={formik}
-        initialValues={initialVacationsFormData}
+        initialValues={initialUserVacationsRequest}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(true);
-          createNewVacation(values);
+          submitRequest(values);
         }}
       >
         {({
@@ -104,22 +105,22 @@ const VacationsForm: React.FC<VacationsFormPropsT> = ({
                     <Form.Label>Typ urlopu</Form.Label>
                     <Form.Control
                       as="select"
-                      name="categoryId"
+                      name="idAbsence"
                       onChange={(e) => {
                         handleCategoryChange(e.currentTarget.value);
                         formik.current?.setFieldValue(
-                          "categoryId",
+                          "idAbsence",
                           parseInt(e.currentTarget.value, 10)
                         );
                       }}
                       onBlur={handleBlur}
-                      value={values.categoryId}
+                      value={values.idAbsence}
                       className={
-                        touched.category && errors.category ? "error" : ""
+                        touched.idAbsence && errors.idAbsence ? "error" : ""
                       }
                     >
-                      {categories &&
-                        categories.map((category, key) => (
+                      {absenceCategories &&
+                        absenceCategories.map((category, key) => (
                           <option key={key} value={category.idAbsence}>
                             {category.name}
                           </option>
@@ -131,30 +132,18 @@ const VacationsForm: React.FC<VacationsFormPropsT> = ({
                   </FormGroup>
                 </Col>
                 <Col md={6}>
-                  <Form.Label>Zastępstwo</Form.Label>
-                  <Form.Control
-                    as="select"
-                    name="substitutionId"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.substitutionId}
-                    className={
-                      touched.category && errors.category ? "error" : ""
-                    }
-                  >
-                    <option disabled value="">
-                      -- wybierz pracownika --
-                    </option>
-                    {potentialSubs &&
-                      potentialSubs.map((sub, key) => (
-                        <option key={key} value={sub.idUser}>
-                          {sub.firstName} {sub.lastName}
-                        </option>
-                      ))}
-                  </Form.Control>
-                  {touched.substitutionId && errors.substitutionId ? (
-                    <div className="error-message">{errors.substitutionId}</div>
-                  ) : null}
+                  <FormGroup>
+                    <Form.Label>Przyczyna</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      name="reason"
+                      onBlur={handleBlur}
+                      value={values.reason}
+                      onChange={handleChange}
+                      placeholder="I was ill..."
+                      className={touched.reason && errors.reason ? "error" : ""}
+                    ></Form.Control>
+                  </FormGroup>
                 </Col>
               </Row>
               <Row>
@@ -192,7 +181,7 @@ const VacationsForm: React.FC<VacationsFormPropsT> = ({
               <Col className="text-right">
                 <LoadingButton
                   variant="primary"
-                  defaultText="Przydziel urlop"
+                  defaultText="Wyślij prośbę"
                   defaultType="submit"
                   isLoading={isSubmitting}
                 ></LoadingButton>
@@ -205,4 +194,4 @@ const VacationsForm: React.FC<VacationsFormPropsT> = ({
   );
 };
 
-export default VacationsForm;
+export default UserVacationsRequestForm;

@@ -10,6 +10,7 @@ import {
   VacationsDataT,
   VacationCreateNewT,
   VacationRequestT,
+  LeftVacationsDaysT,
 } from "../vacations/types";
 
 export type SelectedWorkerIdT = UserIdT;
@@ -18,6 +19,7 @@ export interface ISelectedWorkerVacations extends VacationsDataT {}
 export interface ISelectedWorkerWorkSchedule extends WorkScheduleDataT {}
 export interface ISelectedWorkerVacationCreateNew extends VacationCreateNewT {}
 export interface ISelectedWorkerVacationRequest extends VacationRequestT {}
+export interface ISelectedWorkerLeftVacationsDaysT extends LeftVacationsDaysT {}
 export interface ISelectedWorkerWorkScheduleCreateNew
   extends WorkScheduleCreateNewT {}
 export interface ISelectedWorkerScheduleDay extends WorkScheduleDayT {}
@@ -36,12 +38,6 @@ export type SelectedWorkerUpdateT = {
   fireDate: UserT["fireDate"];
 };
 
-export type LeftVacationsDaysT = {
-  userId: UserIdT;
-  leftDays: number;
-  vacationType: string;
-};
-
 export type SelectedWorkerUserStateT = {
   data?: ISelectedWorker;
   isLoadingData: boolean;
@@ -51,7 +47,7 @@ export type SelectedWorkerUserStateT = {
 
 export type SelectedWorkerVacationsStateT = {
   data?: ISelectedWorkerVacations[];
-  leftDays?: LeftVacationsDaysT[];
+  leftDays?: ISelectedWorkerLeftVacationsDaysT[];
   requests?: ISelectedWorkerVacationRequest[];
   isLoadingData: boolean;
   isLoadingLeftDays: boolean;

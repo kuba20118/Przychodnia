@@ -5,6 +5,7 @@ import {
   VacationsCategoryT,
   VacationRequestT,
   VacationRequestCreateT,
+  LeftVacationsDaysT,
 } from "./types";
 import {
   fetchAllVacationsAsync,
@@ -12,6 +13,7 @@ import {
   getUserVacationsAsync,
   createUserVacationRequestAsync,
   getUserVacationRequestsAsync,
+  getUserLeftVacationsDaysAsync,
 } from "./actions";
 import apiCaller from "../../utils/apiHelper";
 import { UserIdT } from "../user/types";
@@ -88,11 +90,12 @@ function* handleGetUserVacationsRequest(action: IReducerAction<UserIdT>) {
 function* handleCreateUserVacationRequestRequest(
   action: IReducerAction<VacationRequestCreateT>
 ) {
+  console.log(action);
   try {
     const res: VacationRequestT[] | any = yield call(
       apiCaller,
-      "GET",
-      `/vacations/request/add/${action.payload.userId}`,
+      "POST",
+      `/vacation/request/add/${action.payload.userId}`,
       {
         fromDate: action.payload.fromDate,
         toDate: action.payload.toDate,
@@ -100,6 +103,7 @@ function* handleCreateUserVacationRequestRequest(
         idAbsence: action.payload.idAbsence,
       }
     );
+    console.log(res);
 
     yield put(createUserVacationRequestAsync.success(res));
   } catch (err) {
@@ -130,6 +134,30 @@ function* handleGetUserVacationRequestsRequest(
     } else {
       yield put(
         getUserVacationRequestsAsync.failure("An unknown error occured.")
+      );
+    }
+  }
+}
+
+function* handleGetUserLeftVacationsDaysRequest(
+  action: IReducerAction<UserIdT>
+) {
+  try {
+    const res: LeftVacationsDaysT[] | any = yield call(
+      apiCaller,
+      "GET",
+      `/users/vacations/${action.payload}/left`
+    );
+
+    console.log("LEFT", res);
+
+    yield put(getUserLeftVacationsDaysAsync.success(res));
+  } catch (err) {
+    if (err instanceof Error) {
+      yield put(getUserLeftVacationsDaysAsync.failure(err.message!));
+    } else {
+      yield put(
+        getUserLeftVacationsDaysAsync.failure("An unknown error occured.")
       );
     }
   }
@@ -170,6 +198,13 @@ function* watchGetUserVacationRequestsRequest(): Generator {
   );
 }
 
+function* watchGetUserLeftVacationsDaysRequest(): Generator {
+  yield takeEvery(
+    VacationsActionTypes.GET_USER_LEFT_VACATIONS_DAYS,
+    handleGetUserLeftVacationsDaysRequest
+  );
+}
+
 /**
  * @desc saga init, forks in effects, other sagas
  */
@@ -180,5 +215,6 @@ export default function* vacationsSaga() {
     fork(watchGetUserVacationsRequest),
     fork(watchCreateUserVacationRequestRequest),
     fork(watchGetUserVacationRequestsRequest),
+    fork(watchGetUserLeftVacationsDaysRequest),
   ]);
 }
