@@ -7,7 +7,7 @@ export type RoleStateT = {
   roles: RoleT[];
 };
 
-export const AllRightsRoles = ["Dup", "Manager"];
+export const AllRightsRoles = ["Admin", "Kierownik"];
 
 export enum RoleActionTypes {
   FETCH_ROLES = "@@role/FETCH_ROLES",

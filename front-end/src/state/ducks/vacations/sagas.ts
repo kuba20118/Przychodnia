@@ -90,7 +90,6 @@ function* handleGetUserVacationsRequest(action: IReducerAction<UserIdT>) {
 function* handleCreateUserVacationRequestRequest(
   action: IReducerAction<VacationRequestCreateT>
 ) {
-  console.log(action);
   try {
     const res: VacationRequestT[] | any = yield call(
       apiCaller,
@@ -103,7 +102,6 @@ function* handleCreateUserVacationRequestRequest(
         idAbsence: action.payload.idAbsence,
       }
     );
-    console.log(res);
 
     yield put(createUserVacationRequestAsync.success(res));
   } catch (err) {
@@ -193,7 +191,7 @@ function* watchCreateUserVacationRequestRequest(): Generator {
 
 function* watchGetUserVacationRequestsRequest(): Generator {
   yield takeEvery(
-    VacationsActionTypes.CREATE_USER_VACATION_REQUEST,
+    VacationsActionTypes.GET_USER_VACATION_REQUESTS,
     handleGetUserVacationRequestsRequest
   );
 }

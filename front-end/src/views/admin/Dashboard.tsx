@@ -1,17 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Row } from "react-bootstrap";
 import { Col } from "react-bootstrap";
 import CardStats from "../../components/card/CardStats";
 import { MdPeople, MdRefresh } from "react-icons/md";
 import { Bar, Doughnut } from "react-chartjs-2";
 import Card from "../../components/card/Card";
+import { useSelector, useDispatch } from "react-redux";
+import { IApplicationState } from "../../state/ducks";
+import { UserT } from "../../state/ducks/user/types";
+import { fetchAllVacationsAsync } from "../../state/ducks/vacations/actions";
 
 const Dashboard: React.FC = () => {
-  // const fetchAllUsers = useCallback(() => dispatch(fetchAllUsers.request()), [dispatch]);
+  const dispatch = useDispatch();
 
-  // useEffect(() => {
+  const users: UserT[] | undefined = useSelector(
+    (state: IApplicationState) => state.user.users
+  );
 
-  // }
+  useEffect(() => {
+    dispatch(fetchAllVacationsAsync.request());
+  });
 
   const barData = {
     labels: [
@@ -76,6 +84,16 @@ const Dashboard: React.FC = () => {
 
   // var type = "Bar";
 
+  // const allUsersNum = users && users.length;
+  const workersNum =
+    users && users.filter((user) => user.role === "Pracownik").length;
+  const managersNum =
+    users && users.filter((user) => user.role === "Kierownik").length;
+  const rejestratorsNum =
+    users && users.filter((user) => user.role === "Rejestrator").length;
+  const adminsNum =
+    users && users.filter((user) => user.role === "Admin").length;
+
   return (
     <div className="content">
       <Container fluid>
@@ -87,7 +105,7 @@ const Dashboard: React.FC = () => {
               iconBigColor="red"
               Icon={MdRefresh}
               iconText="Przed chwilą odświeżono"
-              value="129"
+              value={workersNum?.toString() || ""}
             />
           </Col>
           <Col className="col-xl-3 col-md-6">
@@ -97,7 +115,7 @@ const Dashboard: React.FC = () => {
               iconBigColor="orange"
               Icon={MdRefresh}
               iconText="Przed chwilą odświeżono"
-              value="8"
+              value={rejestratorsNum?.toString() || ""}
             />
           </Col>
           <Col className="col-xl-3 col-md-6">
@@ -107,7 +125,7 @@ const Dashboard: React.FC = () => {
               iconBigColor="blue"
               Icon={MdRefresh}
               iconText="Przed chwilą odświeżono"
-              value="5"
+              value={managersNum?.toString() || ""}
             />
           </Col>
           <Col className="col-xl-3 col-md-6">
@@ -117,7 +135,7 @@ const Dashboard: React.FC = () => {
               iconBigColor="purple"
               Icon={MdRefresh}
               iconText="Przed chwilą odświeżono"
-              value="5"
+              value={adminsNum?.toString() || ""}
             />
           </Col>
         </Row>
