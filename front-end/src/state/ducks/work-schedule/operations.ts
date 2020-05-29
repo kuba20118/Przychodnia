@@ -67,7 +67,7 @@ export const prepareDaysToGenerate = (days: WorkScheduleGenerateDayT[]) => {
 
   for (let i = 0; i < fullWeekLength; i++) {
     if (!(i in lastWeekDays)) {
-      const date = getNextDay(new Date(lastWeekDays[0].fromTime!), i + 1);
+      const date = getNextDay(new Date(lastWeekDays[0].fromTime!), i);
       leftDays.push(createGenerateDayNull(date));
     }
   }
