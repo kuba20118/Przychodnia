@@ -61,5 +61,13 @@ namespace back_end.Controllers
             //var result = _mapper.Map<NewVacationRequestDTO>(req);
             return Ok();
         }
+
+        [HttpDelete("request/delete/{id}")]
+        public async Task<IActionResult> DeleteVacationRequest(int id)
+        {
+            await _userRepo.DeleteVacationRequest(id);
+            return NoContent();
+        }
+
     }
 }

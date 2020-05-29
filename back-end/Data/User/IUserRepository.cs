@@ -21,6 +21,7 @@ namespace back_end.Data
         Task<bool> CheckIfOverlapping(int userId, NewVacationDTO newVacation);
         Task<int> GetDaysLeft(int userId, int absenseId, int days);
         Task<Vacation> AddNewVacation(int userId, NewVacationDTO newVacation);
+        Task DeleteVacationRequest(int id);
 
 
 
