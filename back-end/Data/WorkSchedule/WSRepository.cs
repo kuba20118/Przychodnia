@@ -67,6 +67,12 @@ namespace back_end.Data
           if (vacDay != null && (currentDay == null || currentDay.Type == "Praca"))
           {
             newDay = vacDay;
+            if(newDay.Type == "Zastepstwo")
+            {
+              newDay.FromTime = fromTime;
+              newDay.ToTime = toTime;
+            }
+
             dayList.Add(newDay);
             await _context.Day.AddAsync(newDay);
           }
