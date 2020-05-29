@@ -29,7 +29,7 @@ export type RoutesType = {
 
 export const adminRoutes: RoutesType = {
   path: "/admin",
-  name: "Dup",
+  name: "Admin",
   component: AdminLayout,
   layout: "",
   children: [

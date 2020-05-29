@@ -66,7 +66,7 @@ function* handleCreateSelectedWorkerVacations(
         fromDate: action.payload.fromDate,
         toDate: action.payload.toDate,
         idAbsence: action.payload.absenceId,
-        substitutionId: action.payload.substitutionId,
+        userForReplacentId: action.payload.substitutionId,
       }
     );
 
