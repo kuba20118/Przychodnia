@@ -29,6 +29,9 @@ export default function apiCaller<T>(
           }
 
           const contentType = response.headers.get("content-type")!;
+          if (!contentType) {
+            resolve();
+          }
 
           if (contentType.startsWith("application/json;")) {
             response.json().then((json) => resolve(json));

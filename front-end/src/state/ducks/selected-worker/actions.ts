@@ -14,6 +14,7 @@ import {
   ISelectedWorkerVacationRequest,
   ISelectedWorkerLeftVacationsDaysT,
 } from "./types";
+import { VacationRequestIdT } from "../vacations/types";
 
 export const setSelectedWorker = (worker: ISelectedWorker) =>
   action(SelectedWorkerActionTypes.SET_SELECTED_WORKER, worker);
@@ -25,7 +26,7 @@ export const updateSelectedWorkerAsync = createAsyncAction(
 )<SelectedWorkerUpdateT, ISelectedWorker, string>();
 
 // --------------------------------
-// vacagtions
+// vacations
 
 export const getSelectedWorkerVacationsAsync = createAsyncAction(
   SelectedWorkerActionTypes.GET_SELECTED_WORKER_VACATIONS,
@@ -50,6 +51,12 @@ export const getSelectedWorkerVacationRequestsAsync = createAsyncAction(
   SelectedWorkerActionTypes.GET_SELECTED_WORKER_VACATION_REQUESTS_SUCCESS,
   SelectedWorkerActionTypes.GET_SELECTED_WORKER_VACATION_REQUESTS_ERROR
 )<SelectedWorkerIdT, ISelectedWorkerVacationRequest[], string>();
+
+export const removeSelectedWorkerVacationRequestsAsync = createAsyncAction(
+  SelectedWorkerActionTypes.REMOVE_SELECTED_WORKER_VACATION_REQUEST,
+  SelectedWorkerActionTypes.REMOVE_SELECTED_WORKER_VACATION_REQUEST_SUCCESS,
+  SelectedWorkerActionTypes.REMOVE_SELECTED_WORKER_VACATION_REQUEST_ERROR
+)<VacationRequestIdT, VacationRequestIdT, string>();
 
 // --------------------------------
 // Work schedule

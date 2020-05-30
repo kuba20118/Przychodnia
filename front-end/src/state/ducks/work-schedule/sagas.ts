@@ -12,7 +12,6 @@ function* handleGetUserWorkSchedule(action: IReducerAction<UserIdT>) {
       `/schedules/${action.payload}`
     );
 
-    console.log(res);
     yield put(getUserWorkScheduleAsync.success(res));
   } catch (err) {
     if (err instanceof Error) {

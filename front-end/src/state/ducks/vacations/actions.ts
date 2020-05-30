@@ -6,6 +6,7 @@ import {
   VacationRequestT,
   LeftVacationsDaysT,
   VacationRequestCreateT,
+  VacationRequestIdT,
 } from "./types";
 import { UserIdT } from "../user/types";
 

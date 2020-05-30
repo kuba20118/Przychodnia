@@ -22,10 +22,12 @@ import {
   createSelectedWorkerWorkScheduleAsync,
   updateSelectedWorkerScheduleDayAsync,
   getSelectedWorkerVacationRequestsAsync,
+  removeSelectedWorkerVacationRequestsAsync,
 } from "./actions";
 import { IReducerAction } from "..";
 import apiCaller from "../../utils/apiHelper";
 import { activateAlert } from "../alert/actions";
+import { VacationRequestIdT } from "../vacations/types";
 
 function* handleGetSelectedWorkerVacations(
   action: IReducerAction<SelectedWorkerIdT>
@@ -142,6 +144,34 @@ function* handleGetSelectedWorkerVacationRequests(
     } else {
       yield put(
         getSelectedWorkerVacationRequestsAsync.failure(
+          "An unknown error occured."
+        )
+      );
+    }
+  }
+}
+
+function* handleRemoveSelectedWorkerVacationRequest(
+  action: IReducerAction<VacationRequestIdT>
+) {
+  try {
+    const res: ISelectedWorkerVacationRequest | any = yield call(
+      apiCaller,
+      "DELETE",
+      `/vacation/request/delete/${action.payload}`
+    );
+
+    yield put(
+      removeSelectedWorkerVacationRequestsAsync.success(action.payload)
+    );
+  } catch (err) {
+    if (err instanceof Error) {
+      yield put(
+        removeSelectedWorkerVacationRequestsAsync.failure(err.message!)
+      );
+    } else {
+      yield put(
+        removeSelectedWorkerVacationRequestsAsync.failure(
           "An unknown error occured."
         )
       );
@@ -276,7 +306,7 @@ function* handleUpdateSelectedWorker(
         workingHours: action.payload.workingHours,
       }
     );
-    console.log(res);
+
     yield put(updateSelectedWorkerAsync.success(res));
     yield put(
       activateAlert({
@@ -329,6 +359,13 @@ function* watchGetSelectedWorkerVacationRequestsRequest(): Generator {
   );
 }
 
+function* watchRemoveSelectedWorkerVacationRequestRequest(): Generator {
+  yield takeEvery(
+    SelectedWorkerActionTypes.REMOVE_SELECTED_WORKER_VACATION_REQUEST,
+    handleRemoveSelectedWorkerVacationRequest
+  );
+}
+
 function* watchGetSelectedWorkerWorkScheduleRequest(): Generator {
   yield takeEvery(
     SelectedWorkerActionTypes.GET_SELECTED_WORKER_WORK_SCHEDULE,
@@ -366,6 +403,7 @@ export default function* selectedWorkerSaga() {
     fork(watchCreateSelectedWorkerVacationsRequest),
     fork(watchGetSelectedWorkerVacationsLeftDaysRequest),
     fork(watchGetSelectedWorkerVacationRequestsRequest),
+    fork(watchRemoveSelectedWorkerVacationRequestRequest),
     fork(watchGetSelectedWorkerWorkScheduleRequest),
     fork(watchCreateSelectedWorkerWorkScheduleRequest),
     fork(watchUpdateSelectedWorkerScheduleDayRequest),

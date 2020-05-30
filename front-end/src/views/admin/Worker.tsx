@@ -11,6 +11,7 @@ import {
   getSelectedWorkerVacationsLeftDaysAsync,
   createSelectedWorkerVacationsAsync,
   getSelectedWorkerVacationRequestsAsync,
+  removeSelectedWorkerVacationRequestsAsync,
 } from "../../state/ducks/selected-worker/actions";
 import {
   ISelectedWorker,
@@ -77,7 +78,6 @@ const Worker: React.FC<IRouteComponentProps> = (props) => {
 
   const acceptVacationRequest = (data: VacationRequestSubmitT) => {
     if (!worker.user.data) return;
-    console.log(data);
     const createNewVacationData: ISelectedWorkerVacationCreateNew = {
       userId: worker.user.data.idUser,
       fromDate: data.fromDate,
@@ -91,7 +91,7 @@ const Worker: React.FC<IRouteComponentProps> = (props) => {
 
   const cancelVacationRequest = (requestId: VacationRequestIdT) => {
     console.log("Cancel vacation request id.", requestId);
-    // dispatch(cancelSelectedWorkerVacationRequestAsync.request(requestId));
+    dispatch(removeSelectedWorkerVacationRequestsAsync.request(requestId));
   };
 
   return (
@@ -111,7 +111,7 @@ const Worker: React.FC<IRouteComponentProps> = (props) => {
                 title="Prośby o urlop"
                 content={
                   <AdminVacationsRequestForm
-                    requests={fakeRequests}
+                    requests={worker.vacation.requests}
                     potentialSubs={potentialSubs}
                     acceptRequest={acceptVacationRequest}
                     cancelRequest={cancelVacationRequest}

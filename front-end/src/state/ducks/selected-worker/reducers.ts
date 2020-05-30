@@ -16,6 +16,7 @@ import {
 import { TypeConstant, Action, PayloadAction } from "typesafe-actions";
 import { combineReducers } from "redux";
 import { isSameDay } from "date-fns";
+import { VacationRequestIdT } from "../vacations/types";
 
 const initialSelectedWorkerUserState: SelectedWorkerUserStateT = {
   data: undefined,
@@ -70,6 +71,7 @@ const selectedWorkerVacationsReducer = (
         ISelectedWorkerVacations &
         ISelectedWorkerLeftVacationsDaysT[] &
         ISelectedWorkerVacationRequest[] &
+        VacationRequestIdT &
         string
     >
 ): SelectedWorkerVacationsStateT => {
@@ -125,6 +127,20 @@ const selectedWorkerVacationsReducer = (
     }
     case SelectedWorkerActionTypes.GET_SELECTED_WORKER_VACATION_REQUESTS_ERROR: {
       return { ...state, isLoadingGetRequests: false, error: action.payload };
+    }
+    case SelectedWorkerActionTypes.REMOVE_SELECTED_WORKER_VACATION_REQUEST: {
+      return { ...state };
+    }
+    case SelectedWorkerActionTypes.REMOVE_SELECTED_WORKER_VACATION_REQUEST_SUCCESS: {
+      return {
+        ...state,
+        requests: state.requests?.filter(
+          (req) => req.idRequest !== action.payload
+        ),
+      };
+    }
+    case SelectedWorkerActionTypes.REMOVE_SELECTED_WORKER_VACATION_REQUEST_ERROR: {
+      return { ...state };
     }
     default: {
       return state;

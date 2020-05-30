@@ -6,6 +6,7 @@ import {
   VacationRequestT,
   VacationRequestCreateT,
   LeftVacationsDaysT,
+  VacationRequestIdT,
 } from "./types";
 import {
   fetchAllVacationsAsync,
@@ -91,7 +92,7 @@ function* handleCreateUserVacationRequestRequest(
   action: IReducerAction<VacationRequestCreateT>
 ) {
   try {
-    const res: VacationRequestT[] | any = yield call(
+    const res: VacationRequestT | any = yield call(
       apiCaller,
       "POST",
       `/vacation/request/add/${action.payload.userId}`,
@@ -102,7 +103,6 @@ function* handleCreateUserVacationRequestRequest(
         idAbsence: action.payload.idAbsence,
       }
     );
-
     yield put(createUserVacationRequestAsync.success(res));
   } catch (err) {
     if (err instanceof Error) {
