@@ -38,7 +38,7 @@ namespace back_end.Controllers
                 return Content("Brak próśb o urlop");
 
             var requestsFromRepo = await _userRepo.GetUserRequests(id);
-            var result = _mapper.Map<IEnumerable<NewVacationRequestDTO>>(requestsFromRepo);
+            var result = _mapper.Map<IEnumerable<VacationRequestReturnDTO>>(requestsFromRepo);
             return Ok(result);
         }
 

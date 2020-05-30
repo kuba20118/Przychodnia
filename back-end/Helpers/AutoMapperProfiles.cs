@@ -13,7 +13,12 @@ namespace back_end.Helpers
         {
 
             CreateMap<NewVacationRequestDTO, Vacationrequest>();
+            CreateMap<VacationRequestReturnDTO, Vacationrequest>();
             CreateMap<Vacationrequest, NewVacationRequestDTO>()
+                .ForMember(dest => dest.Absence, opt =>
+                    opt.MapFrom(src => src.IdAbsenceNavigation.Name)
+                    );
+            CreateMap<Vacationrequest, VacationRequestReturnDTO>()
                 .ForMember(dest => dest.Absence, opt =>
                     opt.MapFrom(src => src.IdAbsenceNavigation.Name)
                     );
