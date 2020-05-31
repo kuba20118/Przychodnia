@@ -62,7 +62,7 @@ namespace back_end.Data
         public async Task<Employment> GetUserEmployment(int userId)
         {
             var empl = await _context.Employment
-                                    .FirstOrDefaultAsync(x => x.User.Any(d => d.IdUser == userId));
+                .FirstOrDefaultAsync(x => x.User.Any(d => d.IdUser == userId));
 
             return empl;
         }
@@ -99,6 +99,7 @@ namespace back_end.Data
         {
             var usersVac = await _context.Vacation
                                     .Where(d => d.FromDate.DayOfYear <= DateTime.Now.DayOfYear && d.ToDate.DayOfYear >= DateTime.Now.DayOfYear)
+                                    .Where(x => x.IdAbsenceVacNavigation.Name != "Zastepstwo")
                                     .Include(a => a.IdAbsenceVacNavigation)
                                     .Include(u => u.IdUserVacNavigation)
                                     .ToListAsync();
@@ -181,16 +182,28 @@ namespace back_end.Data
             return requests;
         }
 
-		public async Task DeleteVacationRequest(int id)
-		{
-			var request = await _context.Vacationrequest
-				.SingleOrDefaultAsync(x => x.IdRequest == id);
+        public async Task DeleteVacationRequest(int id)
+        {
+            var request = await _context.Vacationrequest
+                .SingleOrDefaultAsync(x => x.IdRequest == id);
 
-			if(request != null)
-			{
-			_context.Remove(request);
-			await _context.SaveChangesAsync();
-			}		
-		}
+            if (request != null)
+            {
+                _context.Remove(request);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<IEnumerable<Vacation>> GetAllReplacements()
+        {
+            var repls = await _context.Vacation
+                .Include(x => x.IdAbsenceVacNavigation)
+                .Where(x => x.IdAbsenceVacNavigation.Name == "Zastepstwo")
+                .Where(x => x.FromDate.DayOfYear >= DateTime.Now.DayOfYear)
+                .Include(x => x.IdUserVacNavigation)
+                .ToListAsync();
+
+            return repls;
+        }
     }
 }

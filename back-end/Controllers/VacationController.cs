@@ -69,5 +69,14 @@ namespace back_end.Controllers
             return NoContent();
         }
 
+        [HttpGet("replacments")]
+        public async Task<IActionResult> GetAllReplacments()
+        {
+            var repls = await _userRepo.GetAllReplacements();
+            var result = _mapper.Map<IEnumerable<VacationDTO>>(repls);
+
+            return Ok(result);
+        }
+
     }
 }

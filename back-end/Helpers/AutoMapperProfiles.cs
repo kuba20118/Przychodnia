@@ -49,6 +49,12 @@ namespace back_end.Helpers
                     )
                 .ForMember(dest => dest.IdUser, opt =>
                     opt.MapFrom(src => src.IdUserVacNavigation.IdUser)
+                    )
+                .ForMember(dest => dest.FirstName, opt =>
+                    opt.MapFrom(src => src.IdUserVacNavigation.FirstName)
+                    )
+                .ForMember(dest => dest.LastName, opt =>
+                    opt.MapFrom(src => src.IdUserVacNavigation.LastName)
                     );
 
             CreateMap<Leftvacationdays, LeftVacationDaysDTO>()
