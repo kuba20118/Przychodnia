@@ -11,10 +11,11 @@ using back_end.Helpers;
 using back_end.DTOs.WorkSchedule;
 using back_end.DTOs.Vacation;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace back_end.Controllers
 {
-
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class VacationController : ControllerBase
@@ -69,7 +70,8 @@ namespace back_end.Controllers
             return NoContent();
         }
 
-        [HttpGet("replacments")]
+        [Authorize(Policy = "adminKierownik")]
+        [HttpGet("replacements")]
         public async Task<IActionResult> GetAllReplacments()
         {
             var repls = await _userRepo.GetAllReplacements();

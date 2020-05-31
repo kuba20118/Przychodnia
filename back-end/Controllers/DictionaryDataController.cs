@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using back_end.Data;
 using back_end.DTOs.Vacation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Przychodnia.API;
 
@@ -14,6 +15,7 @@ namespace back_end.Controllers
     -Role
     -Absence
     */
+    [Authorize(Policy = "admin")]
     [ApiController]
     [Route("[controller]")]
     public class DictionaryDataController : ControllerBase

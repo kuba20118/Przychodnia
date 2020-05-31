@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using AutoMapper;
 using back_end.Data;
 using back_end.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Przychodnia.API;
 
 namespace back_end.Controllers
 {
+  [Authorize]
   [ApiController]
   [Route("[controller]")]
   public class UsersController : ControllerBase
@@ -33,6 +35,7 @@ namespace back_end.Controllers
       return Ok(userToReturn);
     }
 
+    [Authorize(Policy = "adminKierownik")]
     [HttpGet]
     public async Task<IActionResult> GetUsers()
     {
@@ -41,6 +44,7 @@ namespace back_end.Controllers
       return Ok(usersToReturn);
     }
 
+    [Authorize(Policy = "adminKierownik")]
     [HttpPut("update/{id}")]
     public async Task<IActionResult> UpdateUser(int id, UserUpdateDTO userToUpdate)
     {
@@ -67,6 +71,7 @@ namespace back_end.Controllers
       return Content($"Błąd aktualizacji danych użytkownika o id: {id}");
     }
 
+    [Authorize(Policy = "adminKierownik")]
     [HttpPut("update/{id}/employment")]
     public async Task<IActionResult> UpdateUserEmployment(int id, EmplUpdateDTO empToUpdate)
     {
@@ -96,6 +101,7 @@ namespace back_end.Controllers
     }
 
     [HttpGet("vacations")]
+    [Authorize(Policy = "adminKierownik")]
     public async Task<IActionResult> GetAllVacations()
     {
       var vacations = await _repo.GetAllVacations();
@@ -111,6 +117,7 @@ namespace back_end.Controllers
       return Ok(daysLeftToReturn);
     }
 
+    [Authorize(Policy = "adminKierownik")]
     [HttpPost("vacations/{id}/new")]
     public async Task<IActionResult> AddUserNewVacation(int id, NewVacationDTO newVacation)
     {

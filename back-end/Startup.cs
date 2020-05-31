@@ -61,6 +61,10 @@ namespace Przychodnia.API
                                 ValidateAudience = false
                             };
                         });
+            services.AddAuthorization(x => x.AddPolicy("adminKierownik", p => p.RequireRole("Admin", "Kierownik")));
+            services.AddAuthorization(x => x.AddPolicy("adminKierownikRejestrator", p => p.RequireRole("Admin", "Kierownik", "Rejestrator")));
+            services.AddAuthorization(x => x.AddPolicy("admin", p => p.RequireRole("Admin")));
+            services.AddAuthorization(x => x.AddPolicy("kierownik", p => p.RequireRole("Kierownik")));
         }
 
 

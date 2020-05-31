@@ -9,10 +9,12 @@ using Przychodnia.API;
 using System.Linq;
 using back_end.Helpers;
 using back_end.DTOs.WorkSchedule;
+using Microsoft.AspNetCore.Authorization;
 
 namespace back_end.Controllers
 {
 
+  [Authorize]
   [ApiController]
   [Route("[controller]")]
   public class SchedulesController : ControllerBase
@@ -37,6 +39,7 @@ namespace back_end.Controllers
       return Ok(wsToReturn);
     }
 
+    [Authorize(Policy = "adminKierownik")]
     [HttpPut("edit/{id}")]
     public async Task<IActionResult> EditDayInWS(int id, DayUpdateDTO day)
     {
@@ -52,6 +55,7 @@ namespace back_end.Controllers
       return Ok(dayToReturn);
     }
 
+    [Authorize(Policy = "adminKierownik")]
     [HttpPost("generate/{id}")]
     public async Task<IActionResult> GenerateUserWorkSchedule(int id, WorkScheduleNewDTO newWS)
     {
@@ -71,6 +75,7 @@ namespace back_end.Controllers
       return Ok(wsToReturn);
     }
 
+    [Authorize(Policy = "adminKierownik")]
     [HttpPost("generate")]
     public async Task<IActionResult> GenerateWorkSchedule(WorkScheduleNewDTO newWS)
     {

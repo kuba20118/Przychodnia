@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using back_end.DTOs;
 using back_end.DTOs.Vacation;
 using back_end.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Przychodnia.API;
 
