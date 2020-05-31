@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Przychodnia.API;
@@ -26,7 +27,11 @@ namespace back_end.Data
 
         public async Task<IEnumerable<Absence>> GetAbsences()
         {
-            var absences = await _context.Absence.ToListAsync();
+            var absences = await _context.Absence
+                .Where(x => x.Name != "Zalegly")
+                .Where(x => x.Name != "Zadanie")
+                .Where(x => x.Name != "Zastepstwo")
+                .ToListAsync();
 
             return absences;
         }
