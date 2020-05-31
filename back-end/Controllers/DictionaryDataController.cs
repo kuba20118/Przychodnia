@@ -30,6 +30,7 @@ namespace back_end.Controllers
         }
 
         [HttpGet("roles")]
+        [Authorize]
         public async Task<IActionResult> GetRoles()
         {
             var rolesToReturn = await _repo.GetRoles();
