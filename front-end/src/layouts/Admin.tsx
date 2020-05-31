@@ -55,6 +55,17 @@ const Admin: React.FC<IRouteComponentProps> = ({ childrenRoutes }) => {
     }
   };
 
+  const getPageDescriptionText = (routes: RoutesType[]) => {
+    for (let i = 0; i < routes.length; i++) {
+      if (
+        currentLocation.pathname.indexOf(routes[i].layout + routes[i].path) !==
+        -1
+      ) {
+        return routes[i].description;
+      }
+    }
+  };
+
   const dispatchToNavbarProps = {
     logoutUserAsyncRequest: useCallback(() => {
       dispatch(logoutUserAsync.request(currentUser?.idUser!));
@@ -77,6 +88,7 @@ const Admin: React.FC<IRouteComponentProps> = ({ childrenRoutes }) => {
       <div className="main-panel">
         <NavbarComponent
           pageName={getPageNameText(childrenRoutes!)}
+          pageDescription={getPageDescriptionText(childrenRoutes!)}
           {...dispatchToNavbarProps}
         />
         <AlertComponent alert={alert} close={removeAlert} />

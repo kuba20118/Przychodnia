@@ -15,6 +15,20 @@
       color: $link-hover-color;
     }
   }
+
+  &__tooltip {
+    padding: 2px;
+    margin: 0 8px;
+
+    > svg:hover {
+      transition: $navbar-tooltip-transition;
+      fill: $navbar-tooltip-color-hover;
+    }
+  }
+
+  &__tooltip-text {
+    background-color: $navbar-tooltip-text-bg-color !important;
+  }
 }
 
 .navbar-default {

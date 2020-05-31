@@ -68,6 +68,9 @@ $sidebar-subnav-transition: all 0.15s ease-in;
 $navbar-text-color: #777;
 $navbar-bg: #fdfefe;
 $navbar-height: 60px;
+$navbar-tooltip-text-bg-color: darken($info-color, 5%);
+$navbar-tooltip-color-hover: darken($info-color, 5%);
+$navbar-tooltip-transition: fill 0.15 ease-in;
 
 $card-primary-color: #333;
 $card-light-color: #9a9a9a;
