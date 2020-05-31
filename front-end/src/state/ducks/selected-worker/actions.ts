@@ -58,6 +58,12 @@ export const removeSelectedWorkerVacationRequestsAsync = createAsyncAction(
   SelectedWorkerActionTypes.REMOVE_SELECTED_WORKER_VACATION_REQUEST_ERROR
 )<VacationRequestIdT, VacationRequestIdT, string>();
 
+export const acceptSelectedWorkerVacationRequestsAsync = createAsyncAction(
+  SelectedWorkerActionTypes.ACCEPT_SELECTED_WORKER_VACATION_REQUEST,
+  SelectedWorkerActionTypes.ACCEPT_SELECTED_WORKER_VACATION_REQUEST_SUCCESS,
+  SelectedWorkerActionTypes.ACCEPT_SELECTED_WORKER_VACATION_REQUEST_ERROR
+)<ISelectedWorkerVacationCreateNew, ISelectedWorkerVacations[], string>();
+
 // --------------------------------
 // Work schedule
 

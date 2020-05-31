@@ -60,7 +60,6 @@ const WorkerEditForm: React.FC<WorkerEditFormPropsT> = ({
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
-          console.log(values);
           setSubmitting(true);
           updateWorker(values);
         }}

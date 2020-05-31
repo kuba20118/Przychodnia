@@ -23,6 +23,7 @@ import {
   updateSelectedWorkerScheduleDayAsync,
   getSelectedWorkerVacationRequestsAsync,
   removeSelectedWorkerVacationRequestsAsync,
+  acceptSelectedWorkerVacationRequestsAsync,
 } from "./actions";
 import { IReducerAction } from "..";
 import apiCaller from "../../utils/apiHelper";
@@ -172,6 +173,54 @@ function* handleRemoveSelectedWorkerVacationRequest(
     } else {
       yield put(
         removeSelectedWorkerVacationRequestsAsync.failure(
+          "An unknown error occured."
+        )
+      );
+    }
+  }
+}
+
+function* handleAcceptSelectedWorkerVacationRequest(
+  action: IReducerAction<ISelectedWorkerVacationCreateNew>
+) {
+  try {
+    yield delay(2000);
+    const res: ISelectedWorkerVacations[] | any = yield call(
+      apiCaller,
+      "POST",
+      `/users/vacations/${action.payload.userId}/new`,
+      {
+        fromDate: action.payload.fromDate,
+        toDate: action.payload.toDate,
+        idAbsence: action.payload.absenceId,
+        userForReplacentId: action.payload.substitutionId,
+      }
+    );
+
+    yield put(acceptSelectedWorkerVacationRequestsAsync.success(res));
+
+    yield put(
+      activateAlert({
+        body: `Sukces! Urlop został pomyślnie zaakceptowany!`,
+        variant: "success",
+        showTime: 6000,
+      })
+    );
+  } catch (err) {
+    if (err instanceof Error) {
+      yield put(
+        activateAlert({
+          body: `${err}. Akceptacja urlopu nie powiodła sie.`,
+          variant: "danger",
+          showTime: 6000,
+        })
+      );
+      yield put(
+        acceptSelectedWorkerVacationRequestsAsync.failure(err.message!)
+      );
+    } else {
+      yield put(
+        acceptSelectedWorkerVacationRequestsAsync.failure(
           "An unknown error occured."
         )
       );
@@ -366,6 +415,13 @@ function* watchRemoveSelectedWorkerVacationRequestRequest(): Generator {
   );
 }
 
+function* watchAcceptSelectedWorkerVacationRequestRequest(): Generator {
+  yield takeEvery(
+    SelectedWorkerActionTypes.ACCEPT_SELECTED_WORKER_VACATION_REQUEST,
+    handleAcceptSelectedWorkerVacationRequest
+  );
+}
+
 function* watchGetSelectedWorkerWorkScheduleRequest(): Generator {
   yield takeEvery(
     SelectedWorkerActionTypes.GET_SELECTED_WORKER_WORK_SCHEDULE,
@@ -404,6 +460,7 @@ export default function* selectedWorkerSaga() {
     fork(watchGetSelectedWorkerVacationsLeftDaysRequest),
     fork(watchGetSelectedWorkerVacationRequestsRequest),
     fork(watchRemoveSelectedWorkerVacationRequestRequest),
+    fork(watchAcceptSelectedWorkerVacationRequestRequest),
     fork(watchGetSelectedWorkerWorkScheduleRequest),
     fork(watchCreateSelectedWorkerWorkScheduleRequest),
     fork(watchUpdateSelectedWorkerScheduleDayRequest),

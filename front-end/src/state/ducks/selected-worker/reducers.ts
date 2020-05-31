@@ -60,6 +60,9 @@ const initialSelectedWorkerVacationsState: SelectedWorkerVacationsStateT = {
   isLoadingLeftDays: false,
   isLoadingCreateData: false,
   isLoadingGetRequests: false,
+  isLoadingRemoveRequest: false,
+  isLoadingAcceptRequest: false,
+  isRequestAcceptError: false,
 };
 
 const selectedWorkerVacationsReducer = (
@@ -129,7 +132,7 @@ const selectedWorkerVacationsReducer = (
       return { ...state, isLoadingGetRequests: false, error: action.payload };
     }
     case SelectedWorkerActionTypes.REMOVE_SELECTED_WORKER_VACATION_REQUEST: {
-      return { ...state };
+      return { ...state, isLoadingRemoveRequest: true };
     }
     case SelectedWorkerActionTypes.REMOVE_SELECTED_WORKER_VACATION_REQUEST_SUCCESS: {
       return {
@@ -137,10 +140,32 @@ const selectedWorkerVacationsReducer = (
         requests: state.requests?.filter(
           (req) => req.idRequest !== action.payload
         ),
+        isLoadingRemoveRequest: false,
       };
     }
     case SelectedWorkerActionTypes.REMOVE_SELECTED_WORKER_VACATION_REQUEST_ERROR: {
-      return { ...state };
+      return { ...state, isLoadingRemoveRequest: false };
+    }
+    case SelectedWorkerActionTypes.ACCEPT_SELECTED_WORKER_VACATION_REQUEST: {
+      return {
+        ...state,
+        isLoadingAcceptRequest: true,
+        isRequestAcceptError: false,
+      };
+    }
+    case SelectedWorkerActionTypes.ACCEPT_SELECTED_WORKER_VACATION_REQUEST_SUCCESS: {
+      return {
+        ...state,
+        isLoadingAcceptRequest: false,
+        data: [...state.data!, action.payload],
+      };
+    }
+    case SelectedWorkerActionTypes.ACCEPT_SELECTED_WORKER_VACATION_REQUEST_ERROR: {
+      return {
+        ...state,
+        isLoadingAcceptRequest: false,
+        isRequestAcceptError: true,
+      };
     }
     default: {
       return state;

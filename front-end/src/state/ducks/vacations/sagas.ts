@@ -147,8 +147,6 @@ function* handleGetUserLeftVacationsDaysRequest(
       `/users/vacations/${action.payload}/left`
     );
 
-    console.log("LEFT", res);
-
     yield put(getUserLeftVacationsDaysAsync.success(res));
   } catch (err) {
     if (err instanceof Error) {

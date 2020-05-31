@@ -51,7 +51,6 @@ const UserVacationsRequestForm: React.FC<UserVactionRequestFormType> = ({
   const [leftDays, setLeftDays] = useState(0);
 
   useEffect(() => {
-    console.log(leftVacationsDays);
     if (leftVacationsDays!.length > 1) {
       setLeftDays(leftVacationsDays![0].leftDays);
     }

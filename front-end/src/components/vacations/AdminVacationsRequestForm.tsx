@@ -16,6 +16,9 @@ type AdminVactionRequestFormType = {
   potentialSubs?: ISelectedWorker[];
   acceptRequest: (data: VacationRequestSubmitT) => void;
   cancelRequest: (requestId: VacationRequestIdT) => void;
+  isAcceptRequestError: boolean;
+  isAcceptLoading: boolean;
+  isCancelLoading: boolean;
 };
 
 const AdminVacationsRequestForm: React.FC<AdminVactionRequestFormType> = ({
@@ -23,9 +26,12 @@ const AdminVacationsRequestForm: React.FC<AdminVactionRequestFormType> = ({
   potentialSubs,
   acceptRequest,
   cancelRequest,
+  isAcceptRequestError,
+  isAcceptLoading,
+  isCancelLoading,
 }) => {
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [substitutionsIds, setSubstitutionsIds] = useState<string[]>([]);
+  const [currentItemKey, setCurrentItemKey] = useState<number>(0);
 
   useEffect(() => {
     if (requests && potentialSubs && potentialSubs.length) {
@@ -49,6 +55,7 @@ const AdminVacationsRequestForm: React.FC<AdminVactionRequestFormType> = ({
     request: ISelectedWorkerVacationRequest,
     key: number
   ) => {
+    setCurrentItemKey(key);
     const vacationRequestData: VacationRequestSubmitT = {
       fromDate: new Date(request.fromDate),
       toDate: new Date(request.toDate),
@@ -60,8 +67,25 @@ const AdminVacationsRequestForm: React.FC<AdminVactionRequestFormType> = ({
     acceptRequest(vacationRequestData);
   };
 
-  const handleCancelRequest = (requestId: VacationRequestIdT) =>
+  const handleCancelRequest = (requestId: VacationRequestIdT, key: number) => {
+    setCurrentItemKey(key);
     cancelRequest(requestId);
+  };
+
+  const handleLoadingState = (isLoading: boolean, key: number) => {
+    return key === currentItemKey ? isLoading : false;
+  };
+
+  const handleIsDisabled = (
+    isLoading: boolean,
+    isError: boolean,
+    key: number
+  ) => {
+    if (isError && key === currentItemKey) {
+      return true;
+    }
+    return key !== currentItemKey ? isLoading : false;
+  };
 
   return (
     <Container fluid>
@@ -110,8 +134,9 @@ const AdminVacationsRequestForm: React.FC<AdminVactionRequestFormType> = ({
                 variant="danger"
                 defaultText="Anuluj"
                 defaultType="button"
-                isLoading={isSubmitting}
-                onClick={() => handleCancelRequest(request.idRequest)}
+                disabled={handleIsDisabled(isCancelLoading, false, key)}
+                isLoading={handleLoadingState(isCancelLoading, key)}
+                onClick={() => handleCancelRequest(request.idRequest, key)}
               ></LoadingButton>
             </Col>
             <Col className="text-right p-0">
@@ -119,7 +144,12 @@ const AdminVacationsRequestForm: React.FC<AdminVactionRequestFormType> = ({
                 variant="primary"
                 defaultText="Przydziel"
                 defaultType="button"
-                isLoading={isSubmitting}
+                disabled={handleIsDisabled(
+                  isAcceptLoading,
+                  isAcceptRequestError,
+                  key
+                )}
+                isLoading={handleLoadingState(isAcceptLoading, key)}
                 onClick={() => handleAcceptRequest(request, key)}
               ></LoadingButton>
             </Col>

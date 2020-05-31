@@ -16,7 +16,6 @@ const createInitialFormValues = (
   roles: RoleT[],
   worker?: ISelectedWorker
 ): SelectedWorkerUpdateT => {
-  console.log(worker);
   return {
     userId: worker?.idUser!,
     firstName: worker?.firstName!,
