@@ -54,13 +54,13 @@ namespace back_end.Controllers
 
             var totalVacDays = (newRequest.ToDate - newRequest.FromDate).Days + 1;
             var daysLeft = await _userRepo.GetDaysLeft(id, newRequest.IdAbsence, totalVacDays);
-	
+
             if (daysLeft < totalVacDays)
                 return Content("Nie można udzielić urlopu. Brak dni do wybrania");
 
             await _userRepo.AddNewVacationRequest(id, newRequest);
             //var result = _mapper.Map<NewVacationRequestDTO>(req);
-            return Ok();
+            return NoContent();
         }
 
         [HttpDelete("request/delete/{id}")]
@@ -76,6 +76,44 @@ namespace back_end.Controllers
         {
             var repls = await _userRepo.GetAllReplacements();
             var result = _mapper.Map<IEnumerable<VacationDTO>>(repls);
+
+            return Ok(result);
+        }
+
+        [Authorize(Policy = "adminKierownik")]
+        [HttpGet("replacements/history")]
+        public async Task<IActionResult> GetAllReplacmentsHistory()
+        {
+            var history = await _userRepo.GetReplacementsHistory();
+            var result = _mapper.Map<IEnumerable<VacationDTO>>(history);
+
+            return Ok(result);
+        }
+
+        [HttpGet("replacements/history/{id}")]
+        public async Task<IActionResult> GetAllUserReplacmentsHistory(int id)
+        {
+            var history = await _userRepo.GetReplacementsHistory(id);
+            var result = _mapper.Map<IEnumerable<VacationDTO>>(history);
+
+            return Ok(result);
+        }
+
+        [Authorize(Policy = "adminKierownik")]
+        [HttpGet("history")]
+        public async Task<IActionResult> GetAllVacationHistory()
+        {
+            var history = await _userRepo.GetVacationsHistory();
+            var result = _mapper.Map<IEnumerable<VacationDTO>>(history);
+
+            return Ok(result);
+        }
+
+        [HttpGet("history/{id}")]
+        public async Task<IActionResult> GetUserVacationHistory(int id)
+        {
+            var history = await _userRepo.GetVacationsHistory(id);
+            var result = _mapper.Map<IEnumerable<VacationDTO>>(history);
 
             return Ok(result);
         }

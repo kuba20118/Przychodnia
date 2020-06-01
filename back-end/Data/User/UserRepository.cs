@@ -206,5 +206,55 @@ namespace back_end.Data
 
             return repls;
         }
+
+        public async Task<IEnumerable<Vacation>> GetReplacementsHistory()
+        {
+            var history = await _context.Vacation
+                .Include(x => x.IdAbsenceVacNavigation)
+                .Where(x => x.IdAbsenceVacNavigation.Name == "Zastepstwo")
+                .Where(x => x.ToDate.DayOfYear < DateTime.Now.DayOfYear)
+                .Include(x => x.IdUserVacNavigation)
+                .ToListAsync();
+
+            return history;
+        }
+
+        public async Task<IEnumerable<Vacation>> GetReplacementsHistory(int userId)
+        {
+            var history = await _context.Vacation
+                .Include(x => x.IdAbsenceVacNavigation)
+                .Where(x => x.IdAbsenceVacNavigation.Name == "Zastepstwo")
+                .Where(x => x.ToDate.DayOfYear < DateTime.Now.DayOfYear)
+                .Where(x => x.IdUserVacNavigation.IdUser == userId)
+                .Include(x => x.IdUserVacNavigation)
+                .ToListAsync();
+
+            return history;
+        }
+
+        public async Task<IEnumerable<Vacation>> GetVacationsHistory()
+        {
+            var history = await _context.Vacation
+                .Include(x => x.IdAbsenceVacNavigation)
+                .Where(x => x.IdAbsenceVacNavigation.Name != "Zastepstwo")
+                .Where(x => x.ToDate.DayOfYear < DateTime.Now.DayOfYear)
+                .Include(x => x.IdUserVacNavigation)
+                .ToListAsync();
+
+            return history;
+        }
+
+        public async Task<IEnumerable<Vacation>> GetVacationsHistory(int userId)
+        {
+            var history = await _context.Vacation
+                .Include(x => x.IdAbsenceVacNavigation)
+                .Where(x => x.IdAbsenceVacNavigation.Name != "Zastepstwo")
+                .Where(x => x.ToDate.DayOfYear < DateTime.Now.DayOfYear)
+                .Where(x => x.IdUserVacNavigation.IdUser == userId)
+                .Include(x => x.IdUserVacNavigation)
+                .ToListAsync();
+
+            return history;
+        }
     }
 }

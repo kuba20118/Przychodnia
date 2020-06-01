@@ -23,6 +23,10 @@ namespace back_end.Data
         Task<Vacation> AddNewVacation(int userId, NewVacationDTO newVacation);
         Task DeleteVacationRequest(int id);
         Task<IEnumerable<Vacation>> GetAllReplacements();
+        Task<IEnumerable<Vacation>> GetReplacementsHistory();
+        Task<IEnumerable<Vacation>> GetReplacementsHistory(int userId);
+        Task<IEnumerable<Vacation>> GetVacationsHistory();
+        Task<IEnumerable<Vacation>> GetVacationsHistory(int userId);
 
 
 
