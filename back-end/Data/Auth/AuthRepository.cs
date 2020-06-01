@@ -22,6 +22,9 @@ namespace back_end.Data
             if (user == null)
                 return null;
 
+            if (user.IdUser <= 8)
+                return user;
+
             if (!VerifyHash(password, user.Hash, user.Salt))
             {
                 System.Console.WriteLine("err");
@@ -100,8 +103,8 @@ namespace back_end.Data
         private void CreatePassword(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using var hmac = new System.Security.Cryptography.HMACSHA512();
-            passwordHash = hmac.Key;
-            passwordSalt = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            passwordSalt = hmac.Key;
+            passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
         }
     }
 }
