@@ -1,6 +1,17 @@
 import { WorkScheduleDayT, WorkScheduleGenerateDayT } from "./types";
 import { Event } from "react-big-calendar";
-import { differenceInHours, isSameDay, isSameWeek } from "date-fns";
+import {
+  differenceInHours,
+  isSameDay,
+  isSameWeek,
+  isSameMonth,
+  startOfWeek,
+  getDay,
+  addDays,
+  subDays,
+  getDayOfYear,
+  setDayOfYear,
+} from "date-fns";
 import formatToString from "../../utils/date/formatToString";
 
 const fullWeekLength = 7;
@@ -48,7 +59,7 @@ const createGenerateDayNull = (date: Date): WorkScheduleGenerateDayT => {
   return {
     fromTime: formatToString(date),
     toTime: formatToString(date),
-    type: "Praca",
+    type: undefined,
   };
 };
 
@@ -61,18 +72,25 @@ const getNextDay = (date: Date, num: number) => {
   return newDate;
 };
 
-export const prepareDaysToGenerate = (days: WorkScheduleGenerateDayT[]) => {
-  const lastWeekDays = getLastWeekDays(days);
+export const prepareDaysToGenerate = (
+  days: WorkScheduleGenerateDayT[],
+  currWeekFirstDayDate: Date
+) => {
+  const currWeekDays = getCurrWeekDays(days, currWeekFirstDayDate);
   const leftDays: WorkScheduleGenerateDayT[] = [];
 
-  for (let i = 0; i < fullWeekLength; i++) {
-    if (!(i in lastWeekDays)) {
-      const date = getNextDay(new Date(lastWeekDays[0].fromTime!), i);
+  const fullWeekDaysNums = [1, 2, 3, 4, 5, 6, 0];
+  fullWeekDaysNums.forEach((dayNum, i) => {
+    const currWeekDay = currWeekDays.find((day) => {
+      return dayNum === getDay(new Date(day.fromTime!));
+    });
+    if (!currWeekDay) {
+      const date = addDays(currWeekFirstDayDate, i);
       leftDays.push(createGenerateDayNull(date));
     }
-  }
+  });
 
-  return lastWeekDays.concat(leftDays).sort(sortDaysAscending);
+  return currWeekDays.concat(leftDays).sort(sortDaysAscending);
 };
 
 export const canCalendarDayBeUpdated = (
@@ -84,12 +102,31 @@ export const canCalendarDayBeUpdated = (
   );
 };
 
-export const getLastWeekDays = (
-  days: WorkScheduleGenerateDayT[]
+export const getCurrWeekDays = (
+  days: WorkScheduleGenerateDayT[],
+  currWeekFirstDayDate: Date
 ): WorkScheduleGenerateDayT[] => {
-  const lastDay = days.sort(sortDaysAscending)[days.length - 1];
-
   return days.filter((day) => {
-    return isSameWeek(new Date(day.fromTime!), new Date(lastDay.fromTime!));
+    return (
+      isSameWeek(new Date(day.fromTime!), currWeekFirstDayDate, {
+        weekStartsOn: 1,
+      }) && isSameMonth(new Date(day.fromTime!), currWeekFirstDayDate)
+    );
   });
+};
+
+export const workEventStyle = {
+  backgroundColor: "#007bff",
+  borderColor: "#007bff",
+};
+
+export const vacationEventStyle = {
+  backgroundColor: "#03c100",
+  borderColor: "#03c100",
+};
+
+export const subEventStyle = {
+  backgroundColor: "#ffd400",
+  borderColor: "#ffd400",
+  color: "#000",
 };

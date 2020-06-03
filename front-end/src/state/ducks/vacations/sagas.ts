@@ -15,6 +15,7 @@ import {
   createUserVacationRequestAsync,
   getUserVacationRequestsAsync,
   getUserLeftVacationsDaysAsync,
+  fetchAllPastVacationsAsync,
 } from "./actions";
 import apiCaller from "../../utils/apiHelper";
 import { UserIdT } from "../user/types";
@@ -34,6 +35,26 @@ function* handleFetchAllCurrentVacationsRequest() {
       yield put(fetchAllVacationsAsync.failure(err.message!));
     } else {
       yield put(fetchAllVacationsAsync.failure("An unknown error occured."));
+    }
+  }
+}
+
+function* handleFetchAllPastVacationsRequest() {
+  try {
+    const res: VacationsDataT[] | any = yield call(
+      apiCaller,
+      "GET",
+      "/vacation/history"
+    );
+
+    yield put(fetchAllPastVacationsAsync.success(res));
+  } catch (err) {
+    if (err instanceof Error) {
+      yield put(fetchAllPastVacationsAsync.failure(err.message!));
+    } else {
+      yield put(
+        fetchAllPastVacationsAsync.failure("An unknown error occured.")
+      );
     }
   }
 }
@@ -166,6 +187,13 @@ function* watchfetchAllCurrentVacationsRequest(): Generator {
   );
 }
 
+function* watchfetchAllPastVacationsRequest(): Generator {
+  yield takeEvery(
+    VacationsActionTypes.FETCH_ALL_PAST_VACATIONS,
+    handleFetchAllPastVacationsRequest
+  );
+}
+
 function* watchGetVacationsCategoriesRequest(): Generator {
   yield takeEvery(
     VacationsActionTypes.GET_VACATIONS_CATEGORIES,
@@ -207,6 +235,7 @@ function* watchGetUserLeftVacationsDaysRequest(): Generator {
 export default function* vacationsSaga() {
   yield all([
     fork(watchfetchAllCurrentVacationsRequest),
+    fork(watchfetchAllPastVacationsRequest),
     fork(watchGetVacationsCategoriesRequest),
     fork(watchGetUserVacationsRequest),
     fork(watchCreateUserVacationRequestRequest),

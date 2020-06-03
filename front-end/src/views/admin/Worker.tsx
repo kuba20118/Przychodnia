@@ -27,7 +27,6 @@ import UserCard from "../../components/card/CardUser";
 import { UserT } from "../../state/ducks/user/types";
 import { Row, Col } from "react-bootstrap";
 import AdminVacationsRequestForm from "../../components/vacations/AdminVacationsRequestForm";
-import { ISelectedWorkerVacationRequest } from "../../state/ducks/selected-worker/types";
 import { getPotentialsSubs } from "../../state/ducks/vacations/operations";
 
 const Worker: React.FC<IRouteComponentProps> = (props) => {

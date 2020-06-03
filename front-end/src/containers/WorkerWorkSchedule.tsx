@@ -21,11 +21,15 @@ import {
   prepareDaysToGenerate,
 } from "../state/ducks/work-schedule/operations";
 import { Event } from "react-big-calendar";
+import { startOfWeek } from "date-fns";
 
 const WorkerWorkSchedule: React.FC = () => {
   const dispatch = useDispatch();
   const [numOfWeeks, setNumOfWeeks] = useState<string>("1");
   const [calendarDays, setCalendarDays] = useState<Event[]>();
+  const [currentWeekFirstDayDate, setCurrentWeekFirstDayDate] = useState<Date>(
+    startOfWeek(new Date(), { weekStartsOn: 1 })
+  );
   const [deletedCalendarDays, setDeletedCalendarDays] = useState<Event[]>([]);
   const { workSchedule, user }: SelectedWorkerStateT = useSelector(
     ({ selectedWorker }: IApplicationState) => selectedWorker
@@ -45,9 +49,9 @@ const WorkerWorkSchedule: React.FC = () => {
     if (user?.data && calendarDays) {
       try {
         const dataDays = prepareDaysToGenerate(
-          tranformCalendarEventsToDays(calendarDays)
+          tranformCalendarEventsToDays(calendarDays),
+          currentWeekFirstDayDate
         );
-
         const generateWSData: ISelectedWorkerWorkScheduleCreateNew = {
           idUser: user.data?.idUser,
           day: dataDays,
@@ -81,6 +85,7 @@ const WorkerWorkSchedule: React.FC = () => {
         setCalendarDays={setCalendarDays}
         updateDay={updateDay}
         onDeleteCalendarDay={onDeleteCalendarDay}
+        setCurrentWeekFirstDayDate={setCurrentWeekFirstDayDate}
       />
       <Row className="pt-3">
         <Col className="text-right">

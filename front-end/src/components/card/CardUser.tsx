@@ -54,6 +54,10 @@ const UserCard: React.FC<UserCardPropsT> = ({ user = initialSelectedUser }) => {
                 : ""}
             </p>
             <p>
+              <b>Status zatrudnienia: </b>
+              {user!.currentyEmployed ? "pracuje" : "nie pracuje"}
+            </p>
+            <p>
               <b>Dziennie pracuje: </b>
               {user!.workingHours} godzin
             </p>

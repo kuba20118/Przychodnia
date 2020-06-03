@@ -21,6 +21,8 @@ import { UserT, UserIdT } from "../../state/ducks/user/types";
 import Card from "../../components/card/Card";
 import UserVacationsRequestForm from "../../components/user/UserVacationsRequestForm";
 import formatToString from "../../state/utils/date/formatToString";
+import { Row, Col } from "react-bootstrap";
+import VacationsLeftDays from "../../components/vacations/VacationsLeftDays";
 
 const tableHeader: CustomTableHeaderT = ["#", "Od", "Do", "Typ"];
 
@@ -65,17 +67,29 @@ const UserVacations: React.FC = () => {
 
   return (
     <div className="content">
-      <Card
-        title="Prośba o urlop"
-        content={
-          <UserVacationsRequestForm
-            leftVacationsDays={vacations.userLeftVacationsDays}
-            submitRequest={handleCreateVacationsRequest}
-            absenceCategories={vacations.categories}
-            isLoading={vacations.isLoadingUserVacationRequests}
+      <Row>
+        <Col md={3}>
+          <Card
+            title="Pozostałe dni urlopu"
+            content={
+              <VacationsLeftDays leftDays={vacations.userLeftVacationsDays} />
+            }
           />
-        }
-      />
+        </Col>
+        <Col md={9}>
+          <Card
+            title="Prośba o urlop"
+            content={
+              <UserVacationsRequestForm
+                leftVacationsDays={vacations.userLeftVacationsDays}
+                submitRequest={handleCreateVacationsRequest}
+                absenceCategories={vacations.categories}
+                isLoading={vacations.isLoadingUserVacationRequests}
+              />
+            }
+          />
+        </Col>
+      </Row>
       <Card
         title="Obecne urlopy"
         subtitle={``}
@@ -94,7 +108,11 @@ const UserVacations: React.FC = () => {
         subtitle={`Dane dotyczą wszystkich nieobecności.`}
         content={
           <div className="content">
-            <p>Historia jest pusta.</p>
+            {tableCurrentData && tableCurrentData!.length > 0 ? (
+              <CustomTable header={tableHeader} data={tableCurrentData} />
+            ) : (
+              <p>Obecnie nie masz żadnych urlopów.</p>
+            )}
           </div>
         }
       />

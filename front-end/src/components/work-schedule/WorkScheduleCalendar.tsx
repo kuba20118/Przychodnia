@@ -1,6 +1,11 @@
 import React from "react";
+import {
+  workEventStyle,
+  subEventStyle,
+  vacationEventStyle,
+} from "../../state/ducks/work-schedule/operations";
 import { Calendar, momentLocalizer, Event, Formats } from "react-big-calendar";
-import { isSameDay } from "date-fns";
+import { isSameDay, startOfWeek } from "date-fns";
 import moment from "moment";
 
 moment.locale("pl", {
@@ -34,6 +39,7 @@ export type WorkingScheduleCalendarPropsT = {
   readonly setCalendarDays: (days: Event[]) => void;
   readonly updateDay: (day: Event) => void;
   readonly onDeleteCalendarDay: (day: Event) => void;
+  readonly setCurrentWeekFirstDayDate: (date: Date) => void;
 };
 
 const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
@@ -42,6 +48,7 @@ const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
   setCalendarDays,
   updateDay,
   onDeleteCalendarDay,
+  setCurrentWeekFirstDayDate,
 }) => {
   const isSelectionOverlaping = (
     start: Date | string,
@@ -73,6 +80,13 @@ const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
         endAccessor="end"
         defaultView={"week"}
         selectable={true}
+        eventPropGetter={(event, start, end, isSelected) => {
+          if (event.title?.includes("Praca") || !event.title)
+            return { style: workEventStyle };
+          else if (event.title?.includes("Zastepstwo"))
+            return { style: subEventStyle };
+          else return { style: vacationEventStyle };
+        }}
         views={{
           week: true,
           work_week: true,
@@ -108,6 +122,9 @@ const WorkScheduleCalendar: React.FC<WorkingScheduleCalendarPropsT> = ({
             onDeleteCalendarDay(event);
             setCalendarDays(calendarDays.filter((e) => e !== event));
           }
+        }}
+        onNavigate={(date) => {
+          setCurrentWeekFirstDayDate(startOfWeek(date, { weekStartsOn: 1 }));
         }}
       />
     </>

@@ -1,6 +1,9 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllVacationsAsync } from "../../state/ducks/vacations/actions";
+import {
+  fetchAllVacationsAsync,
+  fetchAllPastVacationsAsync,
+} from "../../state/ducks/vacations/actions";
 import { VacationsDataT } from "../../state/ducks/vacations/types";
 import CustomTable, {
   CustomTableHeaderT,
@@ -20,47 +23,48 @@ const tableHeader: CustomTableHeaderT = [
   "Typ",
 ];
 
+const createTableData = (
+  users: UserT[],
+  vacations: VacationsDataT[]
+): CustomTableDataT =>
+  vacations.map((item, index) => {
+    const user: UserT | undefined = users.find((u) => {
+      return u.idUser == item.idUser;
+    });
+
+    if (user) {
+      const data = [
+        (index + 1).toString(),
+        user!.firstName || "",
+        user!.lastName || "",
+        format(new Date(item.fromDate), "dd-MM-yyyy"),
+        format(new Date(item.toDate), "dd-MM-yyyy"),
+        item.absenceType,
+      ];
+      return data;
+    }
+    return [];
+  });
+
 const Vacations: React.FC = () => {
   const dispatch = useDispatch();
 
-  const fetchAllVacations = useCallback(
-    () => dispatch(fetchAllVacationsAsync.request()),
-    [dispatch]
-  );
-
   useEffect(() => {
-    fetchAllVacations();
+    dispatch(fetchAllVacationsAsync.request());
+    dispatch(fetchAllPastVacationsAsync.request());
   }, []);
 
   const vacations: VacationsDataT[] | undefined = useSelector(
     ({ vacations }: IApplicationState) => vacations.allVacations
   );
 
+  const pastVacations: VacationsDataT[] | undefined = useSelector(
+    ({ vacations }: IApplicationState) => vacations.allPastVacations
+  );
+
   const users: UserT[] | undefined = useSelector(
     ({ user }: IApplicationState) => user.users
   );
-
-  const tableCurrentData: CustomTableDataT | undefined =
-    vacations &&
-    users &&
-    vacations!.map((item, index) => {
-      const user: UserT | undefined = users.find((u) => {
-        return u.idUser == item.idUser;
-      });
-
-      if (user) {
-        const data = [
-          (index + 1).toString(),
-          user!.firstName || "",
-          user!.lastName || "",
-          format(new Date(item.fromDate), "dd-MM-yyyy"),
-          format(new Date(item.toDate), "dd-MM-yyyy"),
-          item.absenceType,
-        ];
-        return data;
-      }
-      return [];
-    });
 
   return (
     <div className="content">
@@ -69,8 +73,11 @@ const Vacations: React.FC = () => {
         subtitle={`Dane dotyczą wszystkich użytkowników`}
         content={
           <div className="content">
-            {tableCurrentData && tableCurrentData!.length > 0 ? (
-              <CustomTable header={tableHeader} data={tableCurrentData} />
+            {users && vacations ? (
+              <CustomTable
+                header={tableHeader}
+                data={createTableData(users, vacations)}
+              />
             ) : (
               <p>Obecnie nie ma żadnych urlopów.</p>
             )}
@@ -82,7 +89,14 @@ const Vacations: React.FC = () => {
         subtitle={`Dane dotyczą wszystkich użytkowników`}
         content={
           <div className="content">
-            <p>Historia jest pusta.</p>
+            {users && vacations ? (
+              <CustomTable
+                header={tableHeader}
+                data={createTableData(users, pastVacations)}
+              />
+            ) : (
+              <p>Historia jest pusta.</p>
+            )}
           </div>
         }
       />

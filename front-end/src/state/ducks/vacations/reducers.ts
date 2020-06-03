@@ -10,6 +10,7 @@ import { TypeConstant, Action, PayloadAction } from "typesafe-actions";
 
 export const initialVacationsState: VacationsStateT = {
   allVacations: [],
+  allPastVacations: [],
   userVacations: [],
   userVacationRequests: [],
   userLeftVacationsDays: [],
@@ -39,6 +40,15 @@ export const vacationsReducer = (
       return { ...state, isLoading: false, allVacations: action.payload };
     }
     case VacationsActionTypes.FETCH_ALL_CURRENT_VACATIONS_ERROR: {
+      return { ...state, isLoading: false };
+    }
+    case VacationsActionTypes.FETCH_ALL_PAST_VACATIONS: {
+      return { ...state, isLoading: true };
+    }
+    case VacationsActionTypes.FETCH_ALL_PAST_VACATIONS_SUCCESS: {
+      return { ...state, isLoading: false, allPastVacations: action.payload };
+    }
+    case VacationsActionTypes.FETCH_ALL_PAST_VACATIONS_ERROR: {
       return { ...state, isLoading: false };
     }
     case VacationsActionTypes.GET_VACATIONS_CATEGORIES: {

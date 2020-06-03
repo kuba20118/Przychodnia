@@ -6,7 +6,6 @@ import {
   VacationRequestT,
   LeftVacationsDaysT,
   VacationRequestCreateT,
-  VacationRequestIdT,
 } from "./types";
 import { UserIdT } from "../user/types";
 
@@ -14,6 +13,12 @@ export const fetchAllVacationsAsync = createAsyncAction(
   VacationsActionTypes.FETCH_ALL_CURRENT_VACATIONS,
   VacationsActionTypes.FETCH_ALL_CURRENT_VACATIONS_SUCCESS,
   VacationsActionTypes.FETCH_ALL_CURRENT_VACATIONS_ERROR
+)<undefined, VacationsDataT[], string>();
+
+export const fetchAllPastVacationsAsync = createAsyncAction(
+  VacationsActionTypes.FETCH_ALL_PAST_VACATIONS,
+  VacationsActionTypes.FETCH_ALL_PAST_VACATIONS_SUCCESS,
+  VacationsActionTypes.FETCH_ALL_PAST_VACATIONS_ERROR
 )<undefined, VacationsDataT[], string>();
 
 export const getVacationsCategoriesAsync = createAsyncAction(

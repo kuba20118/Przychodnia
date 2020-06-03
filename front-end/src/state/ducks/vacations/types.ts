@@ -69,6 +69,7 @@ export type LeftVacationsDaysT = {
 
 export type VacationsStateT = {
   allVacations: VacationsDataT[];
+  allPastVacations: VacationsDataT[];
   userVacations: VacationsDataT[];
   userVacationRequests: VacationRequestT[];
   userLeftVacationsDays: LeftVacationsDaysT[];
@@ -82,6 +83,11 @@ export enum VacationsActionTypes {
   FETCH_ALL_CURRENT_VACATIONS = "@@vacations/FETCH_ALL_CURRENT_VACATIONS",
   FETCH_ALL_CURRENT_VACATIONS_SUCCESS = "@@vacations/FETCH_ALL_CURRENT_VACATIONS_SUCCESS",
   FETCH_ALL_CURRENT_VACATIONS_ERROR = "@@vacations/FETCH_ALL_CURRENT_VACATIONS_ERROR",
+
+  FETCH_ALL_PAST_VACATIONS = "@@vacations/FETCH_ALL_PAST_VACATIONS",
+  FETCH_ALL_PAST_VACATIONS_SUCCESS = "@@vacations/FETCH_ALL_PAST_VACATIONS_SUCCESS",
+  FETCH_ALL_PAST_VACATIONS_ERROR = "@@vacations/FETCH_ALL_PAST_VACATIONS_ERROR",
+
   GET_VACATIONS_CATEGORIES = "@@vacations/GET_VACATIONS_CATEGORIES",
   GET_VACATIONS_CATEGORIES_SUCCESS = "@@vacations/GET_VACATIONS_CATEGORIES_SUCCESS",
   GET_VACATIONS_CATEGORIES_ERROR = "@@vacations/GET_VACATIONS_CATEGORIES_ERROR",

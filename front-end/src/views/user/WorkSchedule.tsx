@@ -5,7 +5,12 @@ import { getUserWorkScheduleAsync } from "../../state/ducks/work-schedule/action
 import { IApplicationState } from "../../state/ducks";
 import { WorkScheduleDataT } from "../../state/ducks/work-schedule/types";
 import { Calendar, momentLocalizer, Event, Formats } from "react-big-calendar";
-import { tranformDaysToCalendarEvents } from "../../state/ducks/work-schedule/operations";
+import {
+  tranformDaysToCalendarEvents,
+  workEventStyle,
+  subEventStyle,
+  vacationEventStyle,
+} from "../../state/ducks/work-schedule/operations";
 import moment from "moment";
 
 moment.locale("pl", {
@@ -67,6 +72,12 @@ const WorkScheduleUserView: React.FC = () => {
         startAccessor="start"
         endAccessor="end"
         defaultView={"week"}
+        eventPropGetter={(event, start, end, isSelected) => {
+          if (event.title?.includes("Praca")) return { style: workEventStyle };
+          else if (event.title?.includes("Zastepstwo"))
+            return { style: subEventStyle };
+          else return { style: vacationEventStyle };
+        }}
         views={{
           week: true,
           work_week: true,
