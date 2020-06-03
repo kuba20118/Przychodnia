@@ -16,6 +16,7 @@ import {
   getUserVacationRequestsAsync,
   getUserLeftVacationsDaysAsync,
   fetchAllPastVacationsAsync,
+  addVacationCategoryAsync,
 } from "./actions";
 import apiCaller from "../../utils/apiHelper";
 import { UserIdT } from "../user/types";
@@ -87,6 +88,27 @@ function* handleGetVacationsCategoriesRequest() {
       yield put(
         getVacationsCategoriesAsync.failure("An unknown error occured.")
       );
+    }
+  }
+}
+
+function* handleAddVacationCategoryRequest(action: IReducerAction<string>) {
+  try {
+    const res: VacationsCategoryT | any = yield call(
+      apiCaller,
+      "POST",
+      "/dictionarydata/absences/add",
+      {
+        name: action.payload,
+      }
+    );
+
+    yield put(addVacationCategoryAsync.success(res));
+  } catch (err) {
+    if (err instanceof Error) {
+      yield put(addVacationCategoryAsync.failure(err.message!));
+    } else {
+      yield put(addVacationCategoryAsync.failure("An unknown error occured."));
     }
   }
 }
@@ -201,6 +223,13 @@ function* watchGetVacationsCategoriesRequest(): Generator {
   );
 }
 
+function* watchAddVacationCategoryRequest(): Generator {
+  yield takeEvery(
+    VacationsActionTypes.ADD_VACATION_CATEGORY,
+    handleAddVacationCategoryRequest
+  );
+}
+
 function* watchGetUserVacationsRequest(): Generator {
   yield takeEvery(
     VacationsActionTypes.GET_USER_VACATIONS,
@@ -237,6 +266,7 @@ export default function* vacationsSaga() {
     fork(watchfetchAllCurrentVacationsRequest),
     fork(watchfetchAllPastVacationsRequest),
     fork(watchGetVacationsCategoriesRequest),
+    fork(watchAddVacationCategoryRequest),
     fork(watchGetUserVacationsRequest),
     fork(watchCreateUserVacationRequestRequest),
     fork(watchGetUserVacationRequestsRequest),

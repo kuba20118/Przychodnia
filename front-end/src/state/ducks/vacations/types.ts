@@ -77,6 +77,7 @@ export type VacationsStateT = {
   isLoading: boolean;
   isLoadingUserVacations: boolean;
   isLoadingUserVacationRequests: boolean;
+  isLoadingAddCategory: boolean;
 };
 
 export enum VacationsActionTypes {
@@ -91,6 +92,11 @@ export enum VacationsActionTypes {
   GET_VACATIONS_CATEGORIES = "@@vacations/GET_VACATIONS_CATEGORIES",
   GET_VACATIONS_CATEGORIES_SUCCESS = "@@vacations/GET_VACATIONS_CATEGORIES_SUCCESS",
   GET_VACATIONS_CATEGORIES_ERROR = "@@vacations/GET_VACATIONS_CATEGORIES_ERROR",
+
+  ADD_VACATION_CATEGORY = "@@vacations/ADD_VACATION_CATEGORY",
+  ADD_VACATION_CATEGORY_SUCCESS = "@@vacations/ADD_VACATION_CATEGORY_SUCCESS",
+  ADD_VACATION_CATEGORY_ERROR = "@@vacations/ADD_VACATION_CATEGORY_ERROR",
+
   GET_USER_VACATIONS = "@@user/GET_USER_VACATIONS",
   GET_USER_VACATIONS_SUCCESS = "@@user/GET_USER_VACATIONS_SUCCESS",
   GET_USER_VACATIONS_ERROR = "@@user/GET_USER_VACATIONS_ERROR",

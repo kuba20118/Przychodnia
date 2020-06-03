@@ -2,7 +2,8 @@ import { RoleStateT, RoleT, RoleActionTypes } from "./types";
 import { TypeConstant, Action, PayloadAction } from "typesafe-actions";
 
 export const initialRoleState: RoleStateT = {
-  roles: []
+  roles: [],
+  isLoadingAdd: false,
 };
 
 export const roleReducer = (
@@ -20,13 +21,17 @@ export const roleReducer = (
       return { ...state };
     }
     case RoleActionTypes.ADD_ROLE: {
-      return { ...state };
+      return { ...state, isLoadingAdd: true };
     }
     case RoleActionTypes.ADD_ROLE_SUCCESS: {
-      return { ...state, roles: [...state.roles, action.payload] };
+      return {
+        ...state,
+        isLoadingAdd: false,
+        roles: [...state.roles, action.payload],
+      };
     }
     case RoleActionTypes.ADD_ROLE_ERROR: {
-      return { ...state };
+      return { ...state, isLoadingAdd: false };
     }
     default:
       return state;

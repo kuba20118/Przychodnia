@@ -5,6 +5,7 @@ export type RoleT = {
 
 export type RoleStateT = {
   roles: RoleT[];
+  isLoadingAdd: boolean;
 };
 
 export const AllRightsRoles = ["Admin", "Kierownik"];

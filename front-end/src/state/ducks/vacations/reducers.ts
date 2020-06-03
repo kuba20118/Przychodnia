@@ -18,6 +18,7 @@ export const initialVacationsState: VacationsStateT = {
   isLoading: false,
   isLoadingUserVacations: false,
   isLoadingUserVacationRequests: false,
+  isLoadingAddCategory: false,
 };
 
 export const vacationsReducer = (
@@ -27,6 +28,7 @@ export const vacationsReducer = (
       TypeConstant,
       VacationsDataT[] &
         VacationsCategoryT[] &
+        VacationsCategoryT &
         VacationRequestT[] &
         VacationRequestT &
         LeftVacationsDaysT[]
@@ -59,6 +61,19 @@ export const vacationsReducer = (
     }
     case VacationsActionTypes.GET_VACATIONS_CATEGORIES_ERROR: {
       return { ...state, isLoading: false };
+    }
+    case VacationsActionTypes.ADD_VACATION_CATEGORY: {
+      return { ...state, isLoadingAddCategory: true };
+    }
+    case VacationsActionTypes.ADD_VACATION_CATEGORY_SUCCESS: {
+      return {
+        ...state,
+        isLoadingAddCategory: false,
+        categories: [...state.categories, action.payload],
+      };
+    }
+    case VacationsActionTypes.ADD_VACATION_CATEGORY_ERROR: {
+      return { ...state, isLoadingAddCategory: false };
     }
     case VacationsActionTypes.GET_USER_VACATIONS: {
       return { ...state, isLoadingUserVacations: true };

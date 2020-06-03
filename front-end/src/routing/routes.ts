@@ -13,6 +13,7 @@ import WorkerEdit from "../containers/WorkerEdit";
 import Help from "../views/Help";
 import VacationsUserView from "../views/user/Vacations";
 import WorkScheduleUserView from "../views/user/WorkSchedule";
+import DictionaryData from "../views/admin/DictionaryData";
 
 export interface IRouteComponentProps extends RouteProps {
   childrenRoutes?: RoutesType[];
@@ -91,6 +92,13 @@ export const adminRoutes: RoutesType = {
       description:
         "Stwórz nowego użytkownika przypisując mu odpowiednie dane oraz rolę.",
       component: Registration,
+      layout: "/admin",
+    },
+    {
+      path: "/edycja-danych",
+      name: "Edycja danych",
+      description: "Edytuj dane, które są zapisane w systemie.",
+      component: DictionaryData,
       layout: "/admin",
     },
   ],

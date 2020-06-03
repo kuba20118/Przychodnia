@@ -14,7 +14,7 @@ function* handleFetchRole() {
 
     const Role: RoleT[] = res.map((role: any) => ({
       idRole: role.idRole,
-      name: role.name
+      name: role.name,
     }));
 
     yield put(fetchRoleAsync.success(Role));
@@ -27,20 +27,18 @@ function* handleFetchRole() {
   }
 }
 
-function* handleAddRole(action: IReducerAction<RoleT>) {
+function* handleAddRole(action: IReducerAction<string>) {
   try {
     const res: any = yield call(
       apiCaller,
       "POST",
-      `/dictionarydata/Role/add`,
-      {}
+      `/dictionarydata/roles/add`,
+      {
+        name: action.payload,
+      }
     );
 
-    if (res.errors) {
-      throw Error(res.errors.id[0]);
-    }
-
-    // yield put(addRoleAsync.success(res));
+    yield put(addRoleAsync.success(res));
   } catch (err) {
     if (err instanceof Error) {
       yield put(addRoleAsync.failure(err.message!));

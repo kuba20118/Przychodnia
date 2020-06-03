@@ -17,4 +17,4 @@ export const addRoleAsync = createAsyncAction(
   RoleActionTypes.ADD_ROLE,
   RoleActionTypes.ADD_ROLE_SUCCESS,
   RoleActionTypes.ADD_ROLE_ERROR
-)<RoleT, undefined, string>();
+)<string, RoleT, string>();

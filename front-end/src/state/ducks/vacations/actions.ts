@@ -27,6 +27,12 @@ export const getVacationsCategoriesAsync = createAsyncAction(
   VacationsActionTypes.GET_VACATIONS_CATEGORIES_ERROR
 )<undefined, VacationsCategoryT[], string>();
 
+export const addVacationCategoryAsync = createAsyncAction(
+  VacationsActionTypes.ADD_VACATION_CATEGORY,
+  VacationsActionTypes.ADD_VACATION_CATEGORY_SUCCESS,
+  VacationsActionTypes.ADD_VACATION_CATEGORY_ERROR
+)<string, VacationsCategoryT, string>();
+
 export const getUserVacationsAsync = createAsyncAction(
   VacationsActionTypes.GET_USER_VACATIONS,
   VacationsActionTypes.GET_USER_VACATIONS_SUCCESS,
