@@ -27,7 +27,7 @@ namespace back_end.Data
         Task<IEnumerable<Vacation>> GetReplacementsHistory(int userId);
         Task<IEnumerable<Vacation>> GetVacationsHistory();
         Task<IEnumerable<Vacation>> GetVacationsHistory(int userId);
-
+        Task<List<ChartData>> GetStats();
 
 
 

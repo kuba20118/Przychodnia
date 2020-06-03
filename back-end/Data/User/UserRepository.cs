@@ -256,5 +256,82 @@ namespace back_end.Data
 
             return history;
         }
+        private async Task<IEnumerable<Vacation>> AllVacs()
+        {
+            var vacs = await _context.Vacation
+                .Include(x => x.IdAbsenceVacNavigation)
+                .Where(x => x.IdAbsenceVacNavigation.Name != "Zastepstwo")
+                .ToListAsync();
+
+            return vacs;
+        }
+
+        public async Task<List<ChartData>> GetStats()
+        {
+            var list1 = VacationDaysToList(await AllVacs());
+            var months = new int[12];
+            foreach (var item in list1)
+                months[item.FromTime.Month-1]++;
+
+            var monthsList = new List<Tuple<string, int>>
+            {
+                new Tuple<string, int>("Styczeń",months[0]),
+                new Tuple<string, int>("Luty",months[1]),
+                new Tuple<string, int>("Marzec",months[2]),
+                new Tuple<string, int>("Kwiecień",months[3]),
+                new Tuple<string, int>("Maj",months[4]),
+                new Tuple<string, int>("Czerwiec",months[5]),
+                new Tuple<string, int>("Lipiec",months[6]),
+                new Tuple<string, int>("Sierpień",months[7]),
+                new Tuple<string, int>("Wrzesień",months[8]),
+                new Tuple<string, int>("Październik",months[9]),
+                new Tuple<string, int>("Listopad",months[10]),
+                new Tuple<string, int>("Grudzień",months[11])
+            };
+
+            var vacsMonths = new ChartData
+            {
+                Title = "Urlopy",
+                Key = "vacations",
+                ChartType = "Bar",
+                Data = Unpack(monthsList)
+            };
+
+            var chartsList = new List<ChartData> { vacsMonths};
+            return chartsList;
+        }
+
+        public List<Day> VacationDaysToList(IEnumerable<Vacation> vacs)
+        {
+            var dayList = new List<Day>();
+            foreach (var vac in vacs)
+            {
+                var days = vac.ToDate.DayOfYear - vac.FromDate.DayOfYear + 1;
+                for (int i = 0; i < days; i++)
+                {
+                    var fromTime = vac.FromDate.AddDays(i);
+                    var toTime = fromTime.AddHours(23).AddMinutes(59).AddSeconds(59);
+
+                    var newDay = new Day
+                    {
+                        FromTime = fromTime,
+                        ToTime = toTime,
+                        Type = ""
+                    };
+                    dayList.Add(newDay);
+                }
+            }
+            return dayList;
+        }
+        Tuple<List<A>, List<B>> Unpack<A, B>(List<Tuple<A, B>> list)
+        {
+            return list.Aggregate(Tuple.Create(new List<A>(list.Count), new List<B>(list.Count)),
+            (unpacked, tuple) =>
+            {
+                unpacked.Item1.Add(tuple.Item1);
+                unpacked.Item2.Add(tuple.Item2);
+                return unpacked;
+            });
+        }
     }
 }
