@@ -153,6 +153,7 @@ const UserVacationsRequestForm: React.FC<UserVactionRequestFormType> = ({
                       name="fromDate"
                       value={values.fromDate}
                       onChange={handleChange}
+                      minDate={new Date()}
                     />
                     {touched.fromDate && errors.fromDate ? (
                       <div className="error-message">{errors.fromDate}</div>

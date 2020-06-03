@@ -165,6 +165,7 @@ const VacationsForm: React.FC<VacationsFormPropsT> = ({
                       name="fromDate"
                       value={values.fromDate}
                       onChange={handleChange}
+                      minDate={new Date()}
                     />
                     {touched.fromDate && errors.fromDate ? (
                       <div className="error-message">{errors.fromDate}</div>
