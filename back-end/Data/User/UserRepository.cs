@@ -112,7 +112,7 @@ namespace back_end.Data
         {
             var daysLeft = await _context.Leftvacationdays
                                     .Where(u => u.IdUser == userId)
-                                    //.Where(v => v.IdAbsenceNavigation.Name != "L4")
+                                    .Where(v => v.IdAbsenceNavigation.Name != "Zadanie")
                                     .Include(u => u.IdUserNavigation)
                                     .Include(a => a.IdAbsenceNavigation)
                                     .ToListAsync();
@@ -333,5 +333,6 @@ namespace back_end.Data
                 return unpacked;
             });
         }
+
     }
 }
