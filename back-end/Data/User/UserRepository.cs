@@ -113,6 +113,7 @@ namespace back_end.Data
             var daysLeft = await _context.Leftvacationdays
                                     .Where(u => u.IdUser == userId)
                                     .Where(v => v.IdAbsenceNavigation.Name != "Zadanie")
+                                    .Where(v => v.IdAbsenceNavigation.Name != "Zastepstwo")
                                     .Include(u => u.IdUserNavigation)
                                     .Include(a => a.IdAbsenceNavigation)
                                     .ToListAsync();
@@ -172,7 +173,6 @@ namespace back_end.Data
             return newVac;
 
         }
-
         public async Task<IEnumerable<Vacationrequest>> GetUserRequests(int userId)
         {
             var requests = await _context.Vacationrequest
@@ -203,7 +203,6 @@ namespace back_end.Data
 
             return repls;
         }
-
         public async Task<IEnumerable<Vacation>> GetReplacementsHistory()
         {
             var history = await _context.Vacation
@@ -215,7 +214,6 @@ namespace back_end.Data
 
             return history;
         }
-
         public async Task<IEnumerable<Vacation>> GetReplacementsHistory(int userId)
         {
             var history = await _context.Vacation
@@ -228,7 +226,6 @@ namespace back_end.Data
 
             return history;
         }
-
         public async Task<IEnumerable<Vacation>> GetVacationsHistory()
         {
             var history = await _context.Vacation
@@ -240,7 +237,6 @@ namespace back_end.Data
 
             return history;
         }
-
         public async Task<IEnumerable<Vacation>> GetVacationsHistory(int userId)
         {
             var history = await _context.Vacation
@@ -262,7 +258,6 @@ namespace back_end.Data
 
             return vacs;
         }
-
         public async Task<List<ChartData>> GetStats()
         {
             var list1 = VacationDaysToList(await AllVacs());
@@ -297,7 +292,6 @@ namespace back_end.Data
             var chartsList = new List<ChartData> { vacsMonths };
             return chartsList;
         }
-
         public List<Day> VacationDaysToList(IEnumerable<Vacation> vacs)
         {
             var dayList = new List<Day>();
