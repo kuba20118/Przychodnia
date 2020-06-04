@@ -92,12 +92,20 @@ namespace back_end.Data
                         dayList.Add(newDay);
                         await _context.Day.AddAsync(newDay);
                     }
-                    //else if (currentDay.Type == "Praca")
-                    //{
-                    //    newDay = currentDay;
-                    //    dayList.Add(newDay);
-                    //    await _context.Day.AddAsync(newDay);
-                    //}
+                    else if (currentDay.Type == "Praca")
+                    {
+                        newDay = new Day
+                        {
+                            FromTime = fromTime,
+                            ToTime = toTime,
+                            IdWsNavigation = ws,
+                            Type = "Praca"
+                        };
+
+                        _context.Remove(currentDay);
+                        dayList.Add(newDay);
+                        await _context.Day.AddAsync(newDay);
+                    }
                 }
                 ws.IdUserNavigation = user;
                 ws.Day = dayList;
@@ -200,12 +208,20 @@ namespace back_end.Data
                             dayList.Add(newDay);
                             await _context.Day.AddAsync(newDay);
                         }
-                        //else if (currentDay.Type == "Praca")
-                        //{
-                        //    newDay = currentDay;
-                        //    dayList.Add(newDay);
-                        //    await _context.Day.AddAsync(newDay);
-                        //}
+                        else if (currentDay.Type == "Praca")
+                        {
+                            newDay = new Day
+                            {
+                                FromTime = fromTime,
+                                ToTime = toTime,
+                                IdWsNavigation = ws,
+                                Type = "Praca"
+                            };
+
+                            _context.Remove(currentDay);
+                            dayList.Add(newDay);
+                            await _context.Day.AddAsync(newDay);
+                        }
                     }
                     ws.IdUserNavigation = user;
                     ws.Day = dayList;
