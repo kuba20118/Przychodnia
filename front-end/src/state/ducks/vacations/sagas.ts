@@ -7,6 +7,7 @@ import {
   VacationRequestCreateT,
   LeftVacationsDaysT,
   VacationRequestIdT,
+  VacationCategoryCreateT,
 } from "./types";
 import {
   fetchAllVacationsAsync,
@@ -17,6 +18,7 @@ import {
   getUserLeftVacationsDaysAsync,
   fetchAllPastVacationsAsync,
   addVacationCategoryAsync,
+  getAllUsersLeftVacationsDaysAsync,
 } from "./actions";
 import apiCaller from "../../utils/apiHelper";
 import { UserIdT } from "../user/types";
@@ -92,14 +94,17 @@ function* handleGetVacationsCategoriesRequest() {
   }
 }
 
-function* handleAddVacationCategoryRequest(action: IReducerAction<string>) {
+function* handleAddVacationCategoryRequest(
+  action: IReducerAction<VacationCategoryCreateT>
+) {
   try {
     const res: VacationsCategoryT | any = yield call(
       apiCaller,
       "POST",
       "/dictionarydata/absences/add",
       {
-        name: action.payload,
+        name: action.payload.name,
+        limit: action.payload.limit,
       }
     );
 
@@ -202,6 +207,26 @@ function* handleGetUserLeftVacationsDaysRequest(
   }
 }
 
+function* handleGetAllUsersLeftVacationsDaysRequest() {
+  try {
+    const res: LeftVacationsDaysT[] | any = yield call(
+      apiCaller,
+      "GET",
+      `/users/vacations/left/all`
+    );
+
+    yield put(getAllUsersLeftVacationsDaysAsync.success(res));
+  } catch (err) {
+    if (err instanceof Error) {
+      yield put(getAllUsersLeftVacationsDaysAsync.failure(err.message!));
+    } else {
+      yield put(
+        getAllUsersLeftVacationsDaysAsync.failure("An unknown error occured.")
+      );
+    }
+  }
+}
+
 function* watchfetchAllCurrentVacationsRequest(): Generator {
   yield takeEvery(
     VacationsActionTypes.FETCH_ALL_CURRENT_VACATIONS,
@@ -258,6 +283,13 @@ function* watchGetUserLeftVacationsDaysRequest(): Generator {
   );
 }
 
+function* watchGetAllUsersLeftVacationsDaysRequest(): Generator {
+  yield takeEvery(
+    VacationsActionTypes.GET_VACATIONS_LEFT_ALL,
+    handleGetAllUsersLeftVacationsDaysRequest
+  );
+}
+
 /**
  * @desc saga init, forks in effects, other sagas
  */
@@ -271,5 +303,6 @@ export default function* vacationsSaga() {
     fork(watchCreateUserVacationRequestRequest),
     fork(watchGetUserVacationRequestsRequest),
     fork(watchGetUserLeftVacationsDaysRequest),
+    fork(watchGetAllUsersLeftVacationsDaysRequest),
   ]);
 }

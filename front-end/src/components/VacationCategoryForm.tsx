@@ -4,21 +4,25 @@ import LoadingButton from "./LoadingButton";
 import FormikWithRef from "./helpers/FormikWithRef";
 import * as Yup from "yup";
 import { FormikProps } from "formik";
-import { RoleT } from "../state/ducks/role/types";
-import { VacationsCategoryT } from "../state/ducks/vacations/types";
+import {
+  VacationsCategoryT,
+  VacationCategoryCreateT,
+} from "../state/ducks/vacations/types";
 
 const initialValuesForm = {
-  category: "",
+  name: "",
+  limit: 0,
 };
 
 const validationSchema = Yup.object().shape({
-  category: Yup.string().required("*To pole jest wymagane"),
+  name: Yup.string().required("*To pole jest wymagane"),
+  limit: Yup.number().required("*To pole jest wymagane"),
 });
 
 type UserVactionRequestFormType = {
   readonly isLoading: boolean;
   readonly categories: VacationsCategoryT[];
-  readonly submitRequest: (categoryName: string) => void;
+  readonly submitRequest: (vacationCategory: VacationCategoryCreateT) => void;
 };
 
 const VacationCategoryForm: React.FC<UserVactionRequestFormType> = ({
@@ -43,7 +47,7 @@ const VacationCategoryForm: React.FC<UserVactionRequestFormType> = ({
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(true);
-          submitRequest(values.category);
+          submitRequest(values);
         }}
       >
         {({
@@ -60,20 +64,35 @@ const VacationCategoryForm: React.FC<UserVactionRequestFormType> = ({
               <Row>
                 <Col>
                   <FormGroup>
-                    <Form.Label>Typ urlopu</Form.Label>
+                    <Form.Label>Nazwa nieobecności</Form.Label>
 
                     <Form.Control
                       type="text"
-                      name="category"
+                      name="name"
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      value={values.category}
-                      className={
-                        touched.category && errors.category ? "error" : ""
-                      }
+                      value={values.name}
+                      className={touched.name && errors.name ? "error" : ""}
                     />
-                    {touched.category && errors.category ? (
-                      <div className="error-message">{errors.category}</div>
+                    {touched.name && errors.name ? (
+                      <div className="error-message">{errors.name}</div>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+                <Col>
+                  <FormGroup>
+                    <Form.Label>Roczny limit dni</Form.Label>
+
+                    <Form.Control
+                      type="number"
+                      name="limit"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.limit}
+                      className={touched.limit && errors.limit ? "error" : ""}
+                    />
+                    {touched.limit && errors.limit ? (
+                      <div className="error-message">{errors.limit}</div>
                     ) : null}
                   </FormGroup>
                 </Col>

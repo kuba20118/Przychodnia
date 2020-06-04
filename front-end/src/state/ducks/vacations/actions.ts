@@ -6,6 +6,8 @@ import {
   VacationRequestT,
   LeftVacationsDaysT,
   VacationRequestCreateT,
+  VacationCategoryCreateT,
+  UserLeftVacationDays,
 } from "./types";
 import { UserIdT } from "../user/types";
 
@@ -31,7 +33,7 @@ export const addVacationCategoryAsync = createAsyncAction(
   VacationsActionTypes.ADD_VACATION_CATEGORY,
   VacationsActionTypes.ADD_VACATION_CATEGORY_SUCCESS,
   VacationsActionTypes.ADD_VACATION_CATEGORY_ERROR
-)<string, VacationsCategoryT, string>();
+)<VacationCategoryCreateT, VacationsCategoryT, string>();
 
 export const getUserVacationsAsync = createAsyncAction(
   VacationsActionTypes.GET_USER_VACATIONS,
@@ -50,6 +52,12 @@ export const getUserLeftVacationsDaysAsync = createAsyncAction(
   VacationsActionTypes.GET_USER_LEFT_VACATIONS_DAYS_SUCCESS,
   VacationsActionTypes.GET_USER_LEFT_VACATIONS_DAYS_ERROR
 )<UserIdT, LeftVacationsDaysT[], string>();
+
+export const getAllUsersLeftVacationsDaysAsync = createAsyncAction(
+  VacationsActionTypes.GET_VACATIONS_LEFT_ALL,
+  VacationsActionTypes.GET_VACATIONS_LEFT_ALL_SUCCESS,
+  VacationsActionTypes.GET_VACATIONS_LEFT_ALL_ERROR
+)<undefined, UserLeftVacationDays[], string>();
 
 export const getUserVacationRequestsAsync = createAsyncAction(
   VacationsActionTypes.GET_USER_VACATION_REQUESTS,

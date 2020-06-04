@@ -6,7 +6,10 @@ import { Row, Col } from "react-bootstrap";
 import RoleList from "../../components/RoleList";
 import VacationCategoryList from "../../components/VacationCategoryList";
 import Card from "../../components/card/Card";
-import { VacationsStateT } from "../../state/ducks/vacations/types";
+import {
+  VacationsStateT,
+  VacationCategoryCreateT,
+} from "../../state/ducks/vacations/types";
 import { fetchRoleAsync, addRoleAsync } from "../../state/ducks/role/actions";
 import {
   getVacationsCategoriesAsync,
@@ -35,8 +38,8 @@ const DictionaryData: React.FC = ({}) => {
   );
 
   const addVacationCategory = useCallback(
-    (categoryName: string) =>
-      dispatch(addVacationCategoryAsync.request(categoryName)),
+    (vacationCategory: VacationCategoryCreateT) =>
+      dispatch(addVacationCategoryAsync.request(vacationCategory)),
     [dispatch]
   );
 

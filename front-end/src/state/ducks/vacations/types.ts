@@ -13,6 +13,11 @@ export type VacationsCategoryT = {
   limit: number;
 };
 
+export type VacationCategoryCreateT = {
+  name: string;
+  limit: number;
+};
+
 export type VacationsFormDataT = {
   fromDate: Date;
   toDate: Date;
@@ -67,12 +72,19 @@ export type LeftVacationsDaysT = {
   vacationType: string;
 };
 
+export type UserLeftVacationDays = {
+  firstName: string;
+  lastName: string;
+  daysLeft: LeftVacationsDaysT[];
+};
+
 export type VacationsStateT = {
   allVacations: VacationsDataT[];
   allPastVacations: VacationsDataT[];
   userVacations: VacationsDataT[];
   userVacationRequests: VacationRequestT[];
   userLeftVacationsDays: LeftVacationsDaysT[];
+  allUsersLeftVacationDays: UserLeftVacationDays[];
   categories: VacationsCategoryT[];
   isLoading: boolean;
   isLoadingUserVacations: boolean;
@@ -92,6 +104,10 @@ export enum VacationsActionTypes {
   GET_VACATIONS_CATEGORIES = "@@vacations/GET_VACATIONS_CATEGORIES",
   GET_VACATIONS_CATEGORIES_SUCCESS = "@@vacations/GET_VACATIONS_CATEGORIES_SUCCESS",
   GET_VACATIONS_CATEGORIES_ERROR = "@@vacations/GET_VACATIONS_CATEGORIES_ERROR",
+
+  GET_VACATIONS_LEFT_ALL = "@@vacations/GET_VACATIONS_LEFT_ALL",
+  GET_VACATIONS_LEFT_ALL_SUCCESS = "@@vacations/GET_VACATIONS_LEFT_ALL_SUCCESS",
+  GET_VACATIONS_LEFT_ALL_ERROR = "@@vacations/GET_VACATIONS_LEFT_ALL_ERROR",
 
   ADD_VACATION_CATEGORY = "@@vacations/ADD_VACATION_CATEGORY",
   ADD_VACATION_CATEGORY_SUCCESS = "@@vacations/ADD_VACATION_CATEGORY_SUCCESS",

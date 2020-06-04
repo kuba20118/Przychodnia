@@ -9,58 +9,45 @@ import { useSelector, useDispatch } from "react-redux";
 import { IApplicationState } from "../../state/ducks";
 import { UserT } from "../../state/ducks/user/types";
 import { fetchAllVacationsAsync } from "../../state/ducks/vacations/actions";
+import { getStatsAsync } from "../../state/ducks/stats/actions";
+import { ChartDataT } from "../../state/ducks/stats/types";
 
 const Dashboard: React.FC = () => {
   const dispatch = useDispatch();
 
   const users: UserT[] | undefined = useSelector(
-    (state: IApplicationState) => state.user.users
+    ({ user }: IApplicationState) => user.users
+  );
+
+  const stats: ChartDataT | undefined = useSelector(
+    ({ stats }: IApplicationState) => stats.stats[0]
   );
 
   useEffect(() => {
     dispatch(fetchAllVacationsAsync.request());
-  });
+    dispatch(getStatsAsync.request());
+  }, []);
 
-  const barData = {
-    labels: [
-      "Styczeń",
-      "Luty",
-      "Marzec",
-      "Kwiecień",
-      "Maj",
-      "Czerwiec",
-      "Lipiec",
-      "Sierpień",
-      "Wrzesień",
-      "Październik",
-      "Listopad",
-      "Grudzień",
-    ],
+  const createBarData = (
+    title?: string,
+    labels?: string[],
+    values?: number[]
+  ) => ({
+    labels: labels ? labels : [],
     datasets: [
       {
-        label: "Urlop w dniach",
+        label: title ? title : "",
         backgroundColor: "#71dce4",
         barPercentage: 0.5,
         barThickness: 6,
         maxBarThickness: 8,
         minBarLength: 2,
-        data: [
-          { x: 1, y: 245 },
-          { x: 2, y: 243 },
-          { x: 3, y: 177 },
-          { x: 4, y: 87 },
-          { x: 5, y: 44 },
-          { x: 6, y: 33 },
-          { x: 7, y: 240 },
-          { x: 8, y: 299 },
-          { x: 9, y: 121 },
-          { x: 10, y: 55 },
-          { x: 11, y: 77 },
-          { x: 12, y: 99 },
-        ],
+        data: values ? values : [],
       },
     ],
-  };
+  });
+
+  console.log(createBarData(stats.title, stats.data?.item1, stats.data?.item2));
 
   const data = {
     labels: ["Wykorzystany urlop", "Pozostały urlop"],
@@ -71,18 +58,6 @@ const Dashboard: React.FC = () => {
       },
     ],
   };
-
-  // var options = {
-  //   high: 10,
-  //   low: -10,
-  //   axisX: {
-  //     labelInterpolationFnc: function(value: number, index: number) {
-  //       return index % 2 === 0 ? value : null;
-  //     }
-  //   }
-  // };
-
-  // var type = "Bar";
 
   // const allUsersNum = users && users.length;
   const workersNum =
@@ -145,7 +120,14 @@ const Dashboard: React.FC = () => {
               title="Wykorzystanie urlopów w danym miesiącu"
               subtitle="Dane dotyczą wszystkich użytkowników w biężącym roku "
               content={
-                <Bar data={barData} options={{ maintainAspectRatio: true }} />
+                <Bar
+                  data={createBarData(
+                    stats.title,
+                    stats.data?.item1,
+                    stats.data?.item2
+                  )}
+                  options={{ maintainAspectRatio: true }}
+                />
               }
             />
           </Col>

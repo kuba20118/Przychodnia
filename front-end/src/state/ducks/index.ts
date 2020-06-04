@@ -25,6 +25,9 @@ import workScheduleSaga from "./work-schedule/sagas";
 import { SubstitutionStateT } from "./substitution/types";
 import { substitutionReducer } from "./substitution/reducers";
 import substitutionSaga from "./substitution/sagas";
+import { StatsStateT } from "./stats/types";
+import { statsReducer } from "./stats/reducers";
+import statsSaga from "./stats/sagas";
 
 export interface IApplicationState {
   authentication: AuthStateT;
@@ -35,6 +38,7 @@ export interface IApplicationState {
   role: RoleStateT;
   alert: AlertStateT;
   substitution: SubstitutionStateT;
+  stats: StatsStateT;
 }
 
 export interface IReducerAction<TPayload>
@@ -50,6 +54,7 @@ export const rootReducer = combineReducers<IApplicationState>({
   role: roleReducer,
   alert: alertReducer,
   substitution: substitutionReducer,
+  stats: statsReducer,
 });
 
 export function* rootSaga() {
@@ -62,5 +67,6 @@ export function* rootSaga() {
     fork(roleSaga),
     fork(alertSaga),
     fork(substitutionSaga),
+    fork(statsSaga),
   ]);
 }
