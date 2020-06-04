@@ -50,8 +50,14 @@ namespace back_end.Controllers
             var roleToReturn = await _repo.AddRole(newRole.Name);
             return Ok(roleToReturn);
         }
+        [HttpPost("absences/add")]
+        public async Task<IActionResult> AddAbsenceType(Absence newAbsence)
+        {
+            var typeToReturn = await _repo.AddAbsenceType(newAbsence.Name, newAbsence.Limit);
+            return Ok(typeToReturn);
+        }
 
-        [HttpPut("roles/{id}/update")]
+        [HttpPut("roles/update/{id}")]
         public async Task<IActionResult> UpdateRole(int id, Role newName)
         {
             var rolesFromRepo = await _repo.GetRole(id);
@@ -59,10 +65,16 @@ namespace back_end.Controllers
             if (rolesFromRepo == null)
                 return Content("Błędne roleId");
 
+            if (id <= 4)
+                return Content("Nie można zmienić podstawowych ról");
+
+            if (rolesFromRepo.Name == newName.Name)
+                return Content("Podaj nową nazwę");
+
             rolesFromRepo.Name = newName.Name;
 
             if (await _repo.SaveAll())
-                return Content("Zapisano zmiany");
+                return NoContent();
 
             throw new Exception($"Błąd aktualizacji roli o id: {id}");
         }
@@ -74,6 +86,28 @@ namespace back_end.Controllers
             var absencesToReturn = _mapper.Map<IEnumerable<AbsenceDTO>>(absencesFromRepo);
 
             return Ok(absencesToReturn);
+        }
+
+        [HttpPut("absences/update/{id}")]
+        public async Task<IActionResult> UpdateAbsence(int id, Absence newName)
+        {
+            var absenceFromRepo = await _repo.GetAbsence(id);
+
+            if (absenceFromRepo == null)
+                return Content("Błędne absenceId");
+
+            if (id <= 9)
+                return Content("Nie można zmienić podstawowych nieobecności");
+
+            if (absenceFromRepo.Name == newName.Name)
+                return Content("Podaj nową nazwę");
+
+            absenceFromRepo.Name = newName.Name;
+
+            if (await _repo.SaveAll())
+                return NoContent();
+
+            throw new Exception($"Błąd aktualizacji nieobecności o id: {id}");
         }
     }
 }

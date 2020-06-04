@@ -148,11 +148,6 @@ namespace back_end.Data
 
             return dayFromRepo;
         }
-        public Task<IEnumerable<Workschedule>> GetWorkSchedules()
-        {
-            throw new System.NotImplementedException();
-        }
-
         public async Task<Workschedule> GenerateWS(IEnumerable<User> users, WorkScheduleNewDTO newWS)
         {
             foreach (var user in users)

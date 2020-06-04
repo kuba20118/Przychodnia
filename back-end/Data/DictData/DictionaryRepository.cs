@@ -15,14 +15,32 @@ namespace back_end.Data
             _context = context;
         }
 
+        public async Task<Absence> AddAbsenceType(string name, int limit)
+        {
+            var newAbsence = new Absence
+            {
+                Name = name,
+                Limit = limit
+            };
+            await _context.Absence.AddAsync(newAbsence);
+            await _context.SaveChangesAsync();
+
+            return newAbsence;
+        }
+
         public async Task<Role> AddRole(string name)
         {
             var newRole = new Role { Name = name };
-
             await _context.Role.AddAsync(newRole);
             await _context.SaveChangesAsync();
 
             return newRole;
+        }
+
+        public async Task<Absence> GetAbsence(int id)
+        {
+            var absence = await _context.Absence.FirstOrDefaultAsync(r => r.IdAbsence == id);
+            return absence;
         }
 
         public async Task<IEnumerable<Absence>> GetAbsences()
@@ -39,7 +57,6 @@ namespace back_end.Data
         public async Task<Role> GetRole(int roleId)
         {
             var role = await _context.Role.FirstOrDefaultAsync(r => r.IdRole == roleId);
-
             return role;
         }
 
