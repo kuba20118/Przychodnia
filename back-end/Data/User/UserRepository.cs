@@ -99,7 +99,7 @@ namespace back_end.Data
         public async Task<IEnumerable<Vacation>> GetAllVacations()
         {
             var usersVac = await _context.Vacation
-                                    .Where(d => d.FromDate.DayOfYear <= DateTime.Now.DayOfYear && d.ToDate.DayOfYear >= DateTime.Now.DayOfYear)
+                                    .Where(x => x.FromDate.DayOfYear >= DateTime.Now.DayOfYear || x.ToDate.DayOfYear >= DateTime.Now.DayOfYear)
                                     .Where(x => x.IdAbsenceVacNavigation.Name != "Zastepstwo")
                                     .Include(a => a.IdAbsenceVacNavigation)
                                     .Include(u => u.IdUserVacNavigation)
@@ -119,7 +119,6 @@ namespace back_end.Data
 
             return daysLeft;
         }
-
         public async Task<int> GetDaysLeft(int userId, int absenseId, int days)
         {
             var isAvailable = await _context.Leftvacationdays
@@ -182,7 +181,6 @@ namespace back_end.Data
                     .ToListAsync();
             return requests;
         }
-
         public async Task DeleteVacationRequest(int id)
         {
             var request = await _context.Vacationrequest
@@ -194,13 +192,12 @@ namespace back_end.Data
                 await _context.SaveChangesAsync();
             }
         }
-
         public async Task<IEnumerable<Vacation>> GetAllReplacements()
         {
             var repls = await _context.Vacation
                 .Include(x => x.IdAbsenceVacNavigation)
                 .Where(x => x.IdAbsenceVacNavigation.Name == "Zastepstwo")
-                .Where(x => x.FromDate.DayOfYear >= DateTime.Now.DayOfYear)
+                .Where(x => x.FromDate.DayOfYear >= DateTime.Now.DayOfYear || x.ToDate.DayOfYear >= DateTime.Now.DayOfYear)
                 .Include(x => x.IdUserVacNavigation)
                 .ToListAsync();
 
@@ -271,22 +268,22 @@ namespace back_end.Data
             var list1 = VacationDaysToList(await AllVacs());
             var months = new int[12];
             foreach (var item in list1)
-                months[item.FromTime.Month-1]++;
+                months[item.FromTime.Month - 1]++;
 
             var monthsList = new List<Tuple<string, int>>
             {
-                new Tuple<string, int>("Styczeń",months[0]),
-                new Tuple<string, int>("Luty",months[1]),
-                new Tuple<string, int>("Marzec",months[2]),
-                new Tuple<string, int>("Kwiecień",months[3]),
-                new Tuple<string, int>("Maj",months[4]),
-                new Tuple<string, int>("Czerwiec",months[5]),
-                new Tuple<string, int>("Lipiec",months[6]),
-                new Tuple<string, int>("Sierpień",months[7]),
-                new Tuple<string, int>("Wrzesień",months[8]),
-                new Tuple<string, int>("Październik",months[9]),
-                new Tuple<string, int>("Listopad",months[10]),
-                new Tuple<string, int>("Grudzień",months[11])
+                new Tuple<string, int>("Styczeń",months[0]),
+                new Tuple<string, int>("Luty",months[1]),
+                new Tuple<string, int>("Marzec",months[2]),
+                new Tuple<string, int>("Kwiecień",months[3]),
+                new Tuple<string, int>("Maj",months[4]),
+                new Tuple<string, int>("Czerwiec",months[5]),
+                new Tuple<string, int>("Lipiec",months[6]),
+                new Tuple<string, int>("Sierpień",months[7]),
+                new Tuple<string, int>("Wrzesień",months[8]),
+                new Tuple<string, int>("Październik",months[9]),
+                new Tuple<string, int>("Listopad",months[10]),
+                new Tuple<string, int>("Grudzień",months[11])
             };
 
             var vacsMonths = new ChartData
@@ -297,7 +294,7 @@ namespace back_end.Data
                 Data = Unpack(monthsList)
             };
 
-            var chartsList = new List<ChartData> { vacsMonths};
+            var chartsList = new List<ChartData> { vacsMonths };
             return chartsList;
         }
 
