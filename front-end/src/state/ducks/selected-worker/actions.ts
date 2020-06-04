@@ -83,6 +83,12 @@ export const createSelectedWorkerWorkScheduleAsync = createAsyncAction(
   string
 >();
 
+export const createAllWorkersWorkScheduleAsync = createAsyncAction(
+  SelectedWorkerActionTypes.CREATE_ALL_WORKERS_WORK_SCHEDULE,
+  SelectedWorkerActionTypes.CREATE_ALL_WORKERS_WORK_SCHEDULE_SUCCESS,
+  SelectedWorkerActionTypes.CREATE_ALL_WORKERS_WORK_SCHEDULE_ERROR
+)<ISelectedWorkerWorkScheduleCreateNew, undefined, string>();
+
 export const updateSelectedWorkerScheduleDayAsync = createAsyncAction(
   SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_SCHEDULE_DAY,
   SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_SCHEDULE_DAY_SUCCESS,

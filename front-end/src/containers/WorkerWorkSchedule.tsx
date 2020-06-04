@@ -12,6 +12,7 @@ import LoadingButton from "../components/LoadingButton";
 import {
   createSelectedWorkerWorkScheduleAsync,
   updateSelectedWorkerScheduleDayAsync,
+  createAllWorkersWorkScheduleAsync,
 } from "../state/ducks/selected-worker/actions";
 import {
   tranformDaysToCalendarEvents,
@@ -41,11 +42,7 @@ const WorkerWorkSchedule: React.FC = () => {
     }
   }, [workSchedule.data]);
 
-  const handleGenerateWorkSchedule = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    e.preventDefault();
-
+  const handleGenerateWorkSchedule = ({ ...prop }) => {
     if (user?.data && calendarDays) {
       try {
         const dataDays = prepareDaysToGenerate(
@@ -57,7 +54,9 @@ const WorkerWorkSchedule: React.FC = () => {
           day: dataDays,
           numOfWeeks: parseInt(numOfWeeks, 10),
         };
-
+        if (prop.all) {
+          dispatch(createAllWorkersWorkScheduleAsync.request(generateWSData));
+        }
         dispatch(createSelectedWorkerWorkScheduleAsync.request(generateWSData));
       } catch (err) {
         console.error(err);
@@ -113,7 +112,17 @@ const WorkerWorkSchedule: React.FC = () => {
           </FormGroup>
           <div style={{ margin: "1em 0 0 1em" }}>
             <LoadingButton
-              onClick={handleGenerateWorkSchedule}
+              onClick={() => handleGenerateWorkSchedule({ all: true })}
+              disabled={!(user?.data && calendarDays)}
+              defaultText="Generuj dla wszystkich"
+              defaultType="button"
+              variant="warning"
+              isLoading={workSchedule.isLoading}
+            />
+          </div>
+          <div style={{ margin: "1em 0 0 1em" }}>
+            <LoadingButton
+              onClick={() => handleGenerateWorkSchedule({ all: false })}
               disabled={!(user?.data && calendarDays)}
               defaultText="Generuj"
               defaultType="button"

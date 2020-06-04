@@ -24,6 +24,7 @@ import {
   getSelectedWorkerVacationRequestsAsync,
   removeSelectedWorkerVacationRequestsAsync,
   acceptSelectedWorkerVacationRequestsAsync,
+  createAllWorkersWorkScheduleAsync,
 } from "./actions";
 import { IReducerAction } from "..";
 import apiCaller from "../../utils/apiHelper";
@@ -294,6 +295,43 @@ function* handleCreateSelectedWorkerWorkSchedule(
   }
 }
 
+function* handleCreateAllWorkersWorkSchedule(
+  action: IReducerAction<ISelectedWorkerWorkScheduleCreateNew>
+) {
+  try {
+    yield delay(2000);
+    const res: any = yield call(apiCaller, "POST", `/schedules/generate`, {
+      day: action.payload.day,
+      numberOfWeeks: action.payload.numOfWeeks,
+    });
+
+    yield put(createAllWorkersWorkScheduleAsync.success());
+
+    yield put(
+      activateAlert({
+        body: `Sukces! Nowy grafik został pomyślnie wygenerowany dla wszystkich pracowników!`,
+        variant: "success",
+        showTime: 6000,
+      })
+    );
+  } catch (err) {
+    if (err instanceof Error) {
+      yield put(
+        activateAlert({
+          body: `${err}. Wygenerowanie grafiku dla wszystkich pracowników nie powiodło sie.`,
+          variant: "danger",
+          showTime: 6000,
+        })
+      );
+      yield put(createAllWorkersWorkScheduleAsync.failure(err.message!));
+    } else {
+      yield put(
+        createAllWorkersWorkScheduleAsync.failure("An unknown error occured.")
+      );
+    }
+  }
+}
+
 function* handleUpdateSelectedWorkerScheduleDay(
   action: IReducerAction<ISelectedWorkerScheduleUpdateDayT>
 ) {
@@ -436,6 +474,13 @@ function* watchCreateSelectedWorkerWorkScheduleRequest(): Generator {
   );
 }
 
+function* watchCreateAllWorkersWorkScheduleRequest(): Generator {
+  yield takeEvery(
+    SelectedWorkerActionTypes.CREATE_ALL_WORKERS_WORK_SCHEDULE,
+    handleCreateAllWorkersWorkSchedule
+  );
+}
+
 function* watchUpdateSelectedWorkerScheduleDayRequest(): Generator {
   yield takeEvery(
     SelectedWorkerActionTypes.UPDATE_SELECTED_WORKER_SCHEDULE_DAY,
@@ -463,6 +508,7 @@ export default function* selectedWorkerSaga() {
     fork(watchAcceptSelectedWorkerVacationRequestRequest),
     fork(watchGetSelectedWorkerWorkScheduleRequest),
     fork(watchCreateSelectedWorkerWorkScheduleRequest),
+    fork(watchCreateAllWorkersWorkScheduleRequest),
     fork(watchUpdateSelectedWorkerScheduleDayRequest),
     fork(watchUpdateSelectedWorkerRequest),
   ]);
