@@ -41,11 +41,17 @@ export const getUserVacationsAsync = createAsyncAction(
   VacationsActionTypes.GET_USER_VACATIONS_ERROR
 )<UserIdT, VacationsDataT[], string>();
 
+export const getUserPastVacationsAsync = createAsyncAction(
+  VacationsActionTypes.GET_USER_PAST_VACATIONS,
+  VacationsActionTypes.GET_USER_PAST_VACATIONS_SUCCESS,
+  VacationsActionTypes.GET_USER_PAST_VACATIONS_ERROR
+)<UserIdT, VacationsDataT[], string>();
+
 export const createUserVacationRequestAsync = createAsyncAction(
   VacationsActionTypes.CREATE_USER_VACATION_REQUEST,
   VacationsActionTypes.CREATE_USER_VACATION_REQUEST_SUCCESS,
   VacationsActionTypes.CREATE_USER_VACATION_REQUEST_ERROR
-)<VacationRequestCreateT, VacationRequestT, string>();
+)<VacationRequestCreateT, undefined, string>();
 
 export const getUserLeftVacationsDaysAsync = createAsyncAction(
   VacationsActionTypes.GET_USER_LEFT_VACATIONS_DAYS,

@@ -1,4 +1,4 @@
-import { all, call, put, takeEvery, fork } from "redux-saga/effects";
+import { all, call, put, takeEvery, fork, delay } from "redux-saga/effects";
 import {
   VacationsActionTypes,
   VacationsDataT,
@@ -6,7 +6,6 @@ import {
   VacationRequestT,
   VacationRequestCreateT,
   LeftVacationsDaysT,
-  VacationRequestIdT,
   VacationCategoryCreateT,
 } from "./types";
 import {
@@ -19,10 +18,12 @@ import {
   fetchAllPastVacationsAsync,
   addVacationCategoryAsync,
   getAllUsersLeftVacationsDaysAsync,
+  getUserPastVacationsAsync,
 } from "./actions";
 import apiCaller from "../../utils/apiHelper";
 import { UserIdT } from "../user/types";
 import { IReducerAction } from "..";
+import { activateAlert } from "../alert/actions";
 
 function* handleFetchAllCurrentVacationsRequest() {
   try {
@@ -136,10 +137,29 @@ function* handleGetUserVacationsRequest(action: IReducerAction<UserIdT>) {
   }
 }
 
+function* handleGetUserPastVacationsRequest(action: IReducerAction<UserIdT>) {
+  try {
+    const res: VacationsDataT[] | any = yield call(
+      apiCaller,
+      "GET",
+      `/vacation/history/${action.payload}`
+    );
+
+    yield put(getUserPastVacationsAsync.success(res));
+  } catch (err) {
+    if (err instanceof Error) {
+      yield put(getUserPastVacationsAsync.failure(err.message!));
+    } else {
+      yield put(getUserPastVacationsAsync.failure("An unknown error occured."));
+    }
+  }
+}
+
 function* handleCreateUserVacationRequestRequest(
   action: IReducerAction<VacationRequestCreateT>
 ) {
   try {
+    yield delay(2000);
     const res: VacationRequestT | any = yield call(
       apiCaller,
       "POST",
@@ -151,9 +171,23 @@ function* handleCreateUserVacationRequestRequest(
         idAbsence: action.payload.idAbsence,
       }
     );
-    yield put(createUserVacationRequestAsync.success(res));
+    yield put(createUserVacationRequestAsync.success());
+    yield put(
+      activateAlert({
+        body: `Sukces! Prośba o urlop została pomyślnie wysłana!`,
+        variant: "success",
+        showTime: 6000,
+      })
+    );
   } catch (err) {
     if (err instanceof Error) {
+      yield put(
+        activateAlert({
+          body: `${err}. Wysłanie prośby o urlop nie powiodło sie.`,
+          variant: "danger",
+          showTime: 6000,
+        })
+      );
       yield put(createUserVacationRequestAsync.failure(err.message!));
     } else {
       yield put(
@@ -262,6 +296,13 @@ function* watchGetUserVacationsRequest(): Generator {
   );
 }
 
+function* watchGetUserPastVacationsRequest(): Generator {
+  yield takeEvery(
+    VacationsActionTypes.GET_USER_PAST_VACATIONS,
+    handleGetUserPastVacationsRequest
+  );
+}
+
 function* watchCreateUserVacationRequestRequest(): Generator {
   yield takeEvery(
     VacationsActionTypes.CREATE_USER_VACATION_REQUEST,
@@ -300,6 +341,7 @@ export default function* vacationsSaga() {
     fork(watchGetVacationsCategoriesRequest),
     fork(watchAddVacationCategoryRequest),
     fork(watchGetUserVacationsRequest),
+    fork(watchGetUserPastVacationsRequest),
     fork(watchCreateUserVacationRequestRequest),
     fork(watchGetUserVacationRequestsRequest),
     fork(watchGetUserLeftVacationsDaysRequest),

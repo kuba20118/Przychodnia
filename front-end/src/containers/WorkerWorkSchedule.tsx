@@ -56,6 +56,7 @@ const WorkerWorkSchedule: React.FC = () => {
         };
         if (prop.all) {
           dispatch(createAllWorkersWorkScheduleAsync.request(generateWSData));
+          return;
         }
         dispatch(createSelectedWorkerWorkScheduleAsync.request(generateWSData));
       } catch (err) {

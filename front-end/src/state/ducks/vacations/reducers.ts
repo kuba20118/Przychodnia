@@ -13,6 +13,7 @@ export const initialVacationsState: VacationsStateT = {
   allVacations: [],
   allPastVacations: [],
   userVacations: [],
+  userPastVacations: [],
   userVacationRequests: [],
   userLeftVacationsDays: [],
   allUsersLeftVacationDays: [],
@@ -20,6 +21,7 @@ export const initialVacationsState: VacationsStateT = {
   isLoading: false,
   isLoadingUserVacations: false,
   isLoadingUserVacationRequests: false,
+  isLoadingAddUserVacationRequest: false,
   isLoadingAddCategory: false,
 };
 
@@ -91,17 +93,31 @@ export const vacationsReducer = (
     case VacationsActionTypes.GET_USER_VACATIONS_ERROR: {
       return { ...state, isLoadingUserVacations: false };
     }
+    case VacationsActionTypes.GET_USER_PAST_VACATIONS: {
+      return { ...state, isLoadingUserVacations: true };
+    }
+    case VacationsActionTypes.GET_USER_PAST_VACATIONS_SUCCESS: {
+      return {
+        ...state,
+        isLoadingUserVacations: false,
+        userPastVacations: action.payload,
+      };
+    }
+    case VacationsActionTypes.GET_USER_PAST_VACATIONS_ERROR: {
+      return { ...state, isLoadingUserVacations: false };
+    }
     case VacationsActionTypes.CREATE_USER_VACATION_REQUEST: {
-      return { ...state };
+      return { ...state, isLoadingAddUserVacationRequest: true };
     }
     case VacationsActionTypes.CREATE_USER_VACATION_REQUEST_SUCCESS: {
       return {
         ...state,
+        isLoadingAddUserVacationRequest: false,
         userVacationRequests: [...state.userVacationRequests, action.payload],
       };
     }
     case VacationsActionTypes.CREATE_USER_VACATION_REQUEST_ERROR: {
-      return { ...state };
+      return { ...state, isLoadingAddUserVacationRequest: false };
     }
     case VacationsActionTypes.GET_USER_VACATION_REQUESTS: {
       return { ...state, isLoadingUserVacationRequests: true };

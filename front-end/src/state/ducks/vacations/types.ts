@@ -82,6 +82,7 @@ export type VacationsStateT = {
   allVacations: VacationsDataT[];
   allPastVacations: VacationsDataT[];
   userVacations: VacationsDataT[];
+  userPastVacations: VacationsDataT[];
   userVacationRequests: VacationRequestT[];
   userLeftVacationsDays: LeftVacationsDaysT[];
   allUsersLeftVacationDays: UserLeftVacationDays[];
@@ -89,6 +90,7 @@ export type VacationsStateT = {
   isLoading: boolean;
   isLoadingUserVacations: boolean;
   isLoadingUserVacationRequests: boolean;
+  isLoadingAddUserVacationRequest: boolean;
   isLoadingAddCategory: boolean;
 };
 
@@ -116,6 +118,11 @@ export enum VacationsActionTypes {
   GET_USER_VACATIONS = "@@user/GET_USER_VACATIONS",
   GET_USER_VACATIONS_SUCCESS = "@@user/GET_USER_VACATIONS_SUCCESS",
   GET_USER_VACATIONS_ERROR = "@@user/GET_USER_VACATIONS_ERROR",
+
+  GET_USER_PAST_VACATIONS = "@@user/GET_USER_PAST_VACATIONS",
+  GET_USER_PAST_VACATIONS_SUCCESS = "@@user/GET_USER_PAST_VACATIONS_SUCCESS",
+  GET_USER_PAST_VACATIONS_ERROR = "@@user/GET_USER_PAST_VACATIONS_ERROR",
+
   CREATE_USER_VACATION_REQUEST = "@@user/CREATE_USER_VACATION_REQUEST",
   CREATE_USER_VACATION_REQUEST_SUCCESS = "@@user/CREATE_USER_VACATION_REQUEST_SUCCESS",
   CREATE_USER_VACATION_REQUEST_ERROR = "@@user/CREATE_USER_VACATION_REQUEST_ERROR",

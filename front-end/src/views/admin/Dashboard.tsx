@@ -49,16 +49,6 @@ const Dashboard: React.FC = () => {
 
   console.log(createBarData(stats.title, stats.data?.item1, stats.data?.item2));
 
-  const data = {
-    labels: ["Wykorzystany urlop", "Pozostały urlop"],
-    datasets: [
-      {
-        data: [40, 60],
-        backgroundColor: ["orange", "green"],
-      },
-    ],
-  };
-
   // const allUsersNum = users && users.length;
   const workersNum =
     users && users.filter((user) => user.role === "Pracownik").length;
@@ -68,6 +58,16 @@ const Dashboard: React.FC = () => {
     users && users.filter((user) => user.role === "Rejestrator").length;
   const adminsNum =
     users && users.filter((user) => user.role === "Admin").length;
+
+  const data = {
+    labels: ["Pracownicy", "Kierownicy", "Rejestratorzy", "Admini"],
+    datasets: [
+      {
+        data: [workersNum, managersNum, rejestratorsNum, adminsNum],
+        backgroundColor: ["red", "orange", "blue", "purple"],
+      },
+    ],
+  };
 
   return (
     <div className="content">
@@ -114,7 +114,7 @@ const Dashboard: React.FC = () => {
             />
           </Col>
         </Row>
-        <Row>
+        <Row className="d-flex justify-content-center">
           <Col md={8}>
             <Card
               title="Wykorzystanie urlopów w danym miesiącu"
@@ -131,15 +131,20 @@ const Dashboard: React.FC = () => {
               }
             />
           </Col>
-          {/* { <Col md={5}>
-            <Card
-              title="Ogólne wykorzystanie urlopów"
-              subtitle="Dane dotyczą wszystkich użytkowników w biężącym roku"
-              content={
-                <Doughnut data={data} options={{ maintainAspectRatio: true }} />
-              }
-            />
-          </Col> } */}
+          {
+            <Col md={4}>
+              <Card
+                title="Role użytkowników"
+                subtitle="Dane dotyczą wszystkich użytkowników w biężącym roku"
+                content={
+                  <Doughnut
+                    data={data}
+                    options={{ maintainAspectRatio: true }}
+                  />
+                }
+              />
+            </Col>
+          }
         </Row>
       </Container>
     </div>
