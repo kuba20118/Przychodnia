@@ -22,9 +22,6 @@ namespace back_end.Data
             if (user == null)
                 return null;
 
-            if (user.IdUser <= 8)
-                return user;
-
             if (!VerifyHash(password, user.Hash, user.Salt))
             {
                 System.Console.WriteLine("err");

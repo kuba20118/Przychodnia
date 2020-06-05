@@ -60,7 +60,7 @@ namespace back_end.Controllers
 
             await _userRepo.AddNewVacationRequest(id, newRequest);
             //var result = _mapper.Map<NewVacationRequestDTO>(req);
-            return NoContent();
+            return Ok();
         }
 
         [HttpDelete("request/delete/{id}")]

@@ -15,8 +15,8 @@ namespace back_end.Controllers
     -Role
     -Absence
     */
-    [Authorize(Policy = "admin")]
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class DictionaryDataController : ControllerBase
     {
@@ -30,7 +30,6 @@ namespace back_end.Controllers
         }
 
         [HttpGet("roles")]
-        [Authorize]
         public async Task<IActionResult> GetRoles()
         {
             var rolesToReturn = await _repo.GetRoles();
