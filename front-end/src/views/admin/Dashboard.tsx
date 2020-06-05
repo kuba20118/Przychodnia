@@ -115,7 +115,7 @@ const Dashboard: React.FC = () => {
           </Col>
         </Row>
         <Row>
-          <Col md={7}>
+          <Col md={8}>
             <Card
               title="Wykorzystanie urlopów w danym miesiącu"
               subtitle="Dane dotyczą wszystkich użytkowników w biężącym roku "
@@ -131,7 +131,7 @@ const Dashboard: React.FC = () => {
               }
             />
           </Col>
-          <Col md={5}>
+          {/* { <Col md={5}>
             <Card
               title="Ogólne wykorzystanie urlopów"
               subtitle="Dane dotyczą wszystkich użytkowników w biężącym roku"
@@ -139,7 +139,7 @@ const Dashboard: React.FC = () => {
                 <Doughnut data={data} options={{ maintainAspectRatio: true }} />
               }
             />
-          </Col>
+          </Col> } */}
         </Row>
       </Container>
     </div>
