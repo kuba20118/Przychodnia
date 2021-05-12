@@ -24,7 +24,7 @@
     "@types/reselect": "^2.2.0",
     "@types/yup": "^0.26.34",
     "bootstrap": "^4.4.1",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "formik": "^2.1.4",
     "history": "^4.10.1",
     "moment": "^2.24.0",
